@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1053351222036",
+    "project_id": "utperform",
+    "storage_bucket": "utperform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053351222036:android:345df171d14a1c5fe04001",
+        "android_client_info": {
+          "package_name": "com.example.a0utperform"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDf2uE1lrWOeU31mFcRoHsQWYDHz972LY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
