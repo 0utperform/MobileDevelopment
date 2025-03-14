@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">0utPerform</string>
+    <string name="app_name"><font color='#000000'>Out</font><font color='#4A99ED'>Perform</font></string>
+    <string name="logodescription">OutperformLogo</string>
 </resources>
