@@ -2,4 +2,5 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="primaryColor">#FFFFFFFF</color>
+    <color name="brandBlue">#4A99ED</color>
 </resources>

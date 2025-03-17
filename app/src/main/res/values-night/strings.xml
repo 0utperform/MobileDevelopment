@@ -2,4 +2,20 @@
 <resources>
     <string name="logodescription">OutperformLogo</string>
     <string name="app_name">Out<font color='#000000'>to</font> <font color='#4A99ED'>Perform</font></string>
+    <string name="greet_login">Hi! Welcome to</string>
+    <string name="login_description">First you need to login so we can make adjustments to your account</string>
+    <string name="login">Login</string>
+    <string name="btn_google_login">Connect with Google</string>
+    <string name="btn_facebook_login">Connect With Facebook</string>
+    <string name="pass_signin">Sign In With Password</string>
+    <string name="signUp">Don’t have an account? Sign up</string>
+    <string name="log_in"><font color='#898989'>Don’t have an account?</font><font color='#4A99ED'> Log In</font></string>
+    <string name="login_now">loginnow</string>
+    <string name="pass_login">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="register_your_account">to create your account</string>
+    <string name="full_name">Full name</string>
+    <string name="phone_hint">Phone Number</string>
+    <string name="password_confirmaton_hint">Password Confirmation</string>
 </resources>

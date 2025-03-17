@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="image_height">250dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+
+    <!-- Margins -->
+    <dimen name="margin_large">80dp</dimen>
+    <dimen name="margin_medium">36dp</dimen>
+    <dimen name="margin_small">15dp</dimen>
+    <dimen name="margin_top_small">12dp</dimen>
+    <dimen name="margin_top_medium">25dp</dimen>
+    <dimen name="margin_top_large">50dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_large">50dp</dimen>
+    <dimen name="padding_medium">18dp</dimen>
+    <dimen name="padding_small">10dp</dimen>
+
+    <!-- Button Height -->
+    <dimen name="button_height">65dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="corner_radius">12dp</dimen>
+</resources>
