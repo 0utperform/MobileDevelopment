@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityDecideLogin">
+
+    <TextView
+        android:id="@+id/greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/greet_login"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:layout_marginStart="@dimen/margin_medium"
+        app:layout_constraintBottom_toTopOf="@+id/greeting_app"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    
+    <TextView
+        android:id="@+id/greeting_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="@dimen/text_size_extra_large"
+        android:fontFamily="@font/roboto_medium"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/margin_medium"
+        app:layout_constraintTop_toBottomOf="@id/greeting"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/decide_login"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/image_height"
+        android:layout_marginTop="@dimen/margin_top_large"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:scaleType="fitCenter"
+        android:src="@drawable/decide_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/greeting_app" />
+
+    <TextView
+        android:id="@+id/login_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/login_description"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decide_login" />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textSize="@dimen/text_size_large"
+        android:fontFamily="@font/roboto_medium"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        app:layout_constraintTop_toBottomOf="@id/login_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoogleLogIn"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:text="@string/btn_google_login"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/black"
+        app:iconTint="@null"
+        android:scaleType="fitCenter"
+        app:icon="@drawable/ic_google"
+        app:cornerRadius="@dimen/corner_radius"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/padding_medium"
+        app:strokeColor="@color/black"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        app:layout_constraintTop_toBottomOf="@id/login"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFacebookLogIn"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:text="@string/btn_facebook_login"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        app:iconTint="@null"
+        app:icon="@drawable/ic_facebook"
+        app:cornerRadius="@dimen/corner_radius"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/margin_top_small"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        app:strokeColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleLogIn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <ImageView
+        android:id="@+id/login_option_wall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:src="@drawable/option_wall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnFacebookLogIn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_in"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/pass_signin"
+        android:textSize="@dimen/text_size_small"
+        android:backgroundTint="@color/brandBlue"
+        app:cornerRadius="@dimen/corner_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_option_wall"
+        />
+
+    <TextView
+        android:id="@+id/signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_small"
+        android:fontFamily="@font/roboto_regular"
+        android:textStyle="bold"
+
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintTop_toBottomOf="@id/sign_in"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
