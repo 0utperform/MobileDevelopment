@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.8.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.8.2)" variant="all" version="8.8.2">
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;fab_margin&quot; in values-land has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="      &lt;dimen name=&quot;fab_margin&quot;>48dp&lt;/dimen>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-land/dimens.xml"
+            line="2"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="CredentialManagerMisuse"
+        message="Call to `CredentialManager.getCredential` without use of `NoCredentialException`"
+        errorLine1="                val result: GetCredentialResponse = credentialManager.getCredential("
+        errorLine2="                                                    ^">
+        <location
+            file="src/main/java/com/example/a0utperform/decidelogin/ActivityDecideLogin.kt"
+            line="85"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="CredentialManagerSignInWithGoogle"
+        message="Use of `:googleid` classes without use of `GoogleIdTokenCredential`"
+        errorLine1="        val googleIdOption = GetGoogleIdOption.Builder()"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/a0utperform/decidelogin/ActivityDecideLogin.kt"
+            line="75"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="CustomSplashScreen"
+        message="The application should not provide its own launch screen"
+        errorLine1="class SplashActivity : AppCompatActivity() {"
+        errorLine2="      ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/a0utperform/splash/SplashActivity.kt"
+            line="11"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="FragmentTagUsage"
+        message="Replace the &lt;fragment> tag with FragmentContainerView."
+        errorLine1="    &lt;fragment"
+        errorLine2="     ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_dashboard.xml"
+            line="21"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.8.2 is available: 8.9.0"
+        errorLine1="agp = &quot;8.8.2&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.8.2 is available: 8.9.0"
+        errorLine1="agp = &quot;8.8.2&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.8.2 is available: 8.9.0"
+        errorLine1="agp = &quot;8.8.2&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.11.0 is available: 1.12.0"
+        errorLine1="googleMaterial = &quot;1.11.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="5"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.11.0 is available: 1.12.0"
+        errorLine1="googleMaterial = &quot;1.11.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="5"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.11.0 is available: 1.12.0"
+        errorLine1="googleMaterial = &quot;1.11.0&quot;"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="5"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials than 1.5.0-rc01 is available: 1.5.0"
+        errorLine1="credentials = &quot;1.5.0-rc01&quot;"
+        errorLine2="              ~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="17"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials than 1.5.0-rc01 is available: 1.5.0"
+        errorLine1="credentials = &quot;1.5.0-rc01&quot;"
+        errorLine2="              ~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="17"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials than 1.5.0-rc01 is available: 1.5.0"
+        errorLine1="credentials = &quot;1.5.0-rc01&quot;"
+        errorLine2="              ~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="17"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials-play-services-auth than 1.3.0 is available: 1.5.0"
+        errorLine1="credentialsPlayServicesAuth = &quot;1.3.0&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="18"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials-play-services-auth than 1.3.0 is available: 1.5.0"
+        errorLine1="credentialsPlayServicesAuth = &quot;1.3.0&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="18"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.credentials:credentials-play-services-auth than 1.3.0 is available: 1.5.0"
+        errorLine1="credentialsPlayServicesAuth = &quot;1.3.0&quot;"
+        errorLine2="                              ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="18"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationFragmentKtx = &quot;2.8.6&quot;"
+        errorLine2="                        ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="20"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationFragmentKtx = &quot;2.8.6&quot;"
+        errorLine2="                        ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="20"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationFragmentKtx = &quot;2.8.6&quot;"
+        errorLine2="                        ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="20"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationUiKtx = &quot;2.8.6&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="21"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationUiKtx = &quot;2.8.6&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="21"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.8.6 is available: 2.8.9"
+        errorLine1="navigationUiKtx = &quot;2.8.6&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="21"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.1.1 is available: 21.3.0"
+        errorLine1="playServicesAuth = &quot;21.1.1&quot;"
+        errorLine2="                   ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="24"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.1.1 is available: 21.3.0"
+        errorLine1="playServicesAuth = &quot;21.1.1&quot;"
+        errorLine2="                   ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="24"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-auth than 21.1.1 is available: 21.3.0"
+        errorLine1="playServicesAuth = &quot;21.1.1&quot;"
+        errorLine2="                   ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="24"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="google-material-v1110 = { module = &quot;com.google.android.material:material&quot;, version.ref = &quot;googleMaterial&quot; }"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="33"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="google-material-v1110 = { module = &quot;com.google.android.material:material&quot;, version.ref = &quot;googleMaterial&quot; }"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="33"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="google-material-v1110 = { module = &quot;com.google.android.material:material&quot;, version.ref = &quot;googleMaterial&quot; }"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="33"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="material = { group = &quot;com.google.android.material&quot;, name = &quot;material&quot;, version.ref = &quot;material&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="material = { group = &quot;com.google.android.material&quot;, name = &quot;material&quot;, version.ref = &quot;material&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies com.google.android.material:material but with different version"
+        errorLine1="material = { group = &quot;com.google.android.material&quot;, name = &quot;material&quot;, version.ref = &quot;material&quot; }"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/0utPerform/gradle/libs.versions.toml"
+            line="38"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v23`) is unnecessary; `minSdkVersion` is 24. Merge all the resources in this folder into `values`.">
+        <location
+            file="src/main/res/values-v23"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/primaryColor` with a theme that also paints a background (inferred theme is `@style/Theme._0utPerform`)"
+        errorLine1="    android:background=&quot;@color/primaryColor&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_splash.xml"
+            line="9"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.fab_margin` appears to be unused"
+        errorLine1="      &lt;dimen name=&quot;fab_margin&quot;>48dp&lt;/dimen>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-land/dimens.xml"
+            line="2"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.padding_large` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;padding_large&quot;>20dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.padding_small` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;padding_small&quot;>8dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_horizontal_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_horizontal_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="29"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_vertical_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_vertical_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.ic_launcher` appears to be unused">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_launcher_background` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_launcher_background.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.ic_launcher_round` appears to be unused">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.signUp` appears to be unused"
+        errorLine1="    &lt;string name=&quot;signUp&quot;>Don’t have an account? Sign up&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.login_now` appears to be unused"
+        errorLine1="    &lt;string name=&quot;login_now&quot;>loginnow&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_outperform.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_outperform_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/decide_login.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/decide_login.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_facebook.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_facebook.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_google.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_google.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/login_img.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/login_img.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/option_wall.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/option_wall.png"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decide_login.xml"
+            line="35"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_decide_login.xml"
+            line="121"
+            column="6"/>
+    </issue>
+
+</issues>
