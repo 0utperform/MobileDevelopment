@@ -1,4 +1,4 @@
-package com.example.a0utperform
+package com.example.a0utperform.login
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

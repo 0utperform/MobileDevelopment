@@ -20,5 +20,11 @@
     <string name="full_name">Full name</string>
     <string name="phone_hint">Phone Number</string>
     <string name="password_confirmaton_hint">Password Confirmation</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="client_id">1053351222036-ekud8l21pj6ss7rhdk930h48595dhqo7.apps.googleusercontent.com</string>
+    <string name="sign_out">Log Out</string>
 
 </resources>

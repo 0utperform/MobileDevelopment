@@ -1,10 +1,12 @@
-package com.example.a0utperform
+package com.example.a0utperform.splash
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.example.a0utperform.decidelogin.ActivityDecideLogin
+import com.example.a0utperform.R
 
 class SplashActivity : AppCompatActivity() {
 
