@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.2"
+facebookLogin = "18.0.2"
 firebaseBom = "33.10.0"
 googleMaterial = "1.11.0"
 kotlin = "2.1.0"
@@ -25,6 +26,7 @@ playServicesAuth = "21.1.1"
 [libraries]
 
 
+facebook-login = { module = "com.facebook.android:facebook-login", version.ref = "facebookLogin" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

@@ -7,7 +7,9 @@ plugins {
 android {
     namespace = "com.example.a0utperform"
     compileSdk = 35
-
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
     defaultConfig {
         applicationId = "com.example.a0utperform"
         minSdk = 24
@@ -46,6 +48,8 @@ dependencies {
 
 
 
+
+    implementation (libs.facebook.login)
 
     implementation(platform(libs.firebase.bom))
     implementation (libs.google.material.v1110)

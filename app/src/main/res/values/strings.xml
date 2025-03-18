@@ -14,7 +14,7 @@
     <string name="password_hint">Password</string>
     <string name="email_hint">Email</string>
     <string name="signUp">Don’t have an account? Sign up</string>
-    <string name="login_now">loginnow</string>
+    <string name="login_now">login now</string>
     <!-- Strings used for fragments for navigation -->
     <string name="register_your_account">to create your account</string>
     <string name="full_name">Full name</string>
@@ -26,5 +26,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="client_id">1053351222036-ekud8l21pj6ss7rhdk930h48595dhqo7.apps.googleusercontent.com</string>
     <string name="sign_out">Log Out</string>
+    <string name="facebook_app_id">570253492733448</string>
 
 </resources>
