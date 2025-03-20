@@ -3,7 +3,8 @@ agp = "8.8.2"
 facebookLogin = "18.0.2"
 firebaseBom = "33.10.0"
 googleMaterial = "1.11.0"
-kotlin = "2.1.0"
+hiltAndroid = "2.51"
+kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -27,6 +28,9 @@ playServicesAuth = "21.1.1"
 
 
 facebook-login = { module = "com.facebook.android:facebook-login", version.ref = "facebookLogin" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroid" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

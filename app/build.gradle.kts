@@ -2,7 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("com.google.dagger.hilt.android")
+    id ("kotlin-kapt")
+
 }
+
 
 android {
     namespace = "com.example.a0utperform"
@@ -19,7 +23,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    kapt{
+        correctErrorTypes = true
+    }
    buildFeatures{
        viewBinding = true
    }
@@ -46,8 +52,11 @@ dependencies {
 
     implementation(libs.play.services.auth)
 
+    implementation (libs.material)
 
-
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.espresso.core)
+    kapt (libs.hilt.android.compiler)
 
     implementation (libs.facebook.login)
 

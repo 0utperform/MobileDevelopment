@@ -6,17 +6,336 @@
     android:layout_height="match_parent"
     tools:context=".dashboard.ui.dashboard.DashboardFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
+    
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardBackgroundColor="@color/primaryColor"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:padding="@dimen/padding_small">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:strokeColor="@android:color/holo_blue_bright"
+                app:strokeWidth="1dp"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/placeholder_user"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                app:shapeAppearanceOverlay="@style/CircleShape"/>
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/profile_image"
+                android:text="Mark Combine"
+                android:fontFamily="@font/roboto_medium"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/profile_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Staff"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/profile_name"
+            android:fontFamily="@font/roboto_medium" />
+
+            <TextView
+                android:id="@+id/available_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 tasks today"
+                android:layout_marginTop="@dimen/padding_medium"
+                android:layout_marginStart="@dimen/margin_medium"
+                app:layout_constraintStart_toEndOf="@+id/profile_image"
+                app:layout_constraintTop_toBottomOf="@+id/profile_role"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/roboto_medium"
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+   <androidx.cardview.widget.CardView
+       android:id="@+id/attendance_card"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_constraintTop_toBottomOf="@+id/profile_card"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:cardCornerRadius="@dimen/corner_radius"
+       android:layout_marginTop="@dimen/margin_top_medium"
+       android:layout_marginEnd="@dimen/margin_medium"
+       android:layout_marginStart="@dimen/margin_medium"
+     >
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:padding="@dimen/padding_medium">
+
+           <TextView
+               android:id="@+id/time"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:text="@string/time_placeholder"
+               android:textColor="@color/black"
+               android:textSize="@dimen/text_size_extra_large"
+               android:fontFamily="@font/roboto_semibold"
+               android:textStyle="bold"
+               android:gravity="center_horizontal"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintTop_toTopOf="parent" />
+
+           <TextView
+               android:id="@+id/date"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:text="@string/date_placeholder"
+               android:textColor="@color/gray"
+               android:textSize="@dimen/text_size_small"
+               android:fontFamily="@font/roboto_semibold"
+               android:textStyle="bold"
+               android:gravity="center_horizontal"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/time"/>
+
+
+           <FrameLayout
+               android:id="@+id/percentage"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_margin="@dimen/margin_medium"
+               app:layout_constraintTop_toBottomOf="@+id/date"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent">
+
+               <com.google.android.material.imageview.ShapeableImageView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/ic_round"/>
+
+               <!-- Text Inside the Circle -->
+               <TextView
+                   android:id="@+id/percent"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:textAlignment="center"
+                   android:textColor="@color/black"
+                   android:text="@string/placeholder_percent"
+                   android:textSize="@dimen/text_size_extra_large"
+                   android:textStyle="bold"
+                   android:layout_gravity="center"
+                   android:fontFamily="@font/roboto_semibold"
+                   android:layout_marginBottom="@dimen/margin_small"
+                   />
+
+               <TextView
+                   android:id="@+id/percent_description"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_marginTop="28dp"
+                   android:fontFamily="@font/roboto_semibold"
+                   android:textColor="@color/gray"
+                   android:text="@string/percent_desc"
+                   android:textSize="@dimen/text_size_small"
+                   android:textStyle="bold" />
+           </FrameLayout>
+
+           <com.google.android.material.card.MaterialCardView
+               xmlns:android="http://schemas.android.com/apk/res/android"
+               xmlns:app="http://schemas.android.com/apk/res-auto"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="@dimen/corner_radius"
+               app:cardElevation="1dp"
+               android:layout_marginTop="@dimen/margin_small"
+               android:layout_marginBottom="@dimen/margin_small"
+               app:layout_constraintTop_toBottomOf="@+id/percentage"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:strokeWidth="2dp"
+               app:strokeColor="@color/gray"
+
+
+               >
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="start"
+                   android:weightSum="3">
+
+                   <!-- Column 1 -->
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:orientation="horizontal"
+                       android:gravity="center">
+
+                       <ImageView
+                           android:layout_width="24dp"
+                           android:layout_height="24dp"
+                           android:src="@drawable/clock_in"
+                           android:layout_gravity="center_vertical"
+                           android:layout_marginEnd="8dp"/>
+
+                       <LinearLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical">
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="Clock In"
+                               android:layout_margin="2dp"
+                               android:textStyle="bold"
+                               android:textSize="14sp"/>
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_margin="2dp"
+                               android:text="08:30 AM"
+                               android:textSize="12sp"
+                               android:textColor="@color/gray"/>
+                       </LinearLayout>
+                   </LinearLayout>
+
+                   <View
+                       android:layout_width="1dp"
+                       android:layout_height="match_parent"
+                       android:background="@color/gray"
+
+                      />
+                   <!-- Column 2 -->
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:orientation="horizontal"
+                       android:gravity="center">
+
+                       <ImageView
+                           android:layout_width="24dp"
+                           android:layout_height="24dp"
+                           android:src="@drawable/clock_out"
+                           android:layout_gravity="center_vertical"
+                           android:layout_marginEnd="8dp"/>
+
+                       <LinearLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical">
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="Clock Out"
+                               android:layout_margin="2dp"
+                               android:textStyle="bold"
+                               android:textSize="14sp"/>
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="12:00 PM"
+                               android:layout_gravity="center"
+                               android:layout_margin="2dp"
+                               android:textSize="12sp"
+                               android:textColor="@color/gray"/>
+                       </LinearLayout>
+                   </LinearLayout>
+
+                   <View
+                       android:layout_width="1dp"
+                       android:layout_height="match_parent"
+                       android:background="@color/gray"
+                       />
+                   <!-- Column 3 -->
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:orientation="horizontal"
+                       android:gravity="center">
+
+                       <ImageView
+                           android:layout_width="24dp"
+                           android:layout_height="24dp"
+                           android:src="@drawable/total_hrs"
+                           android:layout_gravity="center_vertical"
+                           android:layout_marginEnd="8dp"/>
+
+                       <LinearLayout
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:orientation="vertical">
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="Total Hrs"
+                               android:textStyle="bold"
+                               android:layout_margin="2dp"
+                               android:textSize="14sp"/>
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="05:30 PM"
+                               android:layout_gravity="center"
+                               android:textSize="12sp"
+                               android:layout_margin="2dp"
+                               android:textColor="@color/gray"/>
+                       </LinearLayout>
+                   </LinearLayout>
+               </LinearLayout>
+           </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+
+   </androidx.cardview.widget.CardView>
+    
+    
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
