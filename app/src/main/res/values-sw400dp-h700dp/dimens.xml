@@ -11,6 +11,7 @@
     <dimen name="margin_large">80dp</dimen>
     <dimen name="margin_medium">30dp</dimen>
     <dimen name="margin_small">10dp</dimen>
+    <dimen name="margin_top_extra_small">6dp</dimen>
     <dimen name="margin_top_small">8dp</dimen>
     <dimen name="margin_top_medium">15dp</dimen>
     <dimen name="margin_top_large">60dp</dimen>

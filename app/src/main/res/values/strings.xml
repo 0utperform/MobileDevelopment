@@ -27,5 +27,10 @@
     <string name="client_id">1053351222036-ekud8l21pj6ss7rhdk930h48595dhqo7.apps.googleusercontent.com</string>
     <string name="sign_out">Log Out</string>
     <string name="facebook_app_id">570253492733448</string>
+    <string name="profile_placeholder">placeholder image for profile picture</string>
+    <string name="time_placeholder">09:10 AM</string>
+    <string name="date_placeholder">March 12, 2024 - Saturday</string>
+    <string name="placeholder_percent">94%</string>
+    <string name="percent_desc">Monthly Attendance</string>
 
 </resources>
