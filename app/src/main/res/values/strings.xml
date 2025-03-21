@@ -32,5 +32,12 @@
     <string name="date_placeholder">March 12, 2024 - Saturday</string>
     <string name="placeholder_percent">94%</string>
     <string name="percent_desc">Monthly Attendance</string>
+    <string name="clock_in">Clock In</string>
+    <string name="time">--:-- AM</string>
+    <string name="clock_out">Clock Out</string>
+    <string name="total_hrs">Total Hrs</string>
+    <string name="role_placeholder">Staff</string>
+    <string name="clock_in_button">Clock In</string>
+    <string name="task_label">Your Task</string>
 
 </resources>

@@ -45,6 +45,7 @@ class ActivityDecideLogin : AppCompatActivity() {
 
     private lateinit var binding: ActivityDecideLoginBinding
     private val viewModel: DecideLoginViewModel by viewModels()
+    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +53,19 @@ class ActivityDecideLogin : AppCompatActivity() {
         binding = ActivityDecideLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth = Firebase.auth
+        val firebaseUser = auth.currentUser
+
+        if (firebaseUser != null) {
+            startActivity(Intent(this,Dashboard::class.java))
+            finish()
+            return
+        }
+
         observeViewModel()
         setupClickListeners()
     }
+
 
     private fun observeViewModel() {
         viewModel.loginState.observe(this) { state ->
@@ -71,7 +82,6 @@ class ActivityDecideLogin : AppCompatActivity() {
 
     private fun setupClickListeners() {
         binding.btnGoogleLogIn.setOnClickListener { viewModel.signInWithGoogle(this) }
-        binding.btnFacebookLogIn.setOnClickListener { viewModel.signInWithFacebook(this) }
         binding.signIn.setOnClickListener { navigateTo(LoginActivity::class.java) }
         binding.signUp.setOnClickListener { navigateTo(RegisterActivity::class.java) }
     }
