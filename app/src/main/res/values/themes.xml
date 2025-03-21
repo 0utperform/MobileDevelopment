@@ -1,17 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme._0utPerform" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Base Material Theme (Light Mode) -->
+<style name="Base.Theme._0utPerform" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+</style>
+
+    <style name="Theme.Dashboard" parent="Theme.MaterialComponents.DayNight">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
     </style>
 
-    <style name="CircleShape" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
+<!-- Custom CardView Style -->
+<style name="CustomMaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
+    <item name="strokeColor">@color/brandBlue</item>
+    <item name="strokeWidth">2dp</item>
+    <item name="cardElevation">4dp</item>
+    <item name="cornerRadius">12dp</item>
+</style>
 
+<style name="CircleShape" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">50%</item>
+</style>
 
-
-
-    <style name="Theme._0utPerform" parent="Base.Theme._0utPerform" />
 </resources>

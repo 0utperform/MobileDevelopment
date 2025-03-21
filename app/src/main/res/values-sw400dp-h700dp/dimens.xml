@@ -2,8 +2,9 @@
 <resources>
 
     <dimen name="image_height">250dp</dimen>
+    <dimen name="ic_size">25dp</dimen>
     <!-- Text Sizes -->
-    <dimen name="text_size_large">20sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_small">11sp</dimen>
 

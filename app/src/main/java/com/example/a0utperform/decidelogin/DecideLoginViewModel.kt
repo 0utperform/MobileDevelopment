@@ -1,13 +1,11 @@
 package com.example.a0utperform.decidelogin
 
-import android.app.Activity
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.a0utperform.dashboard.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,11 +31,4 @@ class DecideLoginViewModel @Inject constructor(
         }
     }
 
-    fun signInWithFacebook(activity: Activity) {
-        authRepository.signInWithFacebook(
-            activity,
-            onSuccess = { _loginState.value = LoginState.Success(it) },
-            onError = { error -> _loginState.value = LoginState.Error(error) }
-        )
-    }
 }

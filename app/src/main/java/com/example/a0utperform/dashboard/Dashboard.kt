@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,6 @@ class Dashboard : AppCompatActivity() {
         val firebaseUser = auth.currentUser
 
         if (firebaseUser == null) {
-            // Not signed in, launch the Login activity
             startActivity(Intent(this, ActivityDecideLogin::class.java))
             finish()
             return

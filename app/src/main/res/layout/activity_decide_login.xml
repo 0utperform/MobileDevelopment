@@ -96,28 +96,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFacebookLogIn"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/button_height"
-        android:text="@string/btn_facebook_login"
-        android:fontFamily="@font/roboto_regular"
-        android:textColor="@color/black"
-        android:textAllCaps="false"
-        app:iconTint="@null"
-        app:icon="@drawable/ic_facebook"
-        app:cornerRadius="@dimen/corner_radius"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/padding_medium"
-        android:layout_marginTop="@dimen/margin_top_small"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
-        app:strokeColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/btnGoogleLogIn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
     <ImageView
         android:id="@+id/login_option_wall"
         android:layout_width="0dp"
@@ -128,7 +106,7 @@
         android:src="@drawable/option_wall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFacebookLogIn" />
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogleLogIn" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sign_in"

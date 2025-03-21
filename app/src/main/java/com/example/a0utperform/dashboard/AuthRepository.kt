@@ -1,24 +1,19 @@
-package com.example.a0utperform.decidelogin
+package com.example.a0utperform.dashboard
 
-import android.app.Activity
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.credentials.CredentialManager
 
 
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import com.example.a0utperform.R
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
@@ -54,28 +49,35 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun signInWithFacebook(
-        activity: Activity,
-        onSuccess: (FirebaseUser?) -> Unit,
-        onError: (String) -> Unit
-    ) {
-        LoginManager.getInstance().logInWithReadPermissions(
-            activity, listOf("email", "public_profile")
-        )
-
-        LoginManager.getInstance().registerCallback(
-            CallbackManager.Factory.create(),
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult) {
-                    val credential = FacebookAuthProvider.getCredential(result.accessToken.token)
-                    auth.signInWithCredential(credential)
-                        .addOnSuccessListener { onSuccess(it.user) }
-                        .addOnFailureListener { onError(it.message ?: "Facebook login failed") }
-                }
-
-                override fun onCancel() = onError("Facebook login canceled")
-                override fun onError(error: FacebookException) = onError(error.message ?: "Error")
-            }
-        )
+    suspend fun registerUser(email: String, password: String): Result<FirebaseUser?> {
+        return try {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            Result.success(result.user)
+        } catch (e: FirebaseAuthWeakPasswordException) {
+            Result.failure(Exception("Weak password: ${e.reason}"))
+        } catch (e: FirebaseAuthUserCollisionException) {
+            Result.failure(Exception("Email already in use"))
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Result.failure(Exception("Invalid email format"))
+        } catch (e: FirebaseAuthException) {
+            Result.failure(Exception(e.message ?: "Authentication failed"))
+        }
     }
+
+    suspend fun loginUser(email: String, password: String): Result<FirebaseUser?> {
+        return try {
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            Result.success(result.user)
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Result.failure(Exception("Invalid credentials"))
+        } catch (e: FirebaseAuthException) {
+            Result.failure(Exception(e.message ?: "Authentication failed"))
+        }
+    }
+
+    fun signOut() {
+        auth.signOut()
+    }
+
+    fun getCurrentUser(): FirebaseUser? = auth.currentUser
 }

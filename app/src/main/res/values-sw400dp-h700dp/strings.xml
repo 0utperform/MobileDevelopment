@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="role_placeholder">Staff</string>
+    <string name="clock_in_button">Clock In</string>
+    <string name="task_label">Your Task</string>
+</resources>
