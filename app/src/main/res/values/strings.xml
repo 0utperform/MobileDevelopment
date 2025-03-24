@@ -14,6 +14,7 @@
     <string name="password_hint">Password</string>
     <string name="email_hint">Email</string>
     <string name="signUp">Don’t have an account? Sign up</string>
+    <string name="register">Register</string>
     <string name="login_now">login now</string>
     <!-- Strings used for fragments for navigation -->
     <string name="register_your_account">to create your account</string>

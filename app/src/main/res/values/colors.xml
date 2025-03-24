@@ -4,4 +4,5 @@
     <color name="primaryColor">#FFFFFFFF</color>
     <color name="brandBlue">#4A99ED</color>
     <color name="gray">#969696</color>
+    <color name="brandBlueNight">#2C5B89</color>
 </resources>

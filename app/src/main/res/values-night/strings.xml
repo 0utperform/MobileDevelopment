@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name"><font color ="#FFFFFF">Out</font><font color='#4A99ED'>Perform</font></string>
     <string name="logodescription">OutperformLogo</string>
-    <string name="app_name">Out<font color='#000000'>to</font> <font color='#4A99ED'>Perform</font></string>
     <string name="greet_login">Hi! Welcome to</string>
     <string name="login_description">First you need to login so we can make adjustments to your account</string>
     <string name="login">Login</string>
     <string name="btn_google_login">Connect with Google</string>
     <string name="btn_facebook_login">Connect With Facebook</string>
     <string name="pass_signin">Sign In With Password</string>
-    <string name="signUp">Don’t have an account? Sign up</string>
+    <string name="sign_up"><font color='#898989'>Don’t have an account?</font><font color='#4A99ED'> Sign up</font></string>
     <string name="log_in"><font color='#898989'>Don’t have an account?</font><font color='#4A99ED'> Log In</font></string>
-    <string name="login_now">loginnow</string>
+    <string name="your_account">to your account</string>
     <string name="pass_login">Login</string>
     <string name="password_hint">Password</string>
     <string name="email_hint">Email</string>
+    <string name="signUp">Don’t have an account? Sign up</string>
+    <string name="register">Register</string>
+    <string name="login_now">login now</string>
+    <!-- Strings used for fragments for navigation -->
     <string name="register_your_account">to create your account</string>
     <string name="full_name">Full name</string>
     <string name="phone_hint">Phone Number</string>
     <string name="password_confirmaton_hint">Password Confirmation</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
     <string name="client_id">1053351222036-ekud8l21pj6ss7rhdk930h48595dhqo7.apps.googleusercontent.com</string>
     <string name="sign_out">Log Out</string>
     <string name="facebook_app_id">570253492733448</string>
     <string name="profile_placeholder">placeholder image for profile picture</string>
     <string name="time_placeholder">09:10 AM</string>
     <string name="date_placeholder">March 12, 2024 - Saturday</string>
-    <string name="placeholder_percent">94 %</string>
+    <string name="placeholder_percent">94%</string>
     <string name="percent_desc">Monthly Attendance</string>
     <string name="clock_in">Clock In</string>
     <string name="time">--:-- AM</string>
@@ -33,4 +41,5 @@
     <string name="role_placeholder">Staff</string>
     <string name="clock_in_button">Clock In</string>
     <string name="task_label">Your Task</string>
+
 </resources>
