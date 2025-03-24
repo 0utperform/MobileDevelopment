@@ -4,15 +4,24 @@
 
     </style>
 
+    <style name="Widget.OutlineButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="backgroundTint">@android:color/white</item>
+        <item name="strokeColor">@color/black</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="textFillColor">@color/black</item>
+    </style>
+
     <style name="Theme.Dashboard" parent="Theme.MaterialComponents.DayNight">
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+        <item name="android:navigationBarColor">@color/brandBlueNight</item>
+        <item name="android:statusBarColor">@color/brandBlueNight</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">@color/brandBlueNight</item>
+        <item name="colorPrimaryVariant">@color/brandBlueNight</item>
     </style>
 
     <!-- Custom CardView Style -->
     <style name="CustomMaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
-        <item name="strokeColor">@color/brandBlue</item>
+        <item name="strokeColor">@color/brandBlueNight</item>
         <item name="strokeWidth">2dp</item>
         <item name="cardElevation">4dp</item>
         <item name="cornerRadius">12dp</item>
@@ -22,5 +31,6 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
 
 </resources>

@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-        android:name=".decidelogin.MyApplication"
+        android:name=".ui.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,16 +22,16 @@
             android:value="8126cf32e18c6c7f49a6d9f14f819a70" />
 
         <activity
-            android:name=".dashboard.Dashboard"
+            android:name=".ui.dashboard.ActivityMain"
             android:exported="false"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/Theme.Dashboard"/>
         <activity
-            android:name=".register.RegisterActivity"
+            android:name=".ui.register.RegisterActivity"
             android:exported="false"
             android:theme="@style/Base.Theme._0utPerform"/>
         <activity
-            android:name=".splash.SplashActivity"
+            android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Base.Theme._0utPerform">
             <intent-filter>
@@ -41,12 +41,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".decidelogin.ActivityDecideLogin"
+            android:name=".ui.decidelogin.ActivityDecideLogin"
             android:exported="true"
             android:theme="@style/Base.Theme._0utPerform">
         </activity>
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Base.Theme._0utPerform"
              >

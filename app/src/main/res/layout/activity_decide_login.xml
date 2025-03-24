@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".decidelogin.ActivityDecideLogin">
+    tools:context=".ui.decidelogin.ActivityDecideLogin">
 
     <TextView
         android:id="@+id/greeting"
@@ -86,7 +86,6 @@
         app:cornerRadius="@dimen/corner_radius"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/padding_medium"
-        app:strokeColor="@color/black"
         android:textAllCaps="false"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_medium"
@@ -94,7 +93,8 @@
         app:layout_constraintTop_toBottomOf="@id/login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        style="@style/Widget.OutlineButton"
+        />
 
     <ImageView
         android:id="@+id/login_option_wall"

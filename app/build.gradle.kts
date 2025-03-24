@@ -50,12 +50,14 @@ android {
 
 dependencies {
 
+    implementation (libs.firebase.firestore.ktx)
     implementation(libs.play.services.auth)
 
     implementation (libs.material)
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.datastore.preferences)
     kapt (libs.hilt.android.compiler)
 
     implementation (libs.facebook.login)
