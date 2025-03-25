@@ -11,16 +11,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.a0utperform.data.datastore.UserModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: AuthRepository,
-    private val userPreference: UserPreference // Inject your DataStore helper
+    private val userPreference: UserPreference
 ) : ViewModel() {
 
     private val _loginState = MutableLiveData<Result<FirebaseUser?>>()
     val loginState: LiveData<Result<FirebaseUser?>> get() = _loginState
+
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {

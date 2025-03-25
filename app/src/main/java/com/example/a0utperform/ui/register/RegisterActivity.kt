@@ -33,6 +33,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         observeRegisterState()
+
+
     }
 
     private fun observeRegisterState() {

@@ -7,7 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.datastore.UserModel
 import com.example.a0utperform.data.datastore.UserPreference
 import com.example.a0utperform.data.repository.AuthRepository
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,11 +18,13 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val repository: AuthRepository,
-    private val userPreference: UserPreference  // Inject DataStore helper
+    private val userPreference: UserPreference
 ) : ViewModel() {
 
     private val _registerState = MutableLiveData<Result<FirebaseUser?>>()
     val registerState: LiveData<Result<FirebaseUser?>> get() = _registerState
+
+
 
     fun registerUser(email: String, password: String, phone: String) {
         viewModelScope.launch {
@@ -42,4 +47,6 @@ class RegisterViewModel @Inject constructor(
             _registerState.value = result
         }
     }
+
+
 }

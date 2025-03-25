@@ -11,12 +11,19 @@
         <item name="textFillColor">@color/black</item>
     </style>
 
-    <style name="Theme.Dashboard" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.Dashboard" parent="Theme.MaterialComponents.Light">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/brandBlue</item>
+        <item name="colorPrimaryVariant">@color/brandBlue</item>
+        <item name="colorControlHighlight">@color/brandBlue</item>
+        <item name="actionBarStyle">@style/CustomActionBarStyle</item>
     </style>
-
+    <style name="CustomActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/brandBlue</item>
+        <item name="android:elevation">4dp</item>
+    </style>
 <!-- Custom CardView Style -->
 <style name="CustomMaterialCardViewStyle" parent="Widget.MaterialComponents.CardView">
     <item name="strokeColor">@color/brandBlue</item>
