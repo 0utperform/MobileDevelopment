@@ -84,7 +84,7 @@ class AuthRepository @Inject constructor(
     }
 
 
-    suspend fun registerUser(email: String, password: String, phone: String): Result<FirebaseUser?> {
+    suspend fun registerUser(name:String, email: String, phone: String, password: String): Result<FirebaseUser?> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val firebaseUser = result.user
@@ -92,6 +92,7 @@ class AuthRepository @Inject constructor(
                 // Create a user profile map to store additional details
                 val userProfile = hashMapOf(
                     "uid" to user.uid,
+                    "name" to  name,
                     "email" to (user.email ?: ""),
                     "phone" to phone,
                     "createdAt" to FieldValue.serverTimestamp()
