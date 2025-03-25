@@ -2,6 +2,7 @@ package com.example.a0utperform.ui.register
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,14 +22,20 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.signIn.setOnClickListener {
+            val name = binding.edName.text.toString().trim()
             val email = binding.edEmail.text.toString().trim()
             val password = binding.edPassword.text.toString().trim()
             val phone = binding.edPhone.text.toString().trim()
+            val confirmPassword = binding.edPasswordConfirmation.text.toString().trim()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                registerViewModel.registerUser(email, password, phone)
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || confirmPassword.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
+            } else if (password != confirmPassword) {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
+                registerViewModel.registerUser(name, email, phone, password)
             }
         }
 

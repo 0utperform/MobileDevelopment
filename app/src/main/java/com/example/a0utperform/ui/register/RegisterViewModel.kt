@@ -26,10 +26,10 @@ class RegisterViewModel @Inject constructor(
 
 
 
-    fun registerUser(email: String, password: String, phone: String) {
+    fun registerUser(name:String, email: String, phone: String, password: String) {
         viewModelScope.launch {
             // Register the user using Firebase Auth
-            val result = repository.registerUser(email, password, phone)
+            val result = repository.registerUser(name, email, phone, password)
             if (result.isSuccess) {
                 result.getOrNull()?.let { firebaseUser ->
                     // Convert FirebaseUser to your local UserModel.
