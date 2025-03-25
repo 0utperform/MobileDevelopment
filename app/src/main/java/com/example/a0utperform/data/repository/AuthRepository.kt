@@ -1,6 +1,9 @@
 package com.example.a0utperform.data.repository
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.credentials.CredentialManager
 
 
@@ -11,6 +14,7 @@ import com.example.a0utperform.data.datastore.UserModel
 import com.example.a0utperform.data.datastore.UserPreference
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -26,6 +30,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class AuthRepository @Inject constructor(
     private val auth: FirebaseAuth,
@@ -77,7 +84,6 @@ class AuthRepository @Inject constructor(
     }
 
 
-
     suspend fun registerUser(email: String, password: String, phone: String): Result<FirebaseUser?> {
         return try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
@@ -113,20 +119,8 @@ class AuthRepository @Inject constructor(
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             Result.success(result.user)
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            if (e.errorCode == "ERROR_WRONG_PASSWORD") {
-                Result.failure(Exception("Wrong password. Please try again."))
-            } else if (e.errorCode == "ERROR_USER_NOT_FOUND") {
-                Result.failure(Exception("No account found with this email."))
-            } else {
-                Result.failure(Exception("Invalid email or password."))
-            }
         } catch (e: FirebaseAuthException) {
-            if (e.errorCode == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL") {
-                Result.failure(Exception("This account is registered via Google. Please use Google sign-in."))
-            } else {
-                Result.failure(Exception(e.message ?: "Authentication failed"))
-            }
+                Result.failure(Exception("Wrong Email or Password,or try using Google"))
         }
     }
     fun signOut() {

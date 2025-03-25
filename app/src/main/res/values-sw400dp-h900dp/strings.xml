@@ -40,5 +40,5 @@
     <string name="role_placeholder">Staff</string>
     <string name="clock_in_button">Clock In</string>
     <string name="task_label">Your Task</string>
-
+    <string name="google_login_notice">Google linked account cannot be logged in using email, please login using google.</string>
 </resources>

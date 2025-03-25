@@ -2,6 +2,7 @@ package com.example.a0utperform.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -26,10 +27,19 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.edEmail.text.toString().trim()
             val password = binding.edPassword.text.toString().trim()
 
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                loginViewModel.loginUser(email, password)
-            } else {
-                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
+            when {
+                email.isEmpty() || password.isEmpty() -> {
+                    Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
+                }
+                password.length < 8 -> {
+                    Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    Toast.makeText(this,"Please Enter a Valid Email Address", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    loginViewModel.loginUser(email, password)
+                }
             }
         }
 
