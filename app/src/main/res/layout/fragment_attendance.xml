@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.dashboard.dashboard.DashboardFragment"
+    android:fillViewport="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.notifications.AttendanceFragment">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/dateCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Month Navigation -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_arrow_left"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_arrow_left"
+                    android:contentDescription="Previous Month"
+                    android:padding="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_month"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="March 2025"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:id="@+id/iv_arrow_right"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="Next Month"
+                    android:padding="8dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/margin_small">
+
+                <include layout="@layout/calendar_grid" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:alignmentMode="alignMargins"
+                        android:layout_marginTop="@dimen/margin_small"
+                        />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
+
+                    <!-- Example Legend Items -->
+                    <LinearLayout
+                        android:padding="@dimen/padding_small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="start"
+                        android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:text="D"
+                            android:background="@drawable/circle_shape"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Today"
+                            android:layout_marginEnd="@dimen/margin_large"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                        <TextView
+                            android:text="D"
+                            android:textColor="@color/primaryColor"
+                            android:background="@drawable/full_day"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Full Day"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="start"
+                        android:padding="@dimen/padding_small"
+                        android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:text="D"
+                            android:textColor="@color/primaryColor"
+                            android:background="@drawable/early_leave"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Early Leave"
+                            android:layout_marginEnd="46dp"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                        <TextView
+                            android:text="D"
+                            android:textColor="@color/primaryColor"
+                            android:background="@drawable/absent"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Absent"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:padding="@dimen/padding_small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="start"
+                        android:layout_marginTop="4dp">
+
+                        <TextView
+                            android:text="D"
+                            android:textColor="@color/primaryColor"
+                            android:background="@drawable/approved_leave"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Approved Leave"
+                            android:layout_marginEnd="18dp"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                        <TextView
+                            android:text="D"
+                            android:textColor="@color/primaryColor"
+                            android:background="@drawable/selected_date"
+                            style="@style/CalendarDateStyle"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Selected"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"/>
+
+                    </LinearLayout>
+
+            </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/leave_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text= "Leave Request"
+        android:textSize="@dimen/text_size_large"
+        android:layout_margin="@dimen/margin_medium"
+        android:fontFamily="@font/inter_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateCard" />
+
+    <Button
+        android:id="@+id/btn_approved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Approved"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_outlinedbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leave_label"/>
+
+    <Button
+        android:id="@+id/btn_rejected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rejected"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_outlinedbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="@id/btn_approved"
+        app:layout_constraintTop_toBottomOf="@+id/leave_label"/>
+
+    <Button
+        android:id="@+id/btn_requested"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Requested"
+        android:textColor="@color/primaryColor"
+        android:background="@drawable/bg_blue_filledbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="@id/btn_rejected"
+        app:layout_constraintTop_toBottomOf="@+id/leave_label"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_leave_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_approved" />
+
+    <TextView
+        android:id="@+id/monthly_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text= "Monthly Attendance"
+        android:textSize="@dimen/text_size_large"
+        android:layout_margin="@dimen/margin_medium"
+        android:fontFamily="@font/inter_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_leave_request" />
+
+    <Button
+        android:id="@+id/btn_full_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Full Day"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_filledbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_label"/>
+
+    <Button
+        android:id="@+id/btn_early_leave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Early Leave"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_outlinedbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="@id/btn_full_day"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_label"/>
+
+    <Button
+        android:id="@+id/btn_approved_leave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Approved Leave"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_outlinedbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="@id/btn_early_leave"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_label"/>
+
+    <Button
+        android:id="@+id/btn_absent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Absent"
+        android:textColor="@color/brandBlue"
+        android:background="@drawable/bg_blue_outlinedbutton"
+        android:textAllCaps="false"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_top_small"
+        app:layout_constraintStart_toEndOf="@id/btn_approved_leave"
+        app:layout_constraintTop_toBottomOf="@+id/monthly_label"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_monthly_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_top_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_full_day" />
+
+    <com.google.android.material.button.MaterialButton
+        android:contentDescription="Request Leave Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Request Leave"
+        android:textColor="@color/primaryColor"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_monthly_attendance"
+        android:background="@drawable/bg_blue_filledbutton"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
