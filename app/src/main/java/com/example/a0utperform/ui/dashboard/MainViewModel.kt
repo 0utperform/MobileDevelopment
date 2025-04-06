@@ -6,7 +6,9 @@ import androidx.credentials.CredentialManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.a0utperform.data.datastore.UserModel
 import com.example.a0utperform.data.datastore.UserPreference
 import com.example.a0utperform.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,11 +24,11 @@ class MainViewModel @Inject constructor(
     private val _signOutState = MutableLiveData<Boolean>()
     val signOutState: LiveData<Boolean> get() = _signOutState
 
-    fun signOut(context: Context) {
+    val userSession: LiveData<UserModel?> = userPreference.getSession().asLiveData()
+
+    fun signOut() {
         viewModelScope.launch {
-            val credentialManager = CredentialManager.create(context)
             repository.signOut()
-            credentialManager.clearCredentialState(ClearCredentialStateRequest())
             userPreference.logout()
             _signOutState.postValue(true)
         }

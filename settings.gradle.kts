@@ -16,9 +16,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        }
     }
-}
 
 rootProject.name = "0utPerform"
-include(":app")
- 
+    include(":app")

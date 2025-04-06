@@ -65,7 +65,7 @@
         app:helperText="Enter a valid email">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_email"
+            android:id="@+id/ed_email_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"/>
@@ -91,7 +91,7 @@
         app:helperText="Password must be at least 8 characters">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_password"
+            android:id="@+id/ed_password_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"/>

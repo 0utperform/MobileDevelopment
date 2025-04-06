@@ -1,142 +1,108 @@
 package com.example.a0utperform.data.repository
 
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.credentials.CredentialManager
-
-
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.GetCredentialException
-import com.example.a0utperform.R
+import com.example.a0utperform.data.datastore.UserData
 import com.example.a0utperform.data.datastore.UserModel
 import com.example.a0utperform.data.datastore.UserPreference
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.providers.Google
+import io.github.jan.supabase.auth.providers.OAuthProvider
+import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
-
+import javax.inject.Singleton
+@Singleton
 class AuthRepository @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val credentialManager: CredentialManager,
-    private val firestore: FirebaseFirestore,
+    private val supabaseAuth: Auth,
+    private val supabaseDatabase: Postgrest,
     private val userPreference: UserPreference
 ) {
-    suspend fun signInWithGoogle(context: Context): FirebaseUser? {
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(context.getString(R.string.client_id))
-            .build()
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val result = credentialManager.getCredential(context, request)
-                val googleToken = (result.credential as? GoogleIdTokenCredential)?.idToken
-                    ?: throw Exception("Google ID token not found")
-                val credential = GoogleAuthProvider.getCredential(googleToken, null)
-                val authResult = auth.signInWithCredential(credential).await()
-                val user = authResult.user ?: return@withContext null
-
-                val userDoc = firestore.collection("users").document(user.uid).get().await()
-
-                if (!userDoc.exists()) {
-                    throw Exception("User does not exist. Please register first.")
-                }
-                else {
-                    val userModel = UserModel(
-                        userId = userDoc.getString("uid") ?: "",
-                        name = userDoc.getString("name") ?: "",
-                        email = userDoc.getString("email") ?: "",
-                        phone = userDoc.getString("phone") ?: "",
-                        isLogin = true
-                    )
-
-                    userPreference.saveSession(userModel)
-                }
-
-                user
-            } catch (e: GetCredentialException) {
-                throw Exception("Google Sign-in failed: ${e.message}")
-            }
-        }
-    }
-
-
-    suspend fun registerUser(name:String, email: String, phone: String, password: String): Result<FirebaseUser?> {
+    suspend fun registerUser(name: String, email: String, password: String, phone:String): Result<UserModel> {
         return try {
-            val result = auth.createUserWithEmailAndPassword(email, password).await()
-            val firebaseUser = result.user
-            firebaseUser?.let { user ->
-                // Create a user profile map to store additional details
-                val userProfile = hashMapOf(
-                    "uid" to user.uid,
-                    "name" to  name,
-                    "email" to (user.email ?: ""),
-                    "phone" to phone,
-                    "createdAt" to FieldValue.serverTimestamp()
-                )
-                firestore.collection("users")
-                    .document(user.uid)
-                    .set(userProfile)
-                    .await()
+            val response = supabaseAuth.signUpWith(Email) {
+                this.email = email
+                this.password = password
+
+                this.data = buildJsonObject {
+                    put("display_name", JsonPrimitive(name))
+                    put("phone", JsonPrimitive(phone))
+                }
+
             }
-            Result.success(firebaseUser)
-        } catch (e: FirebaseAuthWeakPasswordException) {
-            Result.failure(Exception("Weak password: ${e.reason}"))
-        } catch (e: FirebaseAuthUserCollisionException) {
-            Result.failure(Exception("Email already in use"))
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            Result.failure(Exception("Invalid email format"))
-        } catch (e: FirebaseAuthException) {
-            Result.failure(Exception(e.message ?: "Authentication failed"))
+
+            val session = supabaseAuth.currentSessionOrNull() ?: return Result.failure(Exception("Session is null"))
+            val user = session.user ?: return Result.failure(Exception("User is null"))
+
+            // Save user details in Supabase database
+            val userData = UserData(
+                user_id = user.id,
+                name = name,
+                email = email,
+                phone = phone,
+                created_at = Clock.System.now().toString()
+
+            )
+            supabaseDatabase.from("users").insert(userData)
+
+            val userModel = UserModel(user.id, email, name, phone, isLogin = true)
+
+            userPreference.saveSession(userModel)
+            Result.success(userModel)
         } catch (e: Exception) {
-
-            Result.failure(e)
+            Result.failure(Exception("Registration failed: ${e.message}"))
         }
     }
-    suspend fun loginUser(email: String, password: String): Result<FirebaseUser?> {
+
+    suspend fun loginUser(email: String, password: String): Result<UserModel> {
         return try {
-            val result = auth.signInWithEmailAndPassword(email, password).await()
-            Result.success(result.user)
-        } catch (e: FirebaseAuthException) {
-                Result.failure(Exception("Wrong Email or Password,or try using Google"))
+            val response = supabaseAuth.signInWith(Email) {
+                this.email = email
+                this.password = password
+            }
+
+
+            val session = supabaseAuth.currentSessionOrNull()
+                ?: return Result.failure(Exception("Session is null"))
+
+            val user = session.user
+                ?: return Result.failure(Exception("User is not found, please register first!"))
+
+            val usersList = supabaseDatabase
+                .from("users")
+                .select(Columns.list())
+                .decodeList<UserData>()
+
+            val userData = usersList.find { it.user_id == user.id }
+                ?: return Result.failure(Exception("User not found"))
+
+            val userModel = UserModel(user.id, email, userData.name, userData.phone, isLogin = true)
+
+
+            userPreference.saveSession(userModel)
+
+            Result.success(userModel)
+        } catch (e: Exception) {
+            Log.e("LoginError", "Login failed", e)
+            Result.failure(Exception("Login failed: ${e.message}"))
         }
     }
-    fun signOut() {
-        auth.signOut()
+
+    suspend fun signOut() {
+        supabaseAuth.signOut()
+
+        userPreference.logout()
     }
 
-    suspend fun getCurrentUser(): UserModel? {
-        val uid = auth.currentUser?.uid ?: return null
-
-        val documentSnapshot = FirebaseFirestore.getInstance()
-            .collection("users")
-            .document(uid)
-            .get()
-            .await()
-
-        return documentSnapshot.toObject(UserModel::class.java)
+    fun getCurrentUser(): Flow<UserModel> {
+        return userPreference.getSession()
     }
 }

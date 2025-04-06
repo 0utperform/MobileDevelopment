@@ -17,18 +17,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.auth.Auth
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var auth: FirebaseAuth
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,14 +37,6 @@ class ActivityMain : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        auth = Firebase.auth
-        val firebaseUser = auth.currentUser
-
-        if (firebaseUser == null) {
-            navigateToLogin()
-            return
-        }
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_dashboard)
@@ -72,7 +60,7 @@ class ActivityMain : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sign_out_menu -> {
-                mainViewModel.signOut(this)
+                mainViewModel.signOut()
                 true
             }
             else -> super.onOptionsItemSelected(item)

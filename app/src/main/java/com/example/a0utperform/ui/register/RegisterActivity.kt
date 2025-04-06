@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
             } else if (password != confirmPassword) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             } else {
-                registerViewModel.registerUser(name, email, phone, password)
+                registerViewModel.registerUser(name, email, password, phone)
             }
         }
 
@@ -45,7 +45,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun observeRegisterState() {
-        registerViewModel.registerState.observe(this) { result ->
+        registerViewModel.registerResult.observe(this) { result ->
             result.onSuccess { user ->
                 Toast.makeText(this, "Account created for ${user?.email}", Toast.LENGTH_SHORT).show()
                 Intent(this, ActivityMain::class.java).also { intent ->

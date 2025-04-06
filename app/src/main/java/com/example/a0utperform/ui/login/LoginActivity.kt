@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityLoginBinding
 import com.example.a0utperform.ui.dashboard.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
-
-
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
@@ -24,8 +22,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.login.setOnClickListener {
-            val email = binding.edEmail.text.toString().trim()
-            val password = binding.edPassword.text.toString().trim()
+            val email = binding.edEmailLogin.text.toString().trim()
+            val password = binding.edPasswordLogin.text.toString().trim()
 
             when {
                 email.isEmpty() || password.isEmpty() -> {
@@ -35,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT).show()
                 }
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                    Toast.makeText(this,"Please Enter a Valid Email Address", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     loginViewModel.loginUser(email, password)
@@ -47,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun observeLoginState() {
-        loginViewModel.loginState.observe(this) { result ->
+        loginViewModel.loginResult.observe(this) { result ->
             result?.onSuccess { user ->
                 Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
                 Intent(this, ActivityMain::class.java).also { intent ->

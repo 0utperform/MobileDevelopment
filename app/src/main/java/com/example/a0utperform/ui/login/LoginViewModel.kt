@@ -6,45 +6,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.datastore.UserPreference
 import com.example.a0utperform.data.repository.AuthRepository
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.example.a0utperform.data.datastore.UserModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
-
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: AuthRepository,
-    private val userPreference: UserPreference
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _loginState = MutableLiveData<Result<FirebaseUser?>>()
-    val loginState: LiveData<Result<FirebaseUser?>> get() = _loginState
-
+    private val _loginResult = MutableLiveData<Result<UserModel?>>()
+    val loginResult: LiveData<Result<UserModel?>> get() = _loginResult
 
     fun loginUser(email: String, password: String) {
         viewModelScope.launch {
-            val result = repository.loginUser(email, password)
-            if (result.isSuccess) {
-                result.getOrNull()?.let { firebaseUser ->
-                    // Convert FirebaseUser to your UserModel.
-                    val userModel = UserModel(
-                        userId = firebaseUser.uid,
-                        name = firebaseUser.displayName ?: "User",
-                        email = firebaseUser.email ?: "",
-                        phone = firebaseUser.phoneNumber?:"",
-                        isLogin = true
-                    )
-                    // Save session locally using DataStore.
-                    userPreference.saveSession(userModel)
-                }
-            }
-            _loginState.value = result
+            val result = authRepository.loginUser(email, password)
+            _loginResult.value = result
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            authRepository.signOut()
         }
     }
 }

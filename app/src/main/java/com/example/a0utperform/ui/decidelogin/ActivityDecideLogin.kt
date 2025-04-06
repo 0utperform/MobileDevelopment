@@ -11,9 +11,7 @@ import com.example.a0utperform.databinding.ActivityDecideLoginBinding
 import com.example.a0utperform.ui.dashboard.ActivityMain
 import com.example.a0utperform.ui.login.LoginActivity
 import com.example.a0utperform.ui.register.RegisterActivity
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +19,6 @@ class ActivityDecideLogin : AppCompatActivity() {
 
     private lateinit var binding: ActivityDecideLoginBinding
     private val viewModel: DecideLoginViewModel by viewModels()
-    private lateinit var auth : FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +26,6 @@ class ActivityDecideLogin : AppCompatActivity() {
         binding = ActivityDecideLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
-        val firebaseUser = auth.currentUser
-
-        if (firebaseUser != null) {
-            startActivity(Intent(this, ActivityMain::class.java))
-            finish()
-            return
-        }
 
         observeViewModel()
         setupClickListeners()
@@ -57,7 +46,7 @@ class ActivityDecideLogin : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        binding.btnGoogleLogIn.setOnClickListener { viewModel.signInWithGoogle(this) }
+        //binding.btnGoogleLogIn.setOnClickListener { viewModel.signInWithGoogle(this) }
         binding.signIn.setOnClickListener { navigateTo(LoginActivity::class.java) }
         binding.signUp.setOnClickListener { navigateTo(RegisterActivity::class.java) }
     }

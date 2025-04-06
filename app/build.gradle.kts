@@ -1,9 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("com.google.dagger.hilt.android")
     id ("kotlin-kapt")
+    id ("org.jetbrains.kotlin.plugin.serialization") version ("2.0.0")
 
 }
 
@@ -22,12 +25,18 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "SUPABASE_URL", "\"${properties.getProperty("SUPABASE_URL")}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${properties.getProperty("SUPABASE_ANON_KEY")}\"")
     }
     kapt{
         correctErrorTypes = true
     }
    buildFeatures{
        viewBinding = true
+       buildConfig = true
    }
 
     buildTypes {
@@ -49,9 +58,8 @@ android {
 }
 
 dependencies {
+    implementation (libs.kotlinx.metadata.jvm)
 
-    implementation (libs.firebase.firestore.ktx)
-    implementation(libs.play.services.auth)
 
     implementation (libs.material)
 
@@ -70,11 +78,17 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     //credential manager
-    implementation(libs.firebase.auth)
+    implementation(libs.supabase.kt)
+    implementation (libs.postgrest.kt)
+    implementation (libs.storage.kt)
+    implementation (libs.auth.kt)
+    implementation(libs.ktor.android.kt)
+    implementation(libs.ktor.core.kt)
+    implementation(libs.ktor.utils.kt)
+
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
