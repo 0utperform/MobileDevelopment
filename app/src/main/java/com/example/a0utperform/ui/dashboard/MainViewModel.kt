@@ -1,6 +1,8 @@
 package com.example.a0utperform.ui.dashboard
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.lifecycle.LiveData
@@ -31,6 +33,17 @@ class MainViewModel @Inject constructor(
             repository.signOut()
             userPreference.logout()
             _signOutState.postValue(true)
+        }
+    }
+    fun linkGoogleAccount(onResult: (Uri?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val uri = repository.getGoogleLinkUri()
+                onResult(uri)
+            } catch (e: Exception) {
+                Log.e("LinkGoogle", "Error creating link URI", e)
+                onResult(null)
+            }
         }
     }
 }

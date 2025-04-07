@@ -8,5 +8,5 @@ data class UserData(
     val name: String,
     val email: String,
     val phone: String,
-    val created_at : String
+    val created_at : String,
 )

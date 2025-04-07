@@ -39,18 +39,25 @@ class ActivityDecideLogin : AppCompatActivity() {
                     startActivity(Intent(this, ActivityMain::class.java))
                     finish()
                 }
-                is LoginState.Error -> showToast(state.message)
-                is LoginState.Loading -> showLoading(true)
+                is LoginState.Error -> {
+                    showLoading(false)
+                    showToast(state.message)
+                }
+                is LoginState.Loading -> {
+                    showLoading(true)
+                }
             }
         }
     }
 
+
     private fun setupClickListeners() {
-        //binding.btnGoogleLogIn.setOnClickListener { viewModel.signInWithGoogle(this) }
+        binding.btnGoogleLogIn.setOnClickListener {
+            viewModel.signInWithGoogle(this)
+        }
         binding.signIn.setOnClickListener { navigateTo(LoginActivity::class.java) }
         binding.signUp.setOnClickListener { navigateTo(RegisterActivity::class.java) }
     }
-
     private fun navigateTo(destination: Class<*>) {
         startActivity(Intent(this, destination))
     }
@@ -59,7 +66,8 @@ class ActivityDecideLogin : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
+
     private fun showLoading(isLoading: Boolean) {
-        // Show loading indicator logic
+        //binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

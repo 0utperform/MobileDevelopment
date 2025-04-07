@@ -1,9 +1,11 @@
 package com.example.a0utperform.ui.dashboard
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +16,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import kotlinx.coroutines.launch
 
@@ -25,6 +29,7 @@ import kotlinx.coroutines.launch
 class ActivityMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var supabaseAuth : Auth
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +55,12 @@ class ActivityMain : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         observeSignOut()
+
+        val data: Uri? = intent?.data
+        if (data != null && data.toString().startsWith("yourapp://callback")) {
+            // Optionally re-fetch session or confirm linking
+            Toast.makeText(this, "Google account linked successfully", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -61,6 +72,13 @@ class ActivityMain : AppCompatActivity() {
         return when (item.itemId) {
             R.id.sign_out_menu -> {
                 mainViewModel.signOut()
+                true
+            }
+            R.id.link_google_account_menu -> {
+                mainViewModel.linkGoogleAccount { uri ->
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

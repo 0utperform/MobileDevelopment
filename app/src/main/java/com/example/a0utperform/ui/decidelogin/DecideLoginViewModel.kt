@@ -25,4 +25,19 @@ class DecideLoginViewModel @Inject constructor(
 
 
     val userSession: LiveData<UserModel?> = userPreference.getSession().asLiveData()
+
+    fun signInWithGoogle(context: Context) {
+        _loginState.value = LoginState.Loading
+
+        viewModelScope.launch {
+            val result = authRepository.signInWithGoogleIdToken(context)
+            result
+                .onSuccess {
+                    _loginState.value = LoginState.Success("Welcome, ${it.name}")
+                }
+                .onFailure {
+                    _loginState.value = LoginState.Error(it.message ?: "Unknown error")
+                }
+        }
+    }
 }
