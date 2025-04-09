@@ -28,6 +28,11 @@
         android:name="com.example.a0utperform.ui.main_activity.leaderboard.LeaderboardFragment"
         android:label="@string/title_leaderboard"
         tools:layout="@layout/fragment_leaderboard" />
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.a0utperform.ui.main_activity.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
 
 
 </navigation>

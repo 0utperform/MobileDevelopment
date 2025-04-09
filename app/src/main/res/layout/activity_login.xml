@@ -27,7 +27,6 @@
         android:text="@string/your_account"
         android:textSize="@dimen/text_size_medium"
         android:fontFamily="@font/roboto_medium"
-        android:textColor="@color/black"
         android:layout_marginStart="@dimen/margin_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_in_login_activity" />
