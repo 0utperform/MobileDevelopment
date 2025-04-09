@@ -21,24 +21,11 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-
     val userSession: LiveData<UserModel?> = userPreference.getSession().asLiveData()
-
     fun signOut() {
         viewModelScope.launch {
             repository.signOut()
             userPreference.logout()
-        }
-    }
-    fun linkGoogleAccount(onResult: (Uri?) -> Unit) {
-        viewModelScope.launch {
-            try {
-                val uri = repository.getGoogleLinkUri()
-                onResult(uri)
-            } catch (e: Exception) {
-                Log.e("LinkGoogle", "Error creating link URI", e)
-                onResult(null)
-            }
         }
     }
 }

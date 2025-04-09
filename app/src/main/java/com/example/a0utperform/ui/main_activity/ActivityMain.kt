@@ -53,8 +53,7 @@ class ActivityMain : AppCompatActivity() {
 
         val data: Uri? = intent?.data
         if (data != null && data.toString().startsWith("outperform://auth")) {
-            // Optionally re-fetch session or confirm linking
-            Toast.makeText(this, "Google account linked successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Account Verified Successfully", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -67,13 +66,6 @@ class ActivityMain : AppCompatActivity() {
         return when (item.itemId) {
             R.id.sign_out_menu -> {
                 mainViewModel.signOut()
-                true
-            }
-            R.id.link_google_account_menu -> {
-                mainViewModel.linkGoogleAccount { uri ->
-                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                    startActivity(intent)
-                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

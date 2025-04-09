@@ -141,8 +141,7 @@ class AuthRepository @Inject constructor(
                 }
             }
 
-            // After sign up, user must verify their email before logging in
-            return Result.failure(Exception("Registration successful. Please verify your email before logging in."))
+            return Result.failure(Exception("Registration successful. Please verify your email "))
         } catch (e: Exception) {
             Result.failure(Exception("Registration failed: ${e.message}"))
         }
@@ -203,13 +202,6 @@ class AuthRepository @Inject constructor(
 
         supabaseDatabase.from("users").insert(newUser)
         return newUser
-    }
-    fun getGoogleLinkUri(): Uri {
-        val redirectUri = "outperform://auth"
-        val linkUrl = "${BuildConfig.SUPABASE_URL}/auth/v1/authorize" +
-                "?provider=google&redirect_to=$redirectUri"
-
-        return Uri.parse(linkUrl)
     }
 
 }

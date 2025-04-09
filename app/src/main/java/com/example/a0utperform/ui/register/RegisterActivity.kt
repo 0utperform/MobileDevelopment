@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityRegisterBinding
+import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
+import com.example.a0utperform.ui.decidelogin.DecideLoginViewModel
 import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,14 +30,26 @@ class RegisterActivity : AppCompatActivity() {
             val phone = binding.edPhone.text.toString().trim()
             val confirmPassword = binding.edPasswordConfirmation.text.toString().trim()
 
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
-            } else if (password != confirmPassword) {
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            } else {
-                registerViewModel.registerUser(name, email, password, phone)
+            fun isValidPhoneNumber(number: String): Boolean {
+                return number.length in 10..15 && number.all { it.isDigit() }
+            }
+
+            when {
+                name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || confirmPassword.isEmpty() -> {
+                    Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                }
+                !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                    Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
+                }
+                !isValidPhoneNumber(phone) -> {
+                    Toast.makeText(this, "Phone number must be 10-15 digits with no symbols", Toast.LENGTH_SHORT).show()
+                }
+                password != confirmPassword -> {
+                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    registerViewModel.registerUser(name, email, password, phone)
+                }
             }
         }
 
@@ -46,14 +60,21 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun observeRegisterState() {
         registerViewModel.registerResult.observe(this) { result ->
-            result.onSuccess { user ->
-                Toast.makeText(this, "Account created for ${user?.email}", Toast.LENGTH_SHORT).show()
-                Intent(this, ActivityMain::class.java).also { intent ->
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                }
+            result.onSuccess {
+                // Not expected to happen in this flow
             }.onFailure { error ->
-                Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                val message = error.message ?: "Registration failed"
+
+                if (message.contains("verify your email", ignoreCase = true)) {
+                    // Treat it as a success
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    Intent(this, ActivityDecideLogin::class.java).also { intent ->
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    }
+                } else {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

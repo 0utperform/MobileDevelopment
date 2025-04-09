@@ -6,8 +6,4 @@
         android:title="@string/sign_out"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/link_google_account_menu"
-        android:title="Link Google Account"
-        app:showAsAction="never" />
 </menu>
