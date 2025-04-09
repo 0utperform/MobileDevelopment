@@ -22,14 +22,10 @@
             android:value="8126cf32e18c6c7f49a6d9f14f819a70" />
 
         <activity
-            android:name=".ui.dashboard.ActivityMain"
-            android:exported="false"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.Dashboard"/>
-        <activity
-            android:name=".ui.register.RegisterActivity"
+            android:name=".ui.main_activity.ActivityMain"
             android:exported="true"
-            android:theme="@style/Base.Theme._0utPerform">
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/Theme.Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -41,6 +37,10 @@
                     android:host="auth" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.register.RegisterActivity"
+            android:exported="true"
+            android:theme="@style/Base.Theme._0utPerform"/>
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
@@ -55,34 +55,12 @@
             android:name=".ui.decidelogin.ActivityDecideLogin"
             android:exported="true"
             android:theme="@style/Base.Theme._0utPerform"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="outperform"
-                    android:host="auth" />
-            </intent-filter>
-        </activity>
+            />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:theme="@style/Base.Theme._0utPerform"
-             >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="outperform"
-                    android:host="auth" />
-            </intent-filter>
-        </activity>
+             />
     </application>
 
 </manifest>

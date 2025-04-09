@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityRegisterBinding
-import com.example.a0utperform.ui.dashboard.ActivityMain
+import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

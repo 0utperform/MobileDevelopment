@@ -1,4 +1,4 @@
-package com.example.a0utperform.ui.dashboard
+package com.example.a0utperform.ui.main_activity
 
 import android.content.Intent
 import android.net.Uri
@@ -9,21 +9,15 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.credentials.ClearCredentialStateRequest
-import androidx.credentials.CredentialManager
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ActivityMain : AppCompatActivity() {
@@ -48,16 +42,16 @@ class ActivityMain : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_dashboard, R.id.navigation_attendance,R.id.navigation_outlet, R.id.navigation_leaderboard
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        observeSignOut()
+        observeSession()
 
         val data: Uri? = intent?.data
-        if (data != null && data.toString().startsWith("yourapp://callback")) {
+        if (data != null && data.toString().startsWith("outperform://auth")) {
             // Optionally re-fetch session or confirm linking
             Toast.makeText(this, "Google account linked successfully", Toast.LENGTH_SHORT).show()
         }
@@ -85,9 +79,9 @@ class ActivityMain : AppCompatActivity() {
         }
     }
 
-    private fun observeSignOut() {
-        mainViewModel.signOutState.observe(this) { isSignedOut ->
-            if (isSignedOut) {
+    private fun observeSession() {
+        mainViewModel.userSession.observe(this) { session ->
+            if (session == null || !session.isLogin) {
                 navigateToLogin()
             }
         }

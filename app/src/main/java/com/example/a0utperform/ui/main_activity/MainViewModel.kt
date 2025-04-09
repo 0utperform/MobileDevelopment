@@ -1,10 +1,7 @@
-package com.example.a0utperform.ui.dashboard
+package com.example.a0utperform.ui.main_activity
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.credentials.ClearCredentialStateRequest
-import androidx.credentials.CredentialManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,11 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: AuthRepository,
-    private val userPreference: UserPreference // Inject DataStore helper
+    private val userPreference: UserPreference
 ) : ViewModel() {
 
-    private val _signOutState = MutableLiveData<Boolean>()
-    val signOutState: LiveData<Boolean> get() = _signOutState
+
 
     val userSession: LiveData<UserModel?> = userPreference.getSession().asLiveData()
 
@@ -32,7 +28,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             repository.signOut()
             userPreference.logout()
-            _signOutState.postValue(true)
         }
     }
     fun linkGoogleAccount(onResult: (Uri?) -> Unit) {

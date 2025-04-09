@@ -1,4 +1,4 @@
-package com.example.a0utperform.ui.dashboard.notifications
+package com.example.a0utperform.ui.main_activity.attendance
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.a0utperform.databinding.FragmentNotificationsBinding
+import com.example.a0utperform.databinding.FragmentAttendanceBinding
 
-class NotificationsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+class AttendanceFragment : Fragment() {
+
+    private var _binding: FragmentAttendanceBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +23,14 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+        val attendanceViewModel =
+            ViewModelProvider(this).get(AttendanceViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentAttendanceBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textAttendance
+        attendanceViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

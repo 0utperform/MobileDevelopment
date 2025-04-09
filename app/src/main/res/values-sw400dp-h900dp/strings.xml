@@ -24,7 +24,7 @@
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_attendance">Attendance</string>
     <string name="client_id">1053351222036-ekud8l21pj6ss7rhdk930h48595dhqo7.apps.googleusercontent.com</string>
     <string name="sign_out">Log Out</string>
     <string name="facebook_app_id">570253492733448</string>
@@ -40,5 +40,7 @@
     <string name="role_placeholder">Staff</string>
     <string name="clock_in_button">Clock In</string>
     <string name="task_label">Your Task</string>
-    <string name="google_login_notice">Google linked account cannot be logged in using email, please login using google.</string>
+    <string name="google_login_notice">Email needs to be linked with Google for proper multi auth access, \nplease link account using google after logging in.</string>
+    <string name="title_leaderboard">LeaderBoard</string>
+    <string name="title_outlet">Outlet</string>
 </resources>

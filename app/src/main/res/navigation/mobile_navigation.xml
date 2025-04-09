@@ -7,13 +7,27 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.a0utperform.ui.dashboard.dashboard.DashboardFragment"
+        android:name="com.example.a0utperform.ui.main_activity.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.a0utperform.ui.dashboard.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_attendance"
+        android:name="com.example.a0utperform.ui.main_activity.attendance.AttendanceFragment"
+        android:label="@string/title_attendance"
+        tools:layout="@layout/fragment_attendance" />
+
+    <fragment
+        android:id="@+id/navigation_outlet"
+        android:name="com.example.a0utperform.ui.main_activity.outlet.OutletFragment"
+        android:label="@string/title_outlet"
+        tools:layout="@layout/fragment_outlet" />
+
+    <fragment
+        android:id="@+id/navigation_leaderboard"
+        android:name="com.example.a0utperform.ui.main_activity.leaderboard.LeaderboardFragment"
+        android:label="@string/title_leaderboard"
+        tools:layout="@layout/fragment_leaderboard" />
+
+
 </navigation>

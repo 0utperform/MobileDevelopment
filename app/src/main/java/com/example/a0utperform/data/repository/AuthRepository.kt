@@ -154,7 +154,6 @@ class AuthRepository @Inject constructor(
                 this.email = email
                 this.password = password
             }
-            supabaseAuth.linkIdentity(Google)
             val session = supabaseAuth.currentSessionOrNull()
                 ?: return Result.failure(Exception("Session is null"))
             val user = session.user

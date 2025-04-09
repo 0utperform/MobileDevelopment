@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.data.state.LoginState
 import com.example.a0utperform.databinding.ActivityDecideLoginBinding
-import com.example.a0utperform.ui.dashboard.ActivityMain
+import com.example.a0utperform.ui.main_activity.ActivityMain
 import com.example.a0utperform.ui.login.LoginActivity
 import com.example.a0utperform.ui.register.RegisterActivity
 
@@ -31,25 +31,14 @@ class ActivityDecideLogin : AppCompatActivity() {
         setupClickListeners()
     }
 
-
     private fun observeViewModel() {
-        viewModel.loginState.observe(this) { state ->
-            when (state) {
-                is LoginState.Success -> {
-                    startActivity(Intent(this, ActivityMain::class.java))
-                    finish()
-                }
-                is LoginState.Error -> {
-                    showLoading(false)
-                    showToast(state.message)
-                }
-                is LoginState.Loading -> {
-                    showLoading(true)
-                }
+        viewModel.userSession.observe(this) { session ->
+            if (session?.isLogin == true) {
+                startActivity(Intent(this, ActivityMain::class.java))
+                finish()
             }
         }
     }
-
 
     private fun setupClickListeners() {
         binding.btnGoogleLogIn.setOnClickListener {

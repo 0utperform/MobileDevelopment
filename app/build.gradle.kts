@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
     kapt (libs.hilt.android.compiler)
 
     implementation (libs.facebook.login)

@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityLoginBinding
-import com.example.a0utperform.ui.dashboard.ActivityMain
+import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
