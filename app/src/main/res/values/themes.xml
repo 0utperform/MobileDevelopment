@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base Material Theme (Light Mode) -->
 <style name="Base.Theme._0utPerform" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
 </style>
 
     <style name="Widget.OutlineButton" parent="Widget.MaterialComponents.Button.OutlinedButton">

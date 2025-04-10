@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityRegisterBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import com.example.a0utperform.ui.decidelogin.DecideLoginViewModel
+import com.example.a0utperform.ui.login.LoginActivity
 import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,10 +53,19 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
-
+        setupClickListeners()
         observeRegisterState()
 
 
+    }
+
+    private fun setupClickListeners() {
+        binding.logIn.setOnClickListener { navigateTo(LoginActivity::class.java) }
+    }
+    private fun navigateTo(destination: Class<*>) {
+        val intent = Intent(this, destination)
+        startActivity(intent)
+        finish() // removes the current activity from the back stack
     }
 
     private fun observeRegisterState() {

@@ -8,7 +8,7 @@
     <string name="btn_facebook_login">Connect With Facebook</string>
     <string name="pass_signin">Sign In With Password</string>
     <string name="sign_up"><font color='#898989'>Don’t have an account?</font><font color='#4A99ED'> Sign up</font></string>
-    <string name="log_in"><font color='#898989'>Don’t have an account?</font><font color='#4A99ED'> Log In</font></string>
+    <string name="log_in"><font color='#898989'>Already have an account?</font><font color='#4A99ED'> Log In</font></string>
     <string name="your_account">to your account</string>
     <string name="pass_login">Login</string>
     <string name="password_hint">Password</string>

@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.decidelogin.ActivityDecideLogin">
+    tools:context=".ui.decidelogin.ActivityDecideLogin"
+    >
 
     <TextView
         android:id="@+id/greeting"
@@ -15,6 +16,7 @@
         android:textSize="@dimen/text_size_medium"
         android:layout_marginTop="@dimen/margin_top_large"
         android:layout_marginStart="@dimen/margin_medium"
+        android:textColor="@color/text_color"
         app:layout_constraintBottom_toTopOf="@+id/greeting_app"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,10 +56,12 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:fontFamily="@font/inter_medium"
         android:text="@string/login_description"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/decide_login" />
+        app:layout_constraintTop_toBottomOf="@+id/decide_login"
+        />
 
     <TextView
         android:id="@+id/login"
@@ -67,6 +71,7 @@
         android:textSize="@dimen/text_size_large"
         android:fontFamily="@font/roboto_medium"
         android:textStyle="bold"
+        android:textColor="@color/text_color"
         android:layout_marginStart="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_top_medium"
         app:layout_constraintTop_toBottomOf="@id/login_desc"

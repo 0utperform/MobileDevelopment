@@ -5,4 +5,5 @@
     <color name="brandBlue">#4A99ED</color>
     <color name="gray">#969696</color>
     <color name="brandBlueNight">#2C5B89</color>
+    <color name="text_color">#000000</color>
 </resources>

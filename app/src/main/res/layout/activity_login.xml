@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/your_account"
         android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/text_color"
         android:fontFamily="@font/roboto_medium"
         android:layout_marginStart="@dimen/margin_medium"
         app:layout_constraintStart_toStartOf="parent"

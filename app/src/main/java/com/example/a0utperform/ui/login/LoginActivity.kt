@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.a0utperform.databinding.ActivityLoginBinding
 import com.example.a0utperform.ui.main_activity.ActivityMain
+import com.example.a0utperform.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -39,8 +40,17 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
+        setupClickListeners()
         observeLoginState()
+    }
+
+    private fun setupClickListeners() {
+        binding.signUp.setOnClickListener { navigateTo(RegisterActivity::class.java) }
+    }
+    private fun navigateTo(destination: Class<*>) {
+        val intent = Intent(this, destination)
+        startActivity(intent)
+        finish() // removes the current activity from the back stack
     }
 
     private fun observeLoginState() {
