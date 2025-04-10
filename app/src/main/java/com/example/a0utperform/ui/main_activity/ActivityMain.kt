@@ -23,7 +23,6 @@ import io.github.jan.supabase.auth.Auth
 class ActivityMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var supabaseAuth : Auth
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,8 +63,12 @@ class ActivityMain : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.sign_out_menu -> {
-                mainViewModel.signOut()
+            R.id.action_notifications -> {
+                Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.action_settings -> {
+                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -12,11 +12,11 @@
     </style>
 
     <style name="Theme.Dashboard" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:navigationBarColor">@color/brandBlueNight</item>
         <item name="android:statusBarColor">@color/brandBlueNight</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="colorPrimary">@color/brandBlueNight</item>
         <item name="colorPrimaryVariant">@color/brandBlueNight</item>
+        <item name="colorControlHighlight">@color/brandBlueNight</item>
         <item name="actionBarStyle">@style/CustomActionBarStyle</item>
     </style>
 
