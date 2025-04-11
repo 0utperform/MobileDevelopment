@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
     private fun observeLoginState() {
         loginViewModel.loginResult.observe(this) { result ->
             result?.onSuccess { user ->
-                Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Welcome ${user?.name}", Toast.LENGTH_SHORT).show()
                 Intent(this, ActivityMain::class.java).also { intent ->
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)

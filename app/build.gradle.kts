@@ -63,6 +63,10 @@ dependencies {
 
     implementation (libs.material)
 
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+
     implementation(libs.hilt.android)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.datastore.preferences)

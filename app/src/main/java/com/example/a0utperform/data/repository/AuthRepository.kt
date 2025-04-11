@@ -1,24 +1,18 @@
 package com.example.a0utperform.data.repository
 
 import android.content.Context
-import android.net.Uri
 import android.util.Base64
 import android.util.Log
-import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
-import com.example.a0utperform.BuildConfig
-import com.example.a0utperform.data.datastore.UserData
-import com.example.a0utperform.data.datastore.UserModel
-import com.example.a0utperform.data.datastore.UserPreference
+import com.example.a0utperform.data.model.UserModel
+import com.example.a0utperform.data.local.datastore.UserPreference
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.providers.Google
-import io.github.jan.supabase.auth.providers.OAuthProvider
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
 import io.github.jan.supabase.auth.user.UserInfo
@@ -27,7 +21,7 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -73,7 +67,7 @@ class AuthRepository @Inject constructor(
             val existingUsers = supabaseDatabase
                 .from("users")
                 .select(Columns.list())
-                .decodeList<UserData>()
+                .decodeList<UserModel>()
             val cleanEmail = email.trim().lowercase()
             val existingUser = existingUsers.find { it.email.trim().lowercase() == cleanEmail }
 
@@ -95,12 +89,22 @@ class AuthRepository @Inject constructor(
 
             val userData = storeUserDataIfNotExists(user)
 
+            supabaseDatabase.from("users").update(
+                mapOf("isLogin" to true)
+            ) {
+                filter {
+                    eq("user_id", user.id)
+                }
+            }
+
             val userModel = UserModel(
                 userId = user.id,
                 email = user.email.orEmpty(),
                 name = userData.name,
                 phone = userData.phone,
-                isLogin = true
+                role = userData.role,
+                isLogin = true,
+                createdAt = userData.createdAt
             )
 
             userPreference.saveSession(userModel)
@@ -131,12 +135,15 @@ class AuthRepository @Inject constructor(
     }
     suspend fun registerUser(name: String, email: String, password: String, phone: String): Result<UserModel> {
         return try {
+            val firstName = name.split(" ").firstOrNull() ?: name
+
             val response = supabaseAuth.signUpWith(Email) {
                 this.email = email
                 this.password = password
 
                 this.data = buildJsonObject {
-                    put("display_name", JsonPrimitive(name))
+                    put("display_name", JsonPrimitive(firstName))
+                    put("full_name", JsonPrimitive(name))
                     put("phone", JsonPrimitive(phone))
                 }
             }
@@ -160,7 +167,22 @@ class AuthRepository @Inject constructor(
 
             val userData = storeUserDataIfNotExists(user)
 
-            val userModel = UserModel(user.id, email, userData.name, userData.phone, isLogin = true)
+            supabaseDatabase.from("users").update(
+                mapOf("isLogin" to true)
+            ) {
+                filter {
+                    eq("user_id", user.id)
+                }
+            }
+
+            val userModel = UserModel(
+                user.id,
+                email,
+                userData.name,
+                userData.role,
+                userData.phone,
+                isLogin = true,
+                createdAt = userData.createdAt)
             userPreference.saveSession(userModel)
 
             Result.success(userModel)
@@ -171,6 +193,14 @@ class AuthRepository @Inject constructor(
     }
 
     suspend fun signOut() {
+        val user = supabaseAuth.currentUserOrNull() ?: return
+        supabaseDatabase.from("users").update(
+            mapOf("isLogin" to false)
+        ) {
+            filter {
+                eq("user_id", user.id)
+            }
+        }
         supabaseAuth.signOut()
         userPreference.logout()
     }
@@ -179,29 +209,30 @@ class AuthRepository @Inject constructor(
         return userPreference.getSession()
     }
 
-    private suspend fun storeUserDataIfNotExists(user: UserInfo): UserData {
+    private suspend fun storeUserDataIfNotExists(user: UserInfo): UserModel {
         val existingUsers = supabaseDatabase
             .from("users")
             .select(Columns.list())
-            .decodeList<UserData>()
+            .decodeList<UserModel>()
 
-        val existingUser = existingUsers.find { it.user_id == user.id }
+        val existingUser = existingUsers.find { it.userId == user.id }
         if (existingUser != null) return existingUser
 
-        val name = user.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull
-            ?: user.email?.substringBefore("@") ?: "User"
+        val name = user.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull ?: ""
         val phone = user.userMetadata?.get("phone")?.jsonPrimitive?.contentOrNull ?: ""
+        val role = "Staff"
+        val created = user.createdAt?.toString() ?: "null"
 
-        val newUser = UserData(
-            user_id = user.id,
-            name = name,
+        val newUser = UserModel(
+            userId = user.id,
             email = user.email.orEmpty(),
+            name = name,
             phone = phone,
-            created_at = Clock.System.now().toString(),
+            role = role,
+            isLogin = true,
+            createdAt = created
         )
-
         supabaseDatabase.from("users").insert(newUser)
         return newUser
     }
-
 }

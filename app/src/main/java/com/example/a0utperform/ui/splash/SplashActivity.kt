@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import com.example.a0utperform.R
-import com.example.a0utperform.data.datastore.UserPreference
+import com.example.a0utperform.data.local.datastore.UserPreference
 import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -38,7 +38,7 @@ class SplashActivity : AppCompatActivity() {
             delay(SPLASH_DELAY)
 
             userPreference.getSession().collect { session ->
-                val intent = if (session.isLogin) {
+                val intent = if (session.isLogin == true) {
                     Intent(this@SplashActivity, ActivityMain::class.java)
                 } else {
                     Intent(this@SplashActivity, ActivityDecideLogin::class.java)

@@ -1,4 +1,4 @@
-package com.example.a0utperform.data.datastore
+package com.example.a0utperform.data.local.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.a0utperform.data.model.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -20,7 +21,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             preferences[NAME_KEY] = user.name
             preferences[EMAIL_KEY] = user.email
             preferences[PHONE_KEY] = user.phone
-            preferences[IS_LOGIN_KEY] = true
+            preferences[ROLE_KEY] = user.role ?: "Staff"
+            preferences[IS_LOGIN_KEY] = true 
+            preferences[CREATED_AT_KEY] = user.createdAt
 
         }
     }
@@ -32,7 +35,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
                 name = preferences[NAME_KEY] ?: "Charlie",
                 email = preferences[EMAIL_KEY] ?: "",
                 phone = preferences[PHONE_KEY] ?: "",
-                isLogin = preferences[IS_LOGIN_KEY] ?: false
+                role = preferences[ROLE_KEY]?: "Null",
+                isLogin = preferences[IS_LOGIN_KEY] ?: false,
+                createdAt = preferences[CREATED_AT_KEY] ?: ""
             )
         }
     }
@@ -51,7 +56,9 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         private val NAME_KEY = stringPreferencesKey("name")
         private val EMAIL_KEY = stringPreferencesKey("email")
         private val PHONE_KEY = stringPreferencesKey("phone")
+        private val ROLE_KEY = stringPreferencesKey("role")
         private val IS_LOGIN_KEY = booleanPreferencesKey("isLogin")
+        private val CREATED_AT_KEY = stringPreferencesKey("created_at")
 
         fun getInstance(dataStore: DataStore<Preferences>): UserPreference {
             return INSTANCE ?: synchronized(this) {

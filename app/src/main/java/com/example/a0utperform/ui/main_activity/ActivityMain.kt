@@ -77,7 +77,7 @@ class ActivityMain : AppCompatActivity() {
 
     private fun observeSession() {
         mainViewModel.userSession.observe(this) { session ->
-            if (session == null || !session.isLogin) {
+            if (session == null || !session.isLogin!!) {
                 navigateToLogin()
             }
         }
