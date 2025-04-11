@@ -3,6 +3,7 @@ package com.example.a0utperform.data.repository
 import android.util.Log
 import com.example.a0utperform.data.local.datastore.UserPreference
 import com.example.a0utperform.data.model.OutletData
+import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
@@ -46,6 +47,37 @@ class DatabaseRepository @Inject constructor(
             Result.success(teamDetail)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching assigned team details", e)
+            Result.failure(e)
+        }
+    }
+    suspend fun getAssignedOutletDetails(userId: String): Result<OutletDetail?> {
+        return try {
+            Log.d("DatabaseRepository", "Fetching outlet assignment for user: $userId")
+
+            val outletAssignments = supabaseDatabase
+                .from("user_outlet")
+                .select(Columns.list()) {
+                    filter { eq("user_id", userId) }
+                }
+                .decodeList<OutletData>()
+
+            val userOutlet = outletAssignments.find { it.user_id == userId }
+            if (userOutlet == null) {
+                return Result.failure(Exception("User has no Outlet assignment"))
+            }
+
+            Log.d("DatabaseRepository", "Fetching Outlet detail for outlet_id: ${userOutlet.outlet_id}")
+
+            val outletDetail = supabaseDatabase
+                .from("outlet")
+                .select(Columns.list()) {
+                    filter { eq("outlet_id", userOutlet.outlet_id) }
+                }
+                .decodeSingleOrNull<OutletDetail>()
+
+            Result.success(outletDetail)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching assigned outlet details", e)
             Result.failure(e)
         }
     }

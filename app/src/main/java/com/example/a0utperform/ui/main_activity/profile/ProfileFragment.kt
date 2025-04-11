@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val profileViewModel : ProfileViewModel by viewModels()
     companion object {
         fun newInstance() = ProfileFragment()
     }
@@ -47,12 +48,17 @@ class ProfileFragment : Fragment() {
 
         mainViewModel.userSession.observe(viewLifecycleOwner) { session ->
             session?.let {
-                mainViewModel.fetchUserAssignments(it.userId)
+                profileViewModel.fetchUserTeamAssignments(it.userId)
+                profileViewModel.fetchUserOutletAssignments(it.userId)
             }
         }
 
-        mainViewModel.teamDetail.observe(viewLifecycleOwner) { team ->
+        profileViewModel.teamDetail.observe(viewLifecycleOwner) { team ->
             teamText.text = getString(R.string.team_format,team?.name ?: "N/A")
+        }
+
+        profileViewModel.outletDetail.observe(viewLifecycleOwner) { outlet ->
+            outletText.text = getString(R.string.outlet_format,outlet?.name ?: "N/A")
         }
 
         signOutButton.setOnClickListener {

@@ -22,21 +22,7 @@ class MainViewModel @Inject constructor(
 
     val userSession: LiveData<UserModel?> = userPreference.getSession().asLiveData()
 
-    private val _teamDetail = MutableLiveData<TeamDetail?>()
-    val teamDetail: LiveData<TeamDetail?> = _teamDetail
 
-
-    fun fetchUserAssignments(userId: String) {
-        viewModelScope.launch {
-            // Fetch team detail
-            val teamResult = databaseRepository.getAssignedTeamDetails(userId)
-            if (teamResult.isSuccess) {
-                _teamDetail.value = teamResult.getOrNull()
-            } else {
-                _teamDetail.value = null
-            }
-        }
-    }
 
     fun signOut() {
         viewModelScope.launch {
