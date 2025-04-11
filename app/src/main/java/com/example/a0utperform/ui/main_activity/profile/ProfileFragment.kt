@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import com.example.a0utperform.R
 import com.example.a0utperform.ui.main_activity.MainViewModel
@@ -38,10 +39,25 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val signOutButton: Button = view.findViewById(R.id.logout_btn)
+        val teamText: TextView = view.findViewById(R.id.team_format)
+        val outletText: TextView = view.findViewById(R.id.outlet_format)
+        signOutButton.setOnClickListener {
+            mainViewModel.signOut()
+        }
+
+        mainViewModel.userSession.observe(viewLifecycleOwner) { session ->
+            session?.let {
+                mainViewModel.fetchUserAssignments(it.userId)
+            }
+        }
+
+        mainViewModel.teamDetail.observe(viewLifecycleOwner) { team ->
+            teamText.text = getString(R.string.team_format,team?.name ?: "N/A")
+        }
+
         signOutButton.setOnClickListener {
             mainViewModel.signOut()
         }
     }
-
 
 }
