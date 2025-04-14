@@ -30,6 +30,16 @@ class ProfileViewModel @Inject constructor(
     private val _outletDetail = MutableLiveData<OutletDetail?>()
     val outletDetail: LiveData<OutletDetail?> = _outletDetail
 
+    private val _avatarUrl = MutableLiveData<String?>()
+    val avatarUrl: LiveData<String?> = _avatarUrl
+
+    fun fetchAvatarUrl() {
+        viewModelScope.launch {
+            val result = databaseRepository.getUserImgUrl()
+            _avatarUrl.value = result.getOrNull()
+        }
+    }
+
     fun fetchUserTeamAssignments(userId: String) {
         viewModelScope.launch {
             // Fetch team detail
@@ -41,6 +51,7 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
 
     fun fetchUserOutletAssignments(userId: String) {
         viewModelScope.launch {

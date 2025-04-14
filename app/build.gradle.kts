@@ -60,7 +60,7 @@ android {
 dependencies {
     implementation (libs.kotlinx.metadata.jvm)
 
-
+    implementation (libs.glide)
     implementation (libs.material)
 
     implementation (libs.retrofit)

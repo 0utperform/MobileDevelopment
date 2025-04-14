@@ -30,7 +30,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mark Combine"
+            android:text="@string/placeholder_name"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_large"
             android:fontFamily="@font/roboto_medium"
@@ -45,7 +45,7 @@
             android:id="@+id/role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Staff"
+            android:text="@string/placolder_role"
             android:textSize="@dimen/text_size_medium"
             android:fontFamily="@font/roboto_regular"
             android:layout_marginTop="@dimen/margin_small"
@@ -98,6 +98,7 @@
 
                 <!-- Name -->
                 <TextView
+                    android:id="@+id/personal_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/name_format"
@@ -112,6 +113,7 @@
 
                 <!-- Age -->
                 <TextView
+                    android:id="@+id/personal_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_medium"
@@ -126,6 +128,7 @@
 
                 <!-- Role -->
                 <TextView
+                    android:id="@+id/personal_role"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/role_format"
@@ -146,6 +149,7 @@
                     android:padding="@dimen/padding_medium">
 
                     <TextView
+                        android:id="@+id/personal_payroll"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -166,7 +170,7 @@
                     android:background="@color/gray" />
 
                 <TextView
-                    android:id="@+id/team_format"
+                    android:id="@+id/personal_team"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/team_format"
@@ -180,7 +184,7 @@
 
                 <!-- Outlet -->
                 <TextView
-                    android:id="@+id/outlet_format"
+                    android:id="@+id/personal_outlet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/outlet_format"

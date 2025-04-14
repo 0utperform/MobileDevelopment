@@ -7,14 +7,19 @@ import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DatabaseRepository @Inject constructor(
+    private val supabaseAuth: Auth,
     private val supabaseDatabase: Postgrest,
     private val userPreference: UserPreference
 ) {
@@ -81,5 +86,20 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
+    suspend fun getUserImgUrl(): Result<String?> {
+        return try {
+            val session = supabaseAuth.currentSessionOrNull()
+                ?: return Result.failure(Exception("Session is null"))
 
+            val user = session.user
+                ?: return Result.failure(Exception("User not found, please register first!"))
+
+            val avatarUrl = user.userMetadata?.get("avatar_url")?.jsonPrimitive?.contentOrNull
+
+            Result.success(avatarUrl)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching user avatar URL", e)
+            Result.failure(e)
+        }
+    }
 }

@@ -26,6 +26,7 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.signIn.setOnClickListener {
             val name = binding.edName.text.toString().trim()
+            val age = binding.edAge.text.toString().trim() ?: "0"
             val email = binding.edEmail.text.toString().trim()
             val password = binding.edPassword.text.toString().trim()
             val phone = binding.edPhone.text.toString().trim()
@@ -36,7 +37,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             when {
-                name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || confirmPassword.isEmpty() -> {
+                name.isEmpty() || email.isEmpty() || password.isEmpty() || phone.isEmpty() || confirmPassword.isEmpty() || age.isEmpty() -> {
                     Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 }
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
@@ -48,8 +49,14 @@ class RegisterActivity : AppCompatActivity() {
                 password != confirmPassword -> {
                     Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 }
+                age.length > 3  -> {
+                    Toast.makeText(this, "Please fill with the right age format ", Toast.LENGTH_SHORT).show()
+                }
+                age.length <= 0  -> {
+                    Toast.makeText(this, "Please fill with the right age format ", Toast.LENGTH_SHORT).show()
+                }
                 else -> {
-                    registerViewModel.registerUser(name, email, password, phone)
+                    registerViewModel.registerUser(name, age, email, password, phone )
                 }
             }
         }

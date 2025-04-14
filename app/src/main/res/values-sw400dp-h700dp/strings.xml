@@ -54,4 +54,7 @@
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="notifications">Notifications</string>
+    <string name="placeholder_name">User</string>
+    <string name="placolder_role">Role</string>
+    <string name="age">Age</string>
 </resources>

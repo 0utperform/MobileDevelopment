@@ -17,9 +17,9 @@ class RegisterViewModel @Inject constructor(
     private val _registerResult = MutableLiveData<Result<UserModel?>>()
     val registerResult: LiveData<Result<UserModel?>> get() = _registerResult
 
-    fun registerUser(name: String, email: String, password: String, phone: String) {
+    fun registerUser(name: String, age: String, email: String, password: String, phone: String) {
         viewModelScope.launch {
-            val result = authRepository.registerUser(name, email, password, phone)
+            val result = authRepository.registerUser(name, age, email, password, phone,)
             _registerResult.value = result
         }
     }

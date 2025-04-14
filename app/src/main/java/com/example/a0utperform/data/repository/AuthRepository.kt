@@ -99,6 +99,7 @@ class AuthRepository @Inject constructor(
 
             val userModel = UserModel(
                 userId = user.id,
+                age = userData.age,
                 email = user.email.orEmpty(),
                 name = userData.name,
                 phone = userData.phone,
@@ -133,7 +134,7 @@ class AuthRepository @Inject constructor(
             null
         }
     }
-    suspend fun registerUser(name: String, email: String, password: String, phone: String): Result<UserModel> {
+    suspend fun registerUser(name: String, age: String, email: String, password: String, phone: String): Result<UserModel> {
         return try {
             val firstName = name.split(" ").firstOrNull() ?: name
 
@@ -145,6 +146,7 @@ class AuthRepository @Inject constructor(
                     put("display_name", JsonPrimitive(firstName))
                     put("full_name", JsonPrimitive(name))
                     put("phone", JsonPrimitive(phone))
+                    put("age", JsonPrimitive(age))
                 }
             }
 
@@ -177,8 +179,9 @@ class AuthRepository @Inject constructor(
 
             val userModel = UserModel(
                 user.id,
-                email,
                 userData.name,
+                userData.age,
+                email,
                 userData.role,
                 userData.phone,
                 isLogin = true,
@@ -219,14 +222,16 @@ class AuthRepository @Inject constructor(
         if (existingUser != null) return existingUser
 
         val name = user.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull ?: ""
+        val age = user.userMetadata?.get("age")?.jsonPrimitive?.contentOrNull ?: ""
         val phone = user.userMetadata?.get("phone")?.jsonPrimitive?.contentOrNull ?: ""
         val role = "Staff"
         val created = user.createdAt?.toString() ?: "null"
 
         val newUser = UserModel(
             userId = user.id,
-            email = user.email.orEmpty(),
             name = name,
+            age = age,
+            email = user.email.orEmpty(),
             phone = phone,
             role = role,
             isLogin = true,

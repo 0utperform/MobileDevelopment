@@ -19,6 +19,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
         dataStore.edit { preferences ->
             preferences[USERID_KEY] = user.userId
             preferences[NAME_KEY] = user.name
+            preferences[AGE_KEY] = user.age ?: "null"
             preferences[EMAIL_KEY] = user.email
             preferences[PHONE_KEY] = user.phone
             preferences[ROLE_KEY] = user.role ?: "Staff"
@@ -33,6 +34,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
             UserModel(
                 userId = preferences[USERID_KEY] ?: "",
                 name = preferences[NAME_KEY] ?: "Charlie",
+                age = preferences[AGE_KEY]?: "null",
                 email = preferences[EMAIL_KEY] ?: "",
                 phone = preferences[PHONE_KEY] ?: "",
                 role = preferences[ROLE_KEY]?: "Null",
@@ -54,6 +56,7 @@ class UserPreference private constructor(private val dataStore: DataStore<Prefer
 
         private val USERID_KEY = stringPreferencesKey("userid")
         private val NAME_KEY = stringPreferencesKey("name")
+        private val AGE_KEY = stringPreferencesKey("age")
         private val EMAIL_KEY = stringPreferencesKey("email")
         private val PHONE_KEY = stringPreferencesKey("phone")
         private val ROLE_KEY = stringPreferencesKey("role")

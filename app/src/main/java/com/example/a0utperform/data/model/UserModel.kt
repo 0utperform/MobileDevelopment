@@ -8,8 +8,9 @@ import kotlinx.serialization.Serializable
 data class UserModel(
     @SerialName("user_id")
     val userId: String,
-    val email: String,
     val name: String,
+    val age: String? = null,
+    val email: String,
     val role: String? = null,
     val phone: String,
     val isLogin: Boolean? = false,
