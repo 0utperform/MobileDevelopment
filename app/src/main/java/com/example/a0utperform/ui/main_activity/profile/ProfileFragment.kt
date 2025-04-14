@@ -14,6 +14,8 @@ import com.example.a0utperform.R
 import com.example.a0utperform.databinding.FragmentProfileBinding
 import com.example.a0utperform.ui.main_activity.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.NumberFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -55,17 +57,27 @@ class ProfileFragment : Fragment() {
         mainViewModel.userSession.observe(viewLifecycleOwner) { session ->
             session?.let {
                 profileViewModel.fetchAvatarUrl()
-                binding.name.text = it.name.split(" ").firstOrNull() ?: "User"
-                binding.role.text = it.role ?: "Role"
-                binding.personalAge.text = it.age
-
-                binding.personalName.text = getString(R.string.name_format, it.name ?: "N/A")
+                profileViewModel.fetchPayroll(it.userId)
                 profileViewModel.fetchUserTeamAssignments(it.userId)
                 profileViewModel.fetchUserOutletAssignments(it.userId)
+                binding.name.text = it.name.split(" ").firstOrNull() ?: "User"
+                binding.role.text = it.role ?: "Role"
+
+                binding.personalName.text = getString(R.string.name_format, it.name )
+                binding.personalAge.text = getString(R.string.age_format, it.age ?: "N/A")
+                binding.personalRole.text = getString(R.string.role_format,it.role ?: "N/A")
+
 
             }
         }
-
+        profileViewModel.payroll.observe(viewLifecycleOwner) { payroll ->
+            if (payroll != null) {
+                val formattedPayroll = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(payroll)
+                binding.personalPayroll.text = getString(R.string.payroll_format, formattedPayroll)
+            } else {
+                binding.personalPayroll.text = getString(R.string.payroll_format, "N/A")
+            }
+        }
         profileViewModel.avatarUrl.observe(viewLifecycleOwner) { url ->
             Glide.with(this)
                 .load(url ?: R.drawable.placeholder_user)
@@ -83,6 +95,7 @@ class ProfileFragment : Fragment() {
         signOutButton.setOnClickListener {
             mainViewModel.signOut()
         }
+
     }
 
 }

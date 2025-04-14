@@ -86,7 +86,7 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
-    suspend fun getUserImgUrl(): Result<String?> {
+    fun getUserImgUrl(): Result<String?> {
         return try {
             val session = supabaseAuth.currentSessionOrNull()
                 ?: return Result.failure(Exception("Session is null"))
@@ -99,6 +99,22 @@ class DatabaseRepository @Inject constructor(
             Result.success(avatarUrl)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching user avatar URL", e)
+            Result.failure(e)
+        }
+    }
+    suspend fun getUserPayroll(userId: String): Result<Double?> {
+        return try {
+            val response = supabaseDatabase
+                .from("users")
+                .select(Columns.list("payroll")) {
+                    filter { eq("user_id", userId) }
+                }
+                .decodeSingleOrNull<Map<String, Double?>>()
+
+            val payroll = response?.get("payroll")
+            Result.success(payroll)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching payroll", e)
             Result.failure(e)
         }
     }

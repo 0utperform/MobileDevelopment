@@ -33,10 +33,24 @@ class ProfileViewModel @Inject constructor(
     private val _avatarUrl = MutableLiveData<String?>()
     val avatarUrl: LiveData<String?> = _avatarUrl
 
+    private val _payroll = MutableLiveData<Double?>()
+    val payroll: LiveData<Double?> = _payroll
+
     fun fetchAvatarUrl() {
         viewModelScope.launch {
             val result = databaseRepository.getUserImgUrl()
             _avatarUrl.value = result.getOrNull()
+        }
+    }
+
+    fun fetchPayroll(userId: String) {
+        viewModelScope.launch {
+            val result = databaseRepository.getUserPayroll(userId)
+            if (result.isSuccess) {
+                _payroll.value = result.getOrNull()
+            } else {
+                _payroll.value = null
+            }
         }
     }
 
