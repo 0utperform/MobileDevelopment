@@ -59,4 +59,19 @@
     <string name="placeholder_name">User</string>
     <string name="placolder_role">Role</string>
     <string name="age">Age</string>
+
+    <string name="profile_header">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="permissions">Permissions</string>
+
+    <string name="notifications_header">Notifications</string>
+
+    <string name="personalization_header">Personalization</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+
+    <string name="more_header">More</string>
+    <string name="about_application">About Application</string>
+    <string name="help">Help</string>
 </resources>

@@ -18,7 +18,9 @@
         <item name="colorPrimaryVariant">@color/brandBlue</item>
         <item name="colorControlHighlight">@color/brandBlue</item>
         <item name="actionBarStyle">@style/CustomActionBarStyle</item>
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
+
     <style name="CustomActionBarStyle" parent="Widget.AppCompat.ActionBar.Solid">
         <item name="android:background">@color/brandBlue</item>
         <item name="android:elevation">4dp</item>
@@ -35,5 +37,7 @@
     <item name="cornerFamily">rounded</item>
     <item name="cornerSize">50%</item>
 </style>
+
+
 
 </resources>

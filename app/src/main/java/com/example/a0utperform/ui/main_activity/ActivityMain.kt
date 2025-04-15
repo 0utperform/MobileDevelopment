@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
+import com.example.a0utperform.ui.setting.SettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.Auth
 
@@ -68,7 +69,7 @@ class ActivityMain : AppCompatActivity() {
                 true
             }
             R.id.action_settings -> {
-                Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, SettingActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

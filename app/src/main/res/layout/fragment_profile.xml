@@ -235,7 +235,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:src="@drawable/baseline_settings_24" />
+                    android:src="@drawable/setting_setting" />
 
                 <TextView
                     android:layout_width="0dp"

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <!-- Section: Profile -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_profile"
+            android:layout_marginTop="@dimen/margin_small"
+            android:padding="12dp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <include layout="@layout/setting_item_profile" />
+
+        <!-- Section: Notifications -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+        <include layout="@layout/setting_item_notifications" />
+
+        <!-- Section: Personalization -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/personalization_label"
+            android:padding="12dp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <include layout="@layout/setting_item_personalization" />
+
+
+    </LinearLayout>
+</ScrollView>

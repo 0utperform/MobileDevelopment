@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.preference)
     kapt (libs.hilt.android.compiler)
 
     implementation (libs.facebook.login)
