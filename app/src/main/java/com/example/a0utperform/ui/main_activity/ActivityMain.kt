@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
+import com.example.a0utperform.ui.notification.NotificationActivity
 import com.example.a0utperform.ui.setting.SettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.Auth
@@ -65,7 +66,7 @@ class ActivityMain : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_notifications -> {
-                Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, NotificationActivity::class.java))
                 true
             }
             R.id.action_settings -> {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_outperform_round"
         android:supportsRtl="true"
-        tools:targetApi="31" >
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.notification.NotificationActivity"
+            android:label="@string/notifications"
+            android:theme="@style/Theme.Dashboard"
+            android:exported="false" />
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="false"
@@ -32,7 +37,7 @@
             android:name=".ui.main_activity.ActivityMain"
             android:exported="true"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.Dashboard" >
+            android:theme="@style/Theme.Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -51,7 +56,7 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme._0utPerform" >
+            android:theme="@style/Base.Theme._0utPerform">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

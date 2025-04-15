@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.profile
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.FragmentProfileBinding
 import com.example.a0utperform.ui.main_activity.MainViewModel
+import com.example.a0utperform.ui.setting.SettingActivity
+import com.russhwolf.settings.Settings
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.util.Locale
@@ -37,6 +40,7 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
 
@@ -49,6 +53,12 @@ class ProfileFragment : Fragment() {
         val signOutButton: Button = view.findViewById(R.id.logout_btn)
         val teamText: TextView = view.findViewById(R.id.personal_team)
         val outletText: TextView = view.findViewById(R.id.personal_outlet)
+
+        binding.btnSetting.setOnClickListener {
+            val intent = Intent(requireContext(), SettingActivity::class.java)
+            startActivity(intent)
+        }
+
 
         signOutButton.setOnClickListener {
             mainViewModel.signOut()
