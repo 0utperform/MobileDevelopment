@@ -73,7 +73,7 @@ class ProfileFragment : Fragment() {
         profileViewModel.payroll.observe(viewLifecycleOwner) { payroll ->
             if (payroll != null) {
                 val formattedPayroll = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(payroll)
-                binding.personalPayroll.text = getString(R.string.payroll_format, formattedPayroll)
+                binding.personalPayroll.text = getString(R.string.payroll_format, formattedPayroll ?: "N/A")
             } else {
                 binding.personalPayroll.text = getString(R.string.payroll_format, "N/A")
             }
