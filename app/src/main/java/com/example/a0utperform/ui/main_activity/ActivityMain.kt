@@ -1,6 +1,7 @@
 package com.example.a0utperform.ui.main_activity
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -18,6 +20,7 @@ import com.example.a0utperform.databinding.ActivityMainBinding
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import com.example.a0utperform.ui.notification.NotificationActivity
 import com.example.a0utperform.ui.setting.SettingActivity
+import com.example.a0utperform.ui.setting.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.Auth
 
@@ -26,6 +29,7 @@ class ActivityMain : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
+    private val settingViewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +54,16 @@ class ActivityMain : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+
         observeSession()
+
+        settingViewModel.getThemeSettings().observe(this) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
         val data: Uri? = intent?.data
         if (data != null && data.toString().startsWith("outperform://auth")) {

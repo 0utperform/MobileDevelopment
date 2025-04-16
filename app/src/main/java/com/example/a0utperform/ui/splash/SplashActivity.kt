@@ -3,13 +3,11 @@ package com.example.a0utperform.ui.splash
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.a0utperform.ui.decidelogin.ActivityDecideLogin
 import com.example.a0utperform.R
-import com.example.a0utperform.data.local.datastore.UserPreference
+import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.ui.main_activity.ActivityMain
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay

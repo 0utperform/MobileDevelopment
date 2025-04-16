@@ -1,17 +1,14 @@
 package com.example.a0utperform.data.repository
 
 import android.util.Log
-import com.example.a0utperform.data.local.datastore.UserPreference
+import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
-import com.example.a0utperform.data.model.UserModel
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject

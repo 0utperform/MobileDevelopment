@@ -15,19 +15,22 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     private val _loginResult = MutableLiveData<Result<UserModel?>>()
     val loginResult: LiveData<Result<UserModel?>> get() = _loginResult
 
     fun loginUser(email: String, password: String) {
+        _isLoading.value = true
         viewModelScope.launch {
-            val result = authRepository.loginUser(email, password)
-            _loginResult.value = result
+            try {
+                val result = authRepository.loginUser(email, password)
+                _loginResult.value = result
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    fun signOut() {
-        viewModelScope.launch {
-            authRepository.signOut()
-        }
-    }
 }

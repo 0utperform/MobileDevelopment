@@ -32,7 +32,6 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -50,20 +49,25 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val signOutButton: Button = view.findViewById(R.id.logout_btn)
-        val teamText: TextView = view.findViewById(R.id.personal_team)
-        val outletText: TextView = view.findViewById(R.id.personal_outlet)
-
         binding.btnSetting.setOnClickListener {
             val intent = Intent(requireContext(), SettingActivity::class.java)
             startActivity(intent)
         }
 
 
-        signOutButton.setOnClickListener {
+        binding.logoutBtn.setOnClickListener {
             mainViewModel.signOut()
         }
 
+        observeViewModels()
+
+
+
+    }
+    private fun observeViewModels() {
+        profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
         mainViewModel.userSession.observe(viewLifecycleOwner) { session ->
             session?.let {
                 profileViewModel.fetchAvatarUrl()
@@ -81,11 +85,11 @@ class ProfileFragment : Fragment() {
             }
         }
         profileViewModel.payroll.observe(viewLifecycleOwner) { payroll ->
-            if (payroll != null) {
-                val formattedPayroll = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(payroll)
-                binding.personalPayroll.text = getString(R.string.payroll_format, formattedPayroll ?: "N/A")
+            binding.personalPayroll.text = if (payroll != null) {
+                val formatted = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(payroll)
+                getString(R.string.payroll_format, formatted)
             } else {
-                binding.personalPayroll.text = getString(R.string.payroll_format, "N/A")
+                getString(R.string.payroll_format, "N/A")
             }
         }
         profileViewModel.avatarUrl.observe(viewLifecycleOwner) { url ->
@@ -95,17 +99,17 @@ class ProfileFragment : Fragment() {
         }
 
         profileViewModel.teamDetail.observe(viewLifecycleOwner) { team ->
-            teamText.text = getString(R.string.team_format,team?.name ?: "N/A")
+            binding.personalTeam.text = getString(R.string.team_format,team?.name ?: "N/A")
         }
 
         profileViewModel.outletDetail.observe(viewLifecycleOwner) { outlet ->
-            outletText.text = getString(R.string.outlet_format,outlet?.name ?: "N/A")
+            binding.personalOutlet.text = getString(R.string.outlet_format,outlet?.name ?: "N/A")
         }
 
-        signOutButton.setOnClickListener {
-            mainViewModel.signOut()
-        }
+    }
 
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
 }

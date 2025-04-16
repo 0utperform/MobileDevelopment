@@ -3,6 +3,7 @@ package com.example.a0utperform.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -54,6 +55,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun observeLoginState() {
+        loginViewModel.isLoading.observe(this) { isLoading ->
+            showLoading(isLoading)
+        }
         loginViewModel.loginResult.observe(this) { result ->
             result?.onSuccess { user ->
                 Toast.makeText(this, "Welcome ${user?.name}", Toast.LENGTH_SHORT).show()
@@ -65,5 +69,8 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

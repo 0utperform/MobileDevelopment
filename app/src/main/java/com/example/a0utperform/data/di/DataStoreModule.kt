@@ -3,9 +3,9 @@ package com.example.a0utperform.data.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import com.example.a0utperform.data.local.datastore.UserPreference
-import com.example.a0utperform.data.local.datastore.dataStore
+import com.example.a0utperform.data.local.user.UserPreference
+import com.example.a0utperform.data.local.user.dataStore
+import com.example.dicodingeventbottomnav.database.setting.SettingPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +22,14 @@ object DataStoreModule {
     fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
         context.dataStore
 
+
     @Provides
     @Singleton
     fun provideUserPreference(dataStore: DataStore<Preferences>): UserPreference =
         UserPreference.getInstance(dataStore)
+
+    @Provides
+    @Singleton
+    fun provideSettingPreferences(dataStore: DataStore<Preferences>): SettingPreferences =
+        SettingPreferences.getInstance(dataStore)
 }

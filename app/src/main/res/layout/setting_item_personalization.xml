@@ -32,10 +32,9 @@
             android:textSize="16sp" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_notifications"
+            android:id="@+id/switch_dark_mode"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout

@@ -1,4 +1,4 @@
-package com.example.a0utperform.data.local.datastore
+package com.example.a0utperform.data.local.user
 
 import android.content.Context
 import androidx.datastore.core.DataStore

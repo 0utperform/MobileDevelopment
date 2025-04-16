@@ -3,6 +3,7 @@ package com.example.a0utperform.ui.register
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -76,6 +77,9 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun observeRegisterState() {
+        registerViewModel.isLoading.observe(this) { isLoading ->
+            showLoading(isLoading)
+        }
         registerViewModel.registerResult.observe(this) { result ->
             result.onSuccess {
                 // Not expected to happen in this flow
@@ -94,5 +98,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
