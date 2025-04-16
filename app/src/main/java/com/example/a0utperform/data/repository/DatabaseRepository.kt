@@ -115,4 +115,36 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun getAllOutlets(): Result<List<OutletDetail>> {
+        return try {
+            val outletList = supabaseDatabase
+                .from("outlet")
+                .select(Columns.list()) // or specify columns as needed
+                .decodeList<OutletDetail>()
+
+            Result.success(outletList)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching all outlets", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getManagerName(managerId: String): Result<String?> {
+        return try {
+
+            val response = supabaseDatabase
+                .from("users")
+                .select(Columns.list("name")) {
+                    filter { eq("user_id", managerId) }
+                }
+                .decodeSingleOrNull<Map<String, String?>>()
+
+            val managerName = response?.get("name")
+            Result.success(managerName)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
