@@ -42,7 +42,7 @@
     <string name="task_label">Your Task</string>
     <string name="link_google_account">Link Google Account</string>
     <string name="google_login_notice">Email needs to be linked with Google for proper multi auth access, \nplease link account using google after logging in.</string>
-    <string name="team_label">Your Team</string>
+    <string name="team_label">Team</string>
     <string name="title_leaderboard">LeaderBoard</string>
     <string name="title_outlet">Outlet</string>
     <string name="title_profile">Profile</string>
@@ -81,4 +81,9 @@
     <string name="outlet_manager_format">Manager : %1$s</string>
     <string name="outlet_size_format">Size : %1$s</string>
     <string name="outlet_address_format">Address : %1$s</string>
+    <string name="staff_title">Staff</string>
+    <string name="outlet_description_format">Description : %1$s</string>
+    <string name="outletId_format">Outlet Id : %1$s</string>
+    <string name="created_format">Created At : %1$s</string>
+    <string name="placeholder_team_name">Team</string>
 </resources>

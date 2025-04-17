@@ -16,10 +16,15 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.main_activity.outlet.outletdetail.ActivityOutletDetail"
+            android:label="@string/title_outlet"
+            android:exported="false"
+            android:theme="@style/Theme.Dashboard"/>
+        <activity
             android:name=".ui.notification.NotificationActivity"
+            android:exported="false"
             android:label="@string/notifications"
-            android:theme="@style/Theme.Dashboard"
-            android:exported="false" />
+            android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.setting.SettingActivity"
             android:exported="false"

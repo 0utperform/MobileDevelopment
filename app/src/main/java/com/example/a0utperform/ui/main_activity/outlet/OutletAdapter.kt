@@ -3,6 +3,7 @@ package com.example.a0utperform.ui.main_activity.outlet
 import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,7 +14,13 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.OutletDetail
 
-class OutletAdapter : RecyclerView.Adapter<OutletAdapter.OutletViewHolder>() {
+class OutletAdapter (
+    private val listener: OnOutletClickListener
+): RecyclerView.Adapter<OutletAdapter.OutletViewHolder>() {
+
+    interface OnOutletClickListener {
+        fun onOutletClick(outletDetail: OutletDetail)
+    }
 
     private val diffCallback = object : DiffUtil.ItemCallback<OutletDetail>() {
         override fun areItemsTheSame(oldItem: OutletDetail, newItem: OutletDetail): Boolean {
@@ -62,6 +69,12 @@ class OutletAdapter : RecyclerView.Adapter<OutletAdapter.OutletViewHolder>() {
             Glide.with(itemView.context)
                 .load(outlet.image_url)
                 .into(mediaCoverImageView)
+
+            itemView.setOnClickListener {
+                listener.onOutletClick(outlet)
+            }
         }
     }
+
+
 }

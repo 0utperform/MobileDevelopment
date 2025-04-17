@@ -130,19 +130,18 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    suspend fun getManagerName(managerId: String): Result<String?> {
+    suspend fun getTeamsByOutletId(outletId: String): Result<List<TeamDetail>> {
         return try {
-
-            val response = supabaseDatabase
-                .from("users")
-                .select(Columns.list("name")) {
-                    filter { eq("user_id", managerId) }
+            val teamList = supabaseDatabase
+                .from("teams")
+                .select(Columns.list()) {
+                    filter { eq("outlet_id", outletId) }
                 }
-                .decodeSingleOrNull<Map<String, String?>>()
+                .decodeList<TeamDetail>()
 
-            val managerName = response?.get("name")
-            Result.success(managerName)
+            Result.success(teamList)
         } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching teams by outlet ID", e)
             Result.failure(e)
         }
     }

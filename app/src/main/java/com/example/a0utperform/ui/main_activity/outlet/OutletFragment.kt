@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.outlet
 
+import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,10 +11,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a0utperform.R
+import com.example.a0utperform.data.model.OutletDetail
+import com.example.a0utperform.ui.main_activity.ActivityMain
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.ActivityOutletDetail
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
-class OutletFragment : Fragment() {
+class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
 
     companion object {
         fun newInstance() = OutletFragment()
@@ -25,6 +30,14 @@ class OutletFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    override fun onOutletClick(outletDetail: OutletDetail) {
+        val outletJson = Json.encodeToString(outletDetail)
+        val detailIntent = Intent(context, ActivityOutletDetail::class.java).apply {
+            putExtra("OUTLET_DETAIL_JSON", outletJson)
+        }
+        startActivity(detailIntent)
     }
 
     override fun onCreateView(
@@ -40,7 +53,7 @@ class OutletFragment : Fragment() {
         val rvOutlets = view.findViewById<RecyclerView>(R.id.rv_outlets)
         rvOutlets.layoutManager = LinearLayoutManager(requireContext())
 
-        outletAdapter = OutletAdapter()
+        outletAdapter = OutletAdapter(listener = this)
         rvOutlets.adapter = outletAdapter
 
 
@@ -56,4 +69,5 @@ class OutletFragment : Fragment() {
 
         viewModel.fetchOutlets()
     }
+
 }
