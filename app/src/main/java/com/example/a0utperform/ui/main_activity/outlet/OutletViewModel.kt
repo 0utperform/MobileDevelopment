@@ -8,6 +8,8 @@ import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +26,7 @@ class OutletViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    fun getUserRole(): Flow<String?> = userPreference.getSession().map { it.role }
 
     fun fetchOutlets() {
         viewModelScope.launch {

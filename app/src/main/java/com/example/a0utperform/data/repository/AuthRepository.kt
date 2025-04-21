@@ -72,6 +72,7 @@ class AuthRepository @Inject constructor(
             if (existingUser == null) {
                 return Result.failure(Exception("Account not registered. Please log in using email first and link Google."))
             }
+
             else {
                 supabaseAuth.signInWith(IDToken) {
                     idToken = googleIdToken
@@ -175,6 +176,7 @@ class AuthRepository @Inject constructor(
                 }
             }
 
+
             val userModel = UserModel(
                 user.id,
                 userData.name,
@@ -217,11 +219,23 @@ class AuthRepository @Inject constructor(
             .decodeList<UserModel>()
 
         val existingUser = existingUsers.find { it.userId == user.id }
-        if (existingUser != null) return existingUser
 
+        val avatarUrl = user.userMetadata?.get("avatar_url")?.jsonPrimitive?.contentOrNull
+
+        if (existingUser != null) {
+            if (avatarUrl != null && avatarUrl != existingUser.avatarUrl) {
+                supabaseDatabase.from("users").update(
+                    mapOf("avatarUrl" to avatarUrl)
+                ) {
+                    filter { eq("user_id", user.id) }
+                }
+            }
+            return existingUser
+        }
         val name = user.userMetadata?.get("full_name")?.jsonPrimitive?.contentOrNull ?: ""
         val age = user.userMetadata?.get("age")?.jsonPrimitive?.contentOrNull ?: ""
         val phone = user.userMetadata?.get("phone")?.jsonPrimitive?.contentOrNull ?: ""
+
         val role = "Staff"
         val created = user.createdAt?.toString() ?: "null"
 
@@ -233,7 +247,8 @@ class AuthRepository @Inject constructor(
             phone = phone,
             role = role,
             isLogin = true,
-            createdAt = created
+            createdAt = created,
+            avatarUrl = avatarUrl // <-- Add this to your insert
         )
         supabaseDatabase.from("users").insert(newUser)
         return newUser

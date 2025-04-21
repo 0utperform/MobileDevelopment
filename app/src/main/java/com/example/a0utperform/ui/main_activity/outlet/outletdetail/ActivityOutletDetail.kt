@@ -2,6 +2,7 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -20,8 +21,9 @@ import kotlinx.serialization.json.Json
 class ActivityOutletDetail : AppCompatActivity() {
 
     private lateinit var binding: ActivityOutletDetailBinding
-    private val outletViewModel: OutletViewModel by viewModels()
+    private val outletViewModel: OutletDetailViewModel by viewModels()
     private val adapter = TeamAdapter()
+    private val staffAdapter = StaffAdapter()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,10 @@ class ActivityOutletDetail : AppCompatActivity() {
 
         binding.rvTeams.layoutManager = LinearLayoutManager(this)
         binding.rvTeams.adapter = adapter
+        binding.rvStaff.adapter = staffAdapter
+        binding.rvStaff.layoutManager = LinearLayoutManager(this)
+
+
 
         val outletJson = intent.getStringExtra("OUTLET_DETAIL_JSON")
         val outletDetail = outletJson?.let { Json.decodeFromString<OutletDetail>(it) }
@@ -48,10 +54,28 @@ class ActivityOutletDetail : AppCompatActivity() {
                 .into(binding.imgOutlet)
 
             outletViewModel.fetchTeamsByOutlet(outlet.outlet_id)
+            outletViewModel.fetchStaffByOutlet(outlet.outlet_id)
+        }
+        outletViewModel.staffList.observe(this) { staff ->
+            if (staff.isNullOrEmpty()) {
+                binding.rvStaff.visibility = View.GONE
+                binding.staffLabel.visibility = View.GONE
+            } else {
+                staffAdapter.submitList(staff)
+                binding.rvStaff.visibility = View.VISIBLE
+                binding.staffLabel.visibility = View.VISIBLE
+            }
         }
 
         outletViewModel.teams.observe(this) { teams ->
-            adapter.submitList(teams)
+            if (teams.isNullOrEmpty()) {
+                binding.rvTeams.visibility = View.GONE
+                binding.teamTitle.visibility = View.GONE  // assuming you have a title TextView
+            } else {
+                adapter.submitList(teams)
+                binding.rvTeams.visibility = View.VISIBLE
+                binding.teamTitle.visibility = View.VISIBLE
+            }
         }
 
         outletViewModel.error.observe(this) { error ->

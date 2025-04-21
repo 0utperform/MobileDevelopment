@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
+import com.example.a0utperform.data.model.StaffData
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import io.github.jan.supabase.auth.Auth
@@ -142,6 +143,53 @@ class DatabaseRepository @Inject constructor(
             Result.success(teamList)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching teams by outlet ID", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getStaffByOutlet(outletId: String): Result<List<StaffData>> {
+        return try {
+            Log.d("getStaffByOutlet", "Fetching staff for outletId: $outletId")
+
+            // Step 1: Get all user_ids from user_outlet for this outlet
+            val userOutletResponse = supabaseDatabase
+                .from("user_outlet")
+                .select(Columns.list()) {
+                    filter { eq("outlet_id", outletId) }
+                }
+                .decodeList<Map<String, String>>()
+
+            Log.d("getStaffByOutlet", "userOutletResponse: $userOutletResponse")
+
+            val userIds = userOutletResponse.mapNotNull { it["user_id"] }
+
+            Log.d("getStaffByOutlet", "Mapped user IDs: $userIds")
+
+            if (userIds.isEmpty()) {
+                Log.w("getStaffByOutlet", "No users found for outletId: $outletId")
+                return Result.success(emptyList())
+            }
+
+            // Step 2: Fetch users using the list of IDs
+            val usersResponse = supabaseDatabase
+                .from("users")
+                .select(Columns.list()) {
+                    filter {
+                    or {
+                        userIds.forEach { userId ->
+                            eq("user_id", userId)
+                        }
+                    }
+                }
+                }
+                .decodeList<StaffData>()
+
+            Log.d("getStaffByOutlet", "Fetched staff data: $usersResponse")
+
+            Result.success(usersResponse)
+
+        } catch (e: Exception) {
+            Log.e("getStaffByOutlet", "Error fetching staff for outletId: $outletId", e)
             Result.failure(e)
         }
     }

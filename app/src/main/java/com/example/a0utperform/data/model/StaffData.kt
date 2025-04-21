@@ -3,9 +3,8 @@ package com.example.a0utperform.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
-data class UserModel(
+data class StaffData(
     @SerialName("user_id")
     val userId: String,
     val name: String,
@@ -15,6 +14,7 @@ data class UserModel(
     val phone: String,
     val isLogin: Boolean? = false,
     val avatarUrl: String? = null,
+    val payroll:Double? = 0.0,
     @SerialName("created_at")
     val createdAt: String
 )
