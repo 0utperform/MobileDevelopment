@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.model.StaffData
+import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,9 @@ import javax.inject.Inject
 class DetailTeamViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository
 ) : ViewModel() {
+
+    private val _taskList = MutableLiveData<List<TaskData>?>()
+    val taskList: LiveData<List<TaskData>?> = _taskList
 
     private val _team = MutableLiveData<TeamDetail>()
     val team: LiveData<TeamDetail> = _team
@@ -31,6 +35,7 @@ class DetailTeamViewModel @Inject constructor(
     fun setTeamDetail(team: TeamDetail) {
         _team.value = team
         fetchStaffByTeam(team.team_id)
+        fetchTasksForTeam(team.team_id)
     }
 
     private fun fetchStaffByTeam(teamId: String) {
@@ -40,6 +45,23 @@ class DetailTeamViewModel @Inject constructor(
                 val result = databaseRepository.getStaffByTeam(teamId)
                 if (result.isSuccess) {
                     _staffList.postValue(result.getOrNull())
+                } else {
+                    _error.postValue(result.exceptionOrNull()?.message)
+                }
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+    fun fetchTasksForTeam(teamId: String) {
+        viewModelScope.launch {
+            _isLoading.postValue(true)
+            try {
+                val result = databaseRepository.getTasksByTeamId(teamId)
+                if (result.isSuccess) {
+                    _taskList.postValue(result.getOrNull())
                 } else {
                     _error.postValue(result.exceptionOrNull()?.message)
                 }

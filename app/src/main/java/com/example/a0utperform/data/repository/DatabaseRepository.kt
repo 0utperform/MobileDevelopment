@@ -5,6 +5,7 @@ import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
+import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import io.github.jan.supabase.auth.Auth
@@ -222,6 +223,22 @@ class DatabaseRepository @Inject constructor(
 
             Result.success(usersResponse)
         } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTasksByTeamId(teamId: String): Result<List<TaskData>> {
+        return try {
+            val tasks = supabaseDatabase
+                .from("task")
+                .select(Columns.list()) {
+                    filter { eq("team_id", teamId) }
+                }
+                .decodeList<TaskData>()
+
+            Result.success(tasks)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching tasks", e)
             Result.failure(e)
         }
     }

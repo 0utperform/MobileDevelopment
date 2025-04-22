@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -25,7 +26,11 @@ class DetailTeamActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailTeamBinding
     private val teamViewModel: DetailTeamViewModel by viewModels()
     private val staffAdapter = StaffAdapter()
-
+    private val taskAdapter = TaskAdapter { task ->
+        val intent = Intent(this, DetailTeamActivity::class.java)
+        intent.putExtra("TASK_DETAIL_JSON", Json.encodeToString(task))
+        startActivity(intent)
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +39,9 @@ class DetailTeamActivity : AppCompatActivity() {
 
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
+
+        binding.rvTasks.adapter = taskAdapter
+        binding.rvTasks.layoutManager = LinearLayoutManager(this)
 
         val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
@@ -67,6 +75,19 @@ class DetailTeamActivity : AppCompatActivity() {
             Glide.with(this)
                 .load(team.img_url ?: R.drawable.placeholder_user)
                 .into(binding.imgTeam)
+        }
+
+        teamViewModel.taskList.observe(this) { tasks ->
+            if (tasks.isNullOrEmpty()) {
+                binding.tasksLabel.visibility = View.GONE
+                binding.rvTasks.visibility = View.GONE
+
+            } else {
+                taskAdapter.submitList(tasks)
+                binding.tasksLabel.visibility = View.VISIBLE
+                binding.rvTasks.visibility = View.VISIBLE
+
+            }
         }
 
     }
