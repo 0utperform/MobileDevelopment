@@ -59,8 +59,6 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getUserRole().collect { role ->
                 if (role.equals("Manager", ignoreCase = true)) {
@@ -103,6 +101,9 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
             outletAdapter.submitList(outletList)
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
             errorMsg?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()

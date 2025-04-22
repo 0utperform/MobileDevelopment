@@ -19,7 +19,9 @@ class OutletViewModel @Inject constructor(
     private val userPreference: UserPreference
 ) : ViewModel() {
 
-    // LiveData or StateFlow to expose the list of outlets
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _outlets = MutableLiveData<List<OutletDetail>>()
     val outlets: LiveData<List<OutletDetail>> = _outlets
 
@@ -30,47 +32,54 @@ class OutletViewModel @Inject constructor(
 
     fun fetchOutlets() {
         viewModelScope.launch {
-            // 1) Get the current user
+            _isLoading.postValue(true)
+
             userPreference.getSession().collect { user ->
                 val userId = user.userId
-                val role = user.role // e.g., "Staff" or "Manager"
+                val role = user.role
 
                 if (userId.isBlank() || role.isNullOrBlank()) {
                     _error.postValue("Invalid user session or role.")
+                    _isLoading.postValue(false)
                     return@collect
                 }
 
                 try {
-                    if (role.equals("Staff", ignoreCase = true)) {
-                        // For staff, fetch a single assigned outlet
-                        val result = databaseRepository.getAssignedOutletDetails(userId)
-                        if (result.isSuccess) {
-                            result.getOrNull()?.let { assignedOutlet ->
-                                _outlets.postValue(listOf(assignedOutlet))
-                            } ?: run {
+                    when {
+                        role.equals("Staff", ignoreCase = true) -> {
+                            val result = databaseRepository.getAssignedOutletDetails(userId)
+                            if (result.isSuccess) {
+                                result.getOrNull()?.let { assignedOutlet ->
+                                    _outlets.postValue(listOf(assignedOutlet))
+                                } ?: run {
+                                    _outlets.postValue(emptyList())
+                                }
+                            } else {
+                                _error.postValue(result.exceptionOrNull()?.message)
                                 _outlets.postValue(emptyList())
                             }
-                        } else {
-                            _error.postValue(result.exceptionOrNull()?.message)
-                            _outlets.postValue(emptyList())
-                        }
-                    } else if (role.equals("Manager", ignoreCase = true)) {
-                        val result = databaseRepository.getAllOutlets()
-                        if (result.isSuccess) {
-                            _outlets.postValue(result.getOrNull().orEmpty())
-                        } else {
-                            _error.postValue(result.exceptionOrNull()?.message)
-                            _outlets.postValue(emptyList())
                         }
 
-                    } else {
-                        // fallback if some other role
-                        _error.postValue("Unknown role: $role")
-                        _outlets.postValue(emptyList())
+                        role.equals("Manager", ignoreCase = true) -> {
+                            val result = databaseRepository.getAllOutlets()
+                            if (result.isSuccess) {
+                                _outlets.postValue(result.getOrNull().orEmpty())
+                            } else {
+                                _error.postValue(result.exceptionOrNull()?.message)
+                                _outlets.postValue(emptyList())
+                            }
+                        }
+
+                        else -> {
+                            _error.postValue("Unknown role: $role")
+                            _outlets.postValue(emptyList())
+                        }
                     }
                 } catch (e: Exception) {
                     _error.postValue(e.message)
                     _outlets.postValue(emptyList())
+                } finally {
+                    _isLoading.postValue(false)
                 }
             }
         }

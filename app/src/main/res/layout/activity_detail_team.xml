@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,17 +11,16 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:padding="16dp"
-    tools:context=".ui.main_activity.outlet.outletdetail.ActivityOutletDetail">
-
+    tools:context=".ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Outlet Detail Card -->
+        <!-- Team Detail Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/detail_card"
+            android:id="@+id/team_detail_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="12dp"
@@ -37,7 +37,7 @@
                     android:layout_height="120dp">
 
                     <ImageView
-                        android:id="@+id/imgOutlet"
+                        android:id="@+id/imgTeam"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -45,12 +45,12 @@
                         android:alpha="0.5" />
 
                     <TextView
-                        android:id="@+id/tvOutletName"
+                        android:id="@+id/tvTeamName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|start"
                         android:layout_margin="12dp"
-                        android:text="@string/placeholder_outlet_name"
+                        android:text="@string/placeholder_team_name"
                         android:textStyle="bold"
                         android:textColor="@color/text_color"
                         android:textSize="16sp"
@@ -66,65 +66,36 @@
                     android:padding="@dimen/padding_medium">
 
                     <TextView
-                        android:id="@+id/tvManager"
+                        android:id="@+id/tvTeamId"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:text="@string/outlet_manager_format" />
+                        android:text="@string/team_id_format" />
 
                     <TextView
-                        android:id="@+id/tvOutletId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:text="@string/outletId_format" />
-
-                    <TextView
-                        android:id="@+id/tvSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/size_format"
-                        android:layout_marginTop="@dimen/margin_small" />
-
-                    <TextView
-                        android:id="@+id/tvAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/outlet_address_format"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:maxLines="2"
-                        android:ellipsize="end" />
-
-                    <TextView
-                        android:id="@+id/tvCreated"
+                        android:id="@+id/tvCreatedAt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
                         android:text="@string/created_format" />
-                </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/tvStaffSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/size_format" />
+
+                    <TextView
+                        android:id="@+id/tvTeamDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/description_format"
+                        android:ellipsize="end" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-        <!-- Team Title -->
-        <TextView
-            android:id="@+id/team_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:text="@string/team_label"
-            android:textColor="@color/text_color"
-            android:fontFamily="@font/roboto_semibold"
-            android:textSize="@dimen/text_size_large" />
-
-        <!-- Team RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_teams"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:nestedScrollingEnabled="false"
-            android:clipToPadding="false" />
 
         <!-- Staff Title -->
         <TextView
@@ -146,16 +117,35 @@
             android:nestedScrollingEnabled="false"
             android:clipToPadding="false" />
 
+        <!-- Tasks Title -->
+        <TextView
+            android:id="@+id/tasks_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/team_task_label"
+            android:textColor="@color/text_color"
+            android:fontFamily="@font/roboto_semibold"
+            android:textSize="@dimen/text_size_large" />
+
+        <!-- Tasks RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:nestedScrollingEnabled="false"
+            android:clipToPadding="false" />
 
     </LinearLayout>
-
 </androidx.core.widget.NestedScrollView>
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+
+<ProgressBar
+android:id="@+id/progressBar"
+style="?android:attr/progressBarStyleLarge"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_gravity="center"
+android:visibility="gone" />
 
 </FrameLayout>

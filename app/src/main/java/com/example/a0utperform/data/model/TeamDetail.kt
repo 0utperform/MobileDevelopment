@@ -10,6 +10,7 @@ data class TeamDetail(
     @SerialName("created_at")
     val createdAt: String? = null,
     val outlet_id: String? = null,
+    @SerialName("staff_size")
     val staffSize:String? = null,
     val img_url:String? = null,
     val description:String?=null

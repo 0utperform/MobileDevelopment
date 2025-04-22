@@ -1,9 +1,7 @@
 package com.example.a0utperform.ui.main_activity.outlet
 
-import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -63,7 +61,7 @@ class OutletAdapter (
             tvOutletName.text = outlet.name ?: "No name"
             tvOutletLocation.text = outlet.location ?: "No location"
             tvManager.text = outlet.manager_name
-            tvSize.text = itemView.context.getString(R.string.outlet_size_format, outlet.staff_size.toString())
+            tvSize.text = itemView.context.getString(R.string.size_format, outlet.staff_size.toString())
 
 
             Glide.with(itemView.context)

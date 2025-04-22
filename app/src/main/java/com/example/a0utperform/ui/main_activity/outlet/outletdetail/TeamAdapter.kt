@@ -1,20 +1,16 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TeamDetail
-import com.example.a0utperform.databinding.ItemOutletBinding
 import com.example.a0utperform.databinding.ItemTeamBinding
 
-class TeamAdapter : RecyclerView.Adapter<TeamAdapter.TeamViewHolder>() {
+class TeamAdapter(private val onTeamClick: (TeamDetail) -> Unit) : RecyclerView.Adapter<TeamAdapter.TeamViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<TeamDetail>() {
         override fun areItemsTheSame(oldItem: TeamDetail, newItem: TeamDetail): Boolean {
@@ -45,12 +41,16 @@ class TeamAdapter : RecyclerView.Adapter<TeamAdapter.TeamViewHolder>() {
     inner class TeamViewHolder(private val binding: ItemTeamBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(team: TeamDetail) {
             binding.tvTeamName.text = team.name
-            binding.tvTeamSize.text = binding.root.context.getString(R.string.outlet_size_format, team.staffSize)
-            binding.tvTeamDescription.text = binding.root.context.getString(R.string.outlet_description_format, team.description)
+            binding.tvTeamSize.text = binding.root.context.getString(R.string.size_format, team.staffSize)
+            binding.tvTeamDescription.text = binding.root.context.getString(R.string.description_format, team.description)
 
             Glide.with(binding.root.context)
                 .load(team.img_url ?: R.drawable.placeholder_user)
                 .into(binding.imgTeam)
+
+            binding.root.setOnClickListener {
+                onTeamClick(team)
+            }
         }
     }
 }

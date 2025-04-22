@@ -1,10 +1,10 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.databinding.ActivityOutletDetailBinding
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.json.Json
@@ -22,17 +23,25 @@ class ActivityOutletDetail : AppCompatActivity() {
 
     private lateinit var binding: ActivityOutletDetailBinding
     private val outletViewModel: OutletDetailViewModel by viewModels()
-    private val adapter = TeamAdapter()
+    private val adapter = TeamAdapter { team ->
+        val intent = Intent(this, DetailTeamActivity::class.java)
+        val teamJson = Json.encodeToString(team)
+        intent.putExtra("TEAM_DETAIL_JSON", teamJson)
+        startActivity(intent)
+    }
     private val staffAdapter = StaffAdapter()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         binding = ActivityOutletDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.rvTeams.layoutManager = LinearLayoutManager(this)
         binding.rvTeams.adapter = adapter
+
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
 
@@ -45,7 +54,7 @@ class ActivityOutletDetail : AppCompatActivity() {
             binding.tvOutletName.text = outlet.name
             binding.tvManager.text = getString(R.string.outlet_manager_format, outlet.manager_name)
             binding.tvOutletId.text = getString(R.string.outletId_format, outlet.outlet_id)
-            binding.tvSize.text = getString(R.string.outlet_size_format, outlet.staff_size.toString())
+            binding.tvSize.text = getString(R.string.size_format, outlet.staff_size.toString())
             binding.tvAddress.text = getString(R.string.outlet_address_format, outlet.location)
             binding.tvCreated.text = getString(R.string.created_format, outlet.created_at.formatToReadableDate())
 
@@ -70,12 +79,16 @@ class ActivityOutletDetail : AppCompatActivity() {
         outletViewModel.teams.observe(this) { teams ->
             if (teams.isNullOrEmpty()) {
                 binding.rvTeams.visibility = View.GONE
-                binding.teamTitle.visibility = View.GONE  // assuming you have a title TextView
+                binding.teamTitle.visibility = View.GONE
             } else {
                 adapter.submitList(teams)
                 binding.rvTeams.visibility = View.VISIBLE
                 binding.teamTitle.visibility = View.VISIBLE
             }
+        }
+
+        outletViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         outletViewModel.error.observe(this) { error ->

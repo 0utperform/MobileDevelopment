@@ -80,11 +80,14 @@
     <string name="outlet_location_placeholder">Outlet Location</string>
     <string name="placeholder_outlet_name">Outlet</string>
     <string name="outlet_manager_format">Manager : %1$s</string>
-    <string name="outlet_size_format">Size : %1$s</string>
+    <string name="size_format">Size : %1$s</string>
     <string name="outlet_address_format">Address : %1$s</string>
     <string name="staff_title">Staff</string>
-    <string name="outlet_description_format">Description : %1$s</string>
+    <string name="description_format">Description : %1$s</string>
     <string name="outletId_format">Outlet Id : %1$s</string>
     <string name="created_format">Created At : %1$s</string>
     <string name="placeholder_team_name">Team</string>
+    <string name="team_id_format">Team ID : %1$s</string>
+    <string name="team_task_label">Tasks</string>
+    <string name="evidence_label">Evidence</string>
 </resources>

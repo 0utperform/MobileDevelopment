@@ -20,6 +20,9 @@ class OutletDetailViewModel @Inject constructor(
     private val userPreference: UserPreference
 ) : ViewModel() {
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val _teams = MutableLiveData<List<TeamDetail>>()
     val teams: LiveData<List<TeamDetail>> = _teams
 
@@ -31,12 +34,14 @@ class OutletDetailViewModel @Inject constructor(
 
     fun fetchTeamsByOutlet(outletId: String) {
         viewModelScope.launch {
+            _isLoading.postValue(true)
             userPreference.getSession().collect { user ->
                 val userId = user.userId
                 val role = user.role
 
                 if (userId.isBlank() || role.isNullOrBlank()) {
                     _error.postValue("Invalid user session or role.")
+                    _isLoading.postValue(false)
                     return@collect
                 }
 
@@ -68,6 +73,8 @@ class OutletDetailViewModel @Inject constructor(
                 } catch (e: Exception) {
                     _error.postValue(e.message)
                     _teams.postValue(emptyList())
+                } finally {
+                    _isLoading.postValue(false)
                 }
             }
         }
@@ -75,11 +82,18 @@ class OutletDetailViewModel @Inject constructor(
 
     fun fetchStaffByOutlet(outletId: String) {
         viewModelScope.launch {
-            val result = databaseRepository.getStaffByOutlet(outletId)
-            if (result.isSuccess) {
-                _staffList.postValue(result.getOrNull())
-            } else {
-                _error.postValue(result.exceptionOrNull()?.message)
+            _isLoading.postValue(true)
+            try {
+                val result = databaseRepository.getStaffByOutlet(outletId)
+                if (result.isSuccess) {
+                    _staffList.postValue(result.getOrNull())
+                } else {
+                    _error.postValue(result.exceptionOrNull()?.message)
+                }
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            } finally {
+                _isLoading.postValue(false)
             }
         }
     }

@@ -57,7 +57,7 @@
                 android:id="@+id/tvSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/outlet_size_format"
+                android:text="@string/size_format"
                 android:layout_marginTop="4dp" />
 
             <TextView

@@ -30,6 +30,7 @@ class ActivityDecideLogin : AppCompatActivity() {
         binding = ActivityDecideLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
 
         observeViewModel()

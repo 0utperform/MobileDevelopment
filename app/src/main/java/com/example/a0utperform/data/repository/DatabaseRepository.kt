@@ -194,4 +194,36 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
+    suspend fun getStaffByTeam(teamId: String): Result<List<StaffData>> {
+        return try {
+            val userTeamResponse = supabaseDatabase
+                .from("user_team")
+                .select(Columns.list()) {
+                    filter { eq("team_id", teamId) }
+                }
+                .decodeList<Map<String, String>>()
+
+            val userIds = userTeamResponse.mapNotNull { it["user_id"] }
+
+            if (userIds.isEmpty()) return Result.success(emptyList())
+
+            val usersResponse = supabaseDatabase
+                .from("users")
+                .select(Columns.list()) {
+                    filter {
+                        or {
+                            userIds.forEach { userId ->
+                                eq("user_id", userId)
+                            }
+                        }
+                    }
+                }
+                .decodeList<StaffData>()
+
+            Result.success(usersResponse)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

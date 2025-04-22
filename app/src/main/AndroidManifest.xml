@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,10 +16,15 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main_activity.outlet.outletdetail.ActivityOutletDetail"
-            android:label="@string/title_outlet"
+            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity"
+            android:label="@string/team_label"
             android:exported="false"
             android:theme="@style/Theme.Dashboard"/>
+        <activity
+            android:name=".ui.main_activity.outlet.outletdetail.ActivityOutletDetail"
+            android:exported="false"
+            android:label="@string/title_outlet"
+            android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.notification.NotificationActivity"
             android:exported="false"
