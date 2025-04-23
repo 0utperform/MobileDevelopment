@@ -1,12 +1,17 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.StaffData
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.UserModel
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,8 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailTeamViewModel @Inject constructor(
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
+    private val userPreference: UserPreference
 ) : ViewModel() {
+
+    val currentUser: LiveData<UserModel> = userPreference.getSession().asLiveData()
+
+    private val _submissionMap = MutableLiveData<Map<String, Int>>()
+    val submissionMap: LiveData<Map<String, Int>> = _submissionMap
 
     private val _taskList = MutableLiveData<List<TaskData>?>()
     val taskList: LiveData<List<TaskData>?> = _taskList
@@ -70,6 +81,27 @@ class DetailTeamViewModel @Inject constructor(
             } finally {
                 _isLoading.postValue(false)
             }
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun loadTeamTasks(teamId: String, userId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val tasksResult = databaseRepository.getTasksByTeamId(teamId)
+            val submissionResult = databaseRepository.getTodaySubmissions(userId, teamId)
+
+            if (tasksResult.isSuccess && submissionResult.isSuccess) {
+                val tasks = tasksResult.getOrNull() ?: emptyList()
+                val submissionMap = submissionResult.getOrNull() ?: emptyMap()
+
+                _taskList.value = tasks
+                _submissionMap.value = submissionMap
+            } else {
+                _error.value = tasksResult.exceptionOrNull()?.message
+                    ?: submissionResult.exceptionOrNull()?.message
+            }
+
+            _isLoading.value = false
         }
     }
 }

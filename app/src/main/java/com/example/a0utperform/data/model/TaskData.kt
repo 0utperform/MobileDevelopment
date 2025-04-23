@@ -15,6 +15,7 @@ data class TaskData(
     @SerialName("created_at")
     val createdAt:String,
     val is_repeating:Boolean,
-    val img_url:String? = "null"
+    val img_url:String? = "null",
+    val submission_per_day: Int? = 0
 
 )

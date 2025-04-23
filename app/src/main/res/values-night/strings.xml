@@ -90,4 +90,8 @@
     <string name="team_id_format">Team ID : %1$s</string>
     <string name="team_task_label">Tasks</string>
     <string name="evidence_label">Evidence</string>
+    <string name="task_placeholder">Task</string>
+    <string name="task_hint">Enter task details here...</string>
+    <string name="description_label">Description</string>
+    <string name="edit_task_label">Edit Task</string>
 </resources>

@@ -16,6 +16,7 @@ import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittask.EditTaskActivity
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.json.Json
@@ -26,11 +27,8 @@ class DetailTeamActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailTeamBinding
     private val teamViewModel: DetailTeamViewModel by viewModels()
     private val staffAdapter = StaffAdapter()
-    private val taskAdapter = TaskAdapter { task ->
-        val intent = Intent(this, DetailTeamActivity::class.java)
-        intent.putExtra("TASK_DETAIL_JSON", Json.encodeToString(task))
-        startActivity(intent)
-    }
+    private lateinit var taskAdapter: TaskAdapter
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +38,51 @@ class DetailTeamActivity : AppCompatActivity() {
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
 
-        binding.rvTasks.adapter = taskAdapter
-        binding.rvTasks.layoutManager = LinearLayoutManager(this)
-
         val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
+        teamDetail?.let { teamViewModel.setTeamDetail(it) }
 
-        teamDetail?.let {
-            teamViewModel.setTeamDetail(it)
+
+        teamViewModel.currentUser.observe(this) { user ->
+            val userRole = user.role ?: return@observe
+
+            taskAdapter = TaskAdapter(
+                userRole = userRole,
+                submissionProgress = teamViewModel.submissionMap.value ?: emptyMap(),
+                onManagerClick = { task ->
+                    val intent = Intent(this, EditTaskActivity::class.java)
+                    intent.putExtra("task_id", task.task_id)
+                    startActivity(intent)
+                },
+                onStaffClick = { task, nextCount ->
+                    val intent = Intent(this, EditTaskActivity::class.java)
+                    intent.putExtra("task_id", task.task_id)
+                    intent.putExtra("submission_progress", nextCount)
+                    startActivity(intent)
+                }
+            )
+
+            binding.rvTasks.adapter = taskAdapter
+            binding.rvTasks.layoutManager = LinearLayoutManager(this)
+
+            // Now observe task data AFTER adapter is ready
+            teamViewModel.taskList.observe(this) { tasks ->
+                if (tasks.isNullOrEmpty()) {
+                    binding.tasksLabel.visibility = View.GONE
+                    binding.rvTasks.visibility = View.GONE
+                } else {
+                    taskAdapter.submitList(tasks)
+                    binding.tasksLabel.visibility = View.VISIBLE
+                    binding.rvTasks.visibility = View.VISIBLE
+                }
+            }
+
+            teamViewModel.submissionMap.observe(this) { map ->
+                taskAdapter.submitList(userRole, map)
+            }
         }
+
+        // These don't depend on the user
         teamViewModel.staffList.observe(this) { staff ->
             if (staff.isNullOrEmpty()) {
                 binding.rvStaff.visibility = View.GONE
@@ -59,6 +93,7 @@ class DetailTeamActivity : AppCompatActivity() {
                 binding.staffLabel.visibility = View.VISIBLE
             }
         }
+
         teamViewModel.isLoading.observe(this) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
@@ -76,19 +111,5 @@ class DetailTeamActivity : AppCompatActivity() {
                 .load(team.img_url ?: R.drawable.placeholder_user)
                 .into(binding.imgTeam)
         }
-
-        teamViewModel.taskList.observe(this) { tasks ->
-            if (tasks.isNullOrEmpty()) {
-                binding.tasksLabel.visibility = View.GONE
-                binding.rvTasks.visibility = View.GONE
-
-            } else {
-                taskAdapter.submitList(tasks)
-                binding.tasksLabel.visibility = View.VISIBLE
-                binding.rvTasks.visibility = View.VISIBLE
-
-            }
-        }
-
     }
 }
