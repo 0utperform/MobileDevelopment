@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.databinding.ItemTaskBinding
 
@@ -26,6 +27,11 @@ class TaskAdapter(
     inner class TaskViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(task: TaskData) {
             binding.tvTaskName.text = task.title
+            binding.tvTaskCompletionLabel.text =  itemView.context.getString(
+                R.string.formatted_completion,
+                task.completedSubmissions.toString(),
+                task.totalTargetSubmissions.toString()
+            )
             binding.root.setOnClickListener { onClick(task) }
         }
     }

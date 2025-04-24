@@ -41,13 +41,14 @@ class DetailTeamActivity : AppCompatActivity() {
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
 
         binding.rvTasks.adapter = taskAdapter
-        binding.rvTasks.layoutManager = LinearLayoutManager(this)
+        binding.rvTasks.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.HORIZONTAL, false)
 
         val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
 
         teamDetail?.let {
             teamViewModel.setTeamDetail(it)
+            teamViewModel.fetchTasksWithProgress(it.team_id)
         }
         teamViewModel.staffList.observe(this) { staff ->
             if (staff.isNullOrEmpty()) {

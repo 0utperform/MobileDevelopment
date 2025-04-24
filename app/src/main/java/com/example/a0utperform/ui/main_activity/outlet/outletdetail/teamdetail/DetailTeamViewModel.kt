@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -64,6 +65,40 @@ class DetailTeamViewModel @Inject constructor(
                     _taskList.postValue(result.getOrNull())
                 } else {
                     _error.postValue(result.exceptionOrNull()?.message)
+                }
+            } catch (e: Exception) {
+                _error.postValue(e.message)
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun fetchTasksWithProgress(teamId: String) {
+        viewModelScope.launch {
+            _isLoading.postValue(true)
+            try {
+                val tasksResult = databaseRepository.getTasksByTeamId(teamId)
+                val submissionsResult = databaseRepository.getSubmissionsByTeamId(teamId)
+
+                if (tasksResult.isSuccess && submissionsResult.isSuccess) {
+                    val tasks = tasksResult.getOrNull() ?: emptyList()
+                    val submissions = submissionsResult.getOrNull() ?: emptyList()
+                    val taskMap = submissions.groupBy { it.task_id }
+
+                    val updatedTasks = tasks.map { task ->
+                        val completed = taskMap[task.task_id]?.size ?: 0
+                        val target = task.submission_per_day
+                        task.apply {
+                            completedSubmissions = completed
+                            if (target != null) {
+                                totalTargetSubmissions = target
+                            }
+                        }
+                    }
+                    _taskList.postValue(updatedTasks)
+                } else {
+                    _error.postValue(tasksResult.exceptionOrNull()?.message ?: "Error loading data")
                 }
             } catch (e: Exception) {
                 _error.postValue(e.message)

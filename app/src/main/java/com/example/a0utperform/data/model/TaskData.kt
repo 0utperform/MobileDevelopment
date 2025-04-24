@@ -2,6 +2,7 @@ package com.example.a0utperform.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class TaskData(
@@ -14,7 +15,14 @@ data class TaskData(
     val dueDate: String?, // Parseable format
     @SerialName("created_at")
     val createdAt:String,
-    val is_repeating:Boolean,
-    val img_url:String? = "null"
+    val is_repeating:Boolean? = null,
+    val img_url:String? = "null",
+    val submission_per_day: Int? = 0,
+
+    @Transient
+    var completedSubmissions: Int = 0,
+
+    @Transient
+    var totalTargetSubmissions: Int = 0
 
 )
