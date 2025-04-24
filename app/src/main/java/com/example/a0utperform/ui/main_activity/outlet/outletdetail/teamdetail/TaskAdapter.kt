@@ -1,16 +1,19 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.databinding.ItemTaskBinding
 
 
 class TaskAdapter(
+    private val context: Context,
     private val onClick: (TaskData) -> Unit
 ) : ListAdapter<TaskData, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
@@ -32,6 +35,9 @@ class TaskAdapter(
                 task.completedSubmissions.toString(),
                 task.totalTargetSubmissions.toString()
             )
+            Glide.with(context)
+                .load(task.img_url)
+                .into(binding.taskImage)
             binding.root.setOnClickListener { onClick(task) }
         }
     }

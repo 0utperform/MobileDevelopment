@@ -15,7 +15,7 @@
         >
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/task_image"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/placeholder_user"

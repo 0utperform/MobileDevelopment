@@ -10,6 +10,8 @@ import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.repository.AuthRepository
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +21,8 @@ class OutletDetailViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
     private val userPreference: UserPreference
 ) : ViewModel() {
+
+
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading

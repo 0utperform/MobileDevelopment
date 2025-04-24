@@ -26,7 +26,7 @@ class DetailTeamActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailTeamBinding
     private val teamViewModel: DetailTeamViewModel by viewModels()
     private val staffAdapter = StaffAdapter()
-    private val taskAdapter = TaskAdapter { task ->
+    private val taskAdapter = TaskAdapter (this) { task ->
         val intent = Intent(this, DetailTeamActivity::class.java)
         intent.putExtra("TASK_DETAIL_JSON", Json.encodeToString(task))
         startActivity(intent)
