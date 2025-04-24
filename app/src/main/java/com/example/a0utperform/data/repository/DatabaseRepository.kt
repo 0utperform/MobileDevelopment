@@ -1,14 +1,11 @@
 package com.example.a0utperform.data.repository
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
 import com.example.a0utperform.data.model.TaskData
-import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import io.github.jan.supabase.auth.Auth
@@ -16,8 +13,6 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
-import java.time.LocalDate
-import java.time.ZoneOffset
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -244,50 +239,6 @@ class DatabaseRepository @Inject constructor(
             Result.success(tasks)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching tasks", e)
-            Result.failure(e)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun getTodaySubmissions(userId: String, teamId: String): Result<Map<String, Int>> {
-        return try {
-            val todayStart = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC)
-            val todayEnd = LocalDate.now().plusDays(1).atStartOfDay().toInstant(ZoneOffset.UTC)
-
-            val submissions = supabaseDatabase
-                .from("task_submissions")
-                .select(Columns.list()) {
-                    filter {
-                        eq("user_id", userId)
-                        gte("submitted_at", todayStart.toString())
-                        lt("submitted_at", todayEnd.toString())
-                    }
-                }
-                .decodeList<TaskSubmission>()
-
-            // Count how many times each task was submitted today
-            val submissionMap = submissions
-                .groupingBy { it.taskId }
-                .eachCount()
-
-            Result.success(submissionMap)
-        } catch (e: Exception) {
-            Log.e("DatabaseRepository", "Error fetching today's submissions", e)
-            Result.failure(e)
-        }
-    }
-
-    suspend fun getTaskById(taskId: String): Result<TaskData?> {
-        return try {
-            val task = supabaseDatabase
-                .from("task")
-                .select(Columns.list()) {
-                    filter { eq("task_id", taskId) }
-                }
-                .decodeSingleOrNull<TaskData>()
-            Result.success(task)
-        } catch (e: Exception) {
-            Log.e("DatabaseRepository", "Error fetching task by ID", e)
             Result.failure(e)
         }
     }
