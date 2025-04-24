@@ -21,7 +21,7 @@ class DetailTeamViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
     private val userPreference: UserPreference
 ) : ViewModel() {
-
+    fun getUserRole(): Flow<String?> = userPreference.getSession().map { it.role }
     private val _taskList = MutableLiveData<List<TaskData>?>()
     val taskList: LiveData<List<TaskData>?> = _taskList
 

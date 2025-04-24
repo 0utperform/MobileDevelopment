@@ -1,6 +1,8 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,10 +12,12 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.databinding.ItemTaskBinding
+import kotlinx.serialization.json.Json
 
 
 class TaskAdapter(
     private val context: Context,
+    private val role: String,
     private val onClick: (TaskData) -> Unit
 ) : ListAdapter<TaskData, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
@@ -38,7 +42,18 @@ class TaskAdapter(
             Glide.with(context)
                 .load(task.img_url)
                 .into(binding.taskImage)
-            binding.root.setOnClickListener { onClick(task) }
+            binding.root.setOnClickListener {
+                val intent = if (role == "Staff") {
+                    Intent(context, EditTaskActivity::class.java)
+                } else {
+                    Intent(context, ViewTaskActivity::class.java)
+                }
+                intent.putExtra("TASK_ID", task.task_id)
+                intent.putExtra("TASK_DETAIL_JSON", Json.encodeToString(task))
+                intent.putExtra("COMPLETED_SUBMISSIONS", task.completedSubmissions)
+                intent.putExtra("TOTAL_TARGET_SUBMISSIONS", task.totalTargetSubmissions)
+                context.startActivity(intent)
+            }
         }
     }
 

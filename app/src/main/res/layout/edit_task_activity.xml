@@ -26,6 +26,7 @@
 
                 <!-- Header Row -->
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -34,6 +35,7 @@
 
 
                     <TextView
+                        android:id="@+id/task_title"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -41,7 +43,9 @@
                         android:textStyle="bold"
                         android:textSize="18sp" />
 
+
                     <TextView
+                        android:id="@+id/formatted_progress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/formatted_completion"
@@ -49,7 +53,17 @@
                         android:textColor="#888888" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_task_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description_label"
+                    android:textSize="14sp"
+                    android:maxLines="20"
+                    android:layout_marginBottom="12dp" />
+
                 <ImageView
+                    android:id="@+id/img_task"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"

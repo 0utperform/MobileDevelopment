@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.a0utperform.R
@@ -18,6 +19,7 @@ import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
@@ -26,11 +28,7 @@ class DetailTeamActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailTeamBinding
     private val teamViewModel: DetailTeamViewModel by viewModels()
     private val staffAdapter = StaffAdapter()
-    private val taskAdapter = TaskAdapter (this) { task ->
-        val intent = Intent(this, DetailTeamActivity::class.java)
-        intent.putExtra("TASK_DETAIL_JSON", Json.encodeToString(task))
-        startActivity(intent)
-    }
+    private lateinit var taskAdapter: TaskAdapter
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +37,35 @@ class DetailTeamActivity : AppCompatActivity() {
 
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
+        binding.rvTasks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        lifecycleScope.launch {
+            teamViewModel.getUserRole().collect { role ->
+                if (!role.isNullOrEmpty()) {
+                    taskAdapter = TaskAdapter(this@DetailTeamActivity, role) { task ->
+                        // Handle click
+                    }
+                    binding.rvTasks.adapter = taskAdapter
 
-        binding.rvTasks.adapter = taskAdapter
-        binding.rvTasks.layoutManager = LinearLayoutManager(this,  LinearLayoutManager.HORIZONTAL, false)
+                    // Observe task list AFTER adapter is initialized
+                    teamViewModel.taskList.observe(this@DetailTeamActivity) { tasks ->
+                        if (tasks.isNullOrEmpty()) {
+                            binding.tasksLabel.visibility = View.GONE
+                            binding.rvTasks.visibility = View.GONE
+                        } else {
+                            taskAdapter.submitList(tasks)
+                            binding.tasksLabel.visibility = View.VISIBLE
+                            binding.rvTasks.visibility = View.VISIBLE
+                        }
+                    }
+
+
+                    teamViewModel.taskList.value?.let {
+                        taskAdapter.submitList(it)
+                    }
+                }
+            }
+        }
+
 
         val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
@@ -50,6 +74,7 @@ class DetailTeamActivity : AppCompatActivity() {
             teamViewModel.setTeamDetail(it)
             teamViewModel.fetchTasksWithProgress(it.team_id)
         }
+
         teamViewModel.staffList.observe(this) { staff ->
             if (staff.isNullOrEmpty()) {
                 binding.rvStaff.visibility = View.GONE
