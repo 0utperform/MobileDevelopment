@@ -1,5 +1,7 @@
 package com.example.a0utperform.data.repository
 
+import android.content.Context
+import android.net.Uri
 import android.util.Log
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
@@ -9,19 +11,29 @@ import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.storage.storage
+import io.ktor.http.ContentType
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DatabaseRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val supabaseAuth: Auth,
     private val supabaseDatabase: Postgrest,
-    private val userPreference: UserPreference
+    private val userPreference: UserPreference,
+    private val supabaseClient: SupabaseClient
 ) {
 
     suspend fun getAssignedTeamDetails(userId: String): Result<TeamDetail?> {
@@ -258,4 +270,51 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
+    suspend fun submitTaskEvidence(
+        task: TaskData,
+        imageUris: List<Uri>,
+        description: String,
+        userId: String
+    ) {
+        val submissionId = UUID.randomUUID().toString()
+        val now = Clock.System.now().toString()
+
+        // Upload images to Supabase Storage
+        val evidenceUrls = imageUris.mapIndexed { index, uri ->
+            val filename = "evidence/$submissionId/${System.currentTimeMillis()}_$index.jpg"
+            val inputStream = context.contentResolver.openInputStream(uri)!!
+            val byteArray = inputStream.readBytes()
+
+            supabaseClient.storage
+                .from("evidence")
+                .upload(filename, byteArray) {
+                    upsert = true
+                    contentType = ContentType.Image.JPEG // Corrected content type
+                }
+
+            "https://your-project.supabase.co/storage/v1/object/public/evidence/$filename"
+        }
+        // Insert into task_submissions
+        supabaseClient.from("task_submissions").insert(
+            mapOf(
+                "submission_id" to submissionId,
+                "task_id" to task.task_id,
+                "user_id" to userId,
+                "team_id" to task.team_id,
+                "submitted_at" to now,
+                "description" to description
+            )
+        )
+
+        // Insert each evidence
+        val evidenceInserts = evidenceUrls.map {
+            mapOf(
+                "evidence_id" to UUID.randomUUID().toString(),
+                "submission_id" to submissionId,
+                "file_url" to it
+            )
+        }
+
+        supabaseClient.from("task_evidence").insert(evidenceInserts)
+    }
 }

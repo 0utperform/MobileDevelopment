@@ -92,4 +92,8 @@
     <string name="description_label">Description</string>
     <string name="formatted_completion">%1$s/%2$s</string>
     <string name="taskEdit_label">Task</string>
+    <string name="add_image_desc">Add Image</string>
+    <string name="evidence_image_desc">Evidence Image</string>
+    <string name="file_provider_label">Outperform FileProvider</string>
+    <string name="submit_task_btn">Submit Task</string>
 </resources>
