@@ -52,7 +52,12 @@ class DetailTeamActivity : AppCompatActivity() {
                             binding.tasksLabel.visibility = View.GONE
                             binding.rvTasks.visibility = View.GONE
                         } else {
-                            taskAdapter.submitList(tasks)
+                            val filteredTasks = if (role == "Staff") {
+                                tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
+                            } else {
+                                tasks
+                            }
+                            taskAdapter.submitList(filteredTasks)
                             binding.tasksLabel.visibility = View.VISIBLE
                             binding.rvTasks.visibility = View.VISIBLE
                         }
@@ -60,7 +65,12 @@ class DetailTeamActivity : AppCompatActivity() {
 
 
                     teamViewModel.taskList.value?.let {
-                        taskAdapter.submitList(it)
+                        val filteredTasks = if (role == "Staff") {
+                            it.filter { task -> task.completedSubmissions < task.totalTargetSubmissions }
+                        } else {
+                            it
+                        }
+                        taskAdapter.submitList(filteredTasks)
                     }
                 }
             }
@@ -107,14 +117,17 @@ class DetailTeamActivity : AppCompatActivity() {
             if (tasks.isNullOrEmpty()) {
                 binding.tasksLabel.visibility = View.GONE
                 binding.rvTasks.visibility = View.GONE
-
             } else {
-                taskAdapter.submitList(tasks)
+                // Apply filtering based on role
+                val filteredTasks = if (teamViewModel.getUserRole().toString() == "Staff") {
+                    tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
+                } else {
+                    tasks // No filter for Manager role
+                }
+                taskAdapter.submitList(filteredTasks)
                 binding.tasksLabel.visibility = View.VISIBLE
                 binding.rvTasks.visibility = View.VISIBLE
-
             }
         }
-
     }
 }
