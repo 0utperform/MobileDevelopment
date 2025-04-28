@@ -3,12 +3,14 @@ package com.example.a0utperform.ui.main_activity.dashboard
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,7 +20,9 @@ import com.example.a0utperform.databinding.FragmentDashboardBinding
 import com.example.a0utperform.databinding.FragmentProfileBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.TeamAdapter
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
@@ -26,6 +30,7 @@ class DashboardFragment : Fragment() {
 
     private val dashboardViewModel: DashboardViewModel by viewModels()
     private lateinit var teamAdapter: TeamAdapter
+    private lateinit var taskAdapter: TaskAdapter
     private lateinit var binding: FragmentDashboardBinding
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -38,6 +43,16 @@ class DashboardFragment : Fragment() {
             navigateToTeamDetail(team)
         }
         setupRecyclerView()
+
+        lifecycleScope.launch {
+            dashboardViewModel.getUserRole().collect { role ->
+                if (!role.isNullOrEmpty()) {
+                    taskAdapter = TaskAdapter(requireContext(), role)
+                    binding.task.adapter = taskAdapter
+                    observeTaskList(role)
+                }
+            }
+        }
 
         return binding.root
     }
@@ -62,14 +77,39 @@ class DashboardFragment : Fragment() {
         }
 
         dashboardViewModel.teamAssignment.observe(viewLifecycleOwner) { teamList ->
-            // Submit the list of teams to the adapter
+            Log.d("DashboardFragment", "Fetched teamList: $teamList")
+
             teamAdapter.submitList(teamList)
+            teamList.firstOrNull()?.team_id?.let { teamId ->
+                Log.d("DashboardFragment", "Fetching tasks for teamId: $teamId")
+                dashboardViewModel.fetchTasksWithProgress(teamId)  // Fetch tasks with progress
+            }
         }
     }
 
     private fun setupRecyclerView() {
         binding.team.layoutManager = LinearLayoutManager(requireContext())
         binding.team.adapter = teamAdapter
+        binding.task.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    private fun observeTaskList(role: String) {
+        dashboardViewModel.taskList.observe(viewLifecycleOwner) { tasks ->
+            if (tasks.isNullOrEmpty()) {
+                binding.taskLabel.visibility = View.GONE
+                binding.task.visibility = View.GONE
+            } else {
+                // Filter tasks based on role (Staff vs. Manager)
+                val filteredTasks = if (role == "Staff") {
+                    tasks.filter { it.completedSubmissions < (it.totalTargetSubmissions ?: 0) }
+                } else {
+                    tasks
+                }
+                taskAdapter.submitList(filteredTasks)
+                binding.taskLabel.visibility = View.VISIBLE
+                binding.task.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun navigateToTeamDetail(team: TeamDetail) {

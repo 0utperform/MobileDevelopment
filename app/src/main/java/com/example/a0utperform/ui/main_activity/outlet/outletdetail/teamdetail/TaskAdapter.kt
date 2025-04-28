@@ -19,7 +19,6 @@ import kotlinx.serialization.json.Json
 class TaskAdapter(
     private val context: Context,
     private val role: String,
-    private val onClick: (TaskData) -> Unit
 ) : ListAdapter<TaskData, TaskAdapter.TaskViewHolder>(DIFF_CALLBACK) {
 
     companion object {

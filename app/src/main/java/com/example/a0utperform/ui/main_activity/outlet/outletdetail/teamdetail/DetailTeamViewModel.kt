@@ -60,7 +60,7 @@ class DetailTeamViewModel @Inject constructor(
             }
         }
     }
-    fun fetchTasksForTeam(teamId: String) {
+    private fun fetchTasksForTeam(teamId: String) {
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {

@@ -41,9 +41,7 @@ class DetailTeamActivity : AppCompatActivity() {
         lifecycleScope.launch {
             teamViewModel.getUserRole().collect { role ->
                 if (!role.isNullOrEmpty()) {
-                    taskAdapter = TaskAdapter(this@DetailTeamActivity, role) { task ->
-                        // Handle click
-                    }
+                    taskAdapter = TaskAdapter(this@DetailTeamActivity, role)
                     binding.rvTasks.adapter = taskAdapter
 
                     // Observe task list AFTER adapter is initialized
