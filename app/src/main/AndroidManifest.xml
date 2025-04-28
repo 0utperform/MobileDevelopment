@@ -27,11 +27,13 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
-            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.ViewTaskActivity"
+            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.viewtaskactivity.ViewTaskActivity"
+            android:label="@string/taskEdit_label"
             android:theme="@style/Theme.Dashboard"
             android:exported="false" />
         <activity
-            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.EditTaskActivity"
+            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory.EditTaskActivity"
+            android:label="@string/taskEdit_label"
             android:theme="@style/Theme.Dashboard"
             android:exported="false" />
         <activity

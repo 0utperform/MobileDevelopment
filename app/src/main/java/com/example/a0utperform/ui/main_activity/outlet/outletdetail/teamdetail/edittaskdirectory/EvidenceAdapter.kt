@@ -1,4 +1,4 @@
-package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
+package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.a0utperform.R
+
 class EvidenceAdapter(
     private val onAddClick: () -> Unit
 ) : ListAdapter<Uri, RecyclerView.ViewHolder>(DiffCallback()) {
@@ -36,7 +37,9 @@ class EvidenceAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ImageViewHolder && position < currentList.size) {
-            Glide.with(holder.itemView).load(currentList[position]).into(holder.imageView)
+            Glide.with(holder.itemView)
+                .load(currentList[position])
+                .into(holder.imageView)
         } else if (holder is AddViewHolder) {
             holder.itemView.setOnClickListener { onAddClick() }
         }

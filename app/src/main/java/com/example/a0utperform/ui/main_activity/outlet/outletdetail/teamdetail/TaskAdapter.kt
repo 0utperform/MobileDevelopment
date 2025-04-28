@@ -2,7 +2,6 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,6 +11,8 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.databinding.ItemTaskBinding
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory.EditTaskActivity
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.viewtaskactivity.ViewTaskActivity
 import kotlinx.serialization.json.Json
 
 

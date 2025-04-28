@@ -3,11 +3,13 @@ package com.example.a0utperform.data.repository
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
 import com.example.a0utperform.data.model.TaskData
+import com.example.a0utperform.data.model.TaskEvidence
 import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
@@ -270,6 +272,34 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
+    suspend fun getSubmissionsByTaskId(taskId: String): Result<List<TaskSubmission>> {
+        return try {
+            val submissions = supabaseDatabase
+                .from("task_submissions")
+                .select(Columns.list()) {
+                    filter { eq("task_id", taskId) }
+                }
+                .decodeList<TaskSubmission>()
+            Result.success(submissions)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getEvidenceBySubmissionId(submissionId: String): Result<List<TaskEvidence>> {
+        return try {
+            val evidenceList = supabaseDatabase
+                .from("task_evidence")
+                .select(Columns.list()) {
+                    filter { eq("submission_id", submissionId) }
+                }
+                .decodeList<TaskEvidence>()
+            Result.success(evidenceList)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun submitTaskEvidence(
         task: TaskData,
         imageUris: List<Uri>,
@@ -292,7 +322,7 @@ class DatabaseRepository @Inject constructor(
                     contentType = ContentType.Image.JPEG // Corrected content type
                 }
 
-            "https://your-project.supabase.co/storage/v1/object/public/evidence/$filename"
+            "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/evidence/$filename"
         }
         // Insert into task_submissions
         supabaseClient.from("task_submissions").insert(

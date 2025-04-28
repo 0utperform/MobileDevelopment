@@ -1,4 +1,4 @@
-package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
+package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

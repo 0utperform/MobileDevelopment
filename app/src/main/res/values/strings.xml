@@ -96,4 +96,5 @@
     <string name="evidence_image_desc">Evidence Image</string>
     <string name="file_provider_label">Outperform FileProvider</string>
     <string name="submit_task_btn">Submit Task</string>
+    <string name="task_completion_format">Task Completion: %1$s/%2$s</string>
 </resources>
