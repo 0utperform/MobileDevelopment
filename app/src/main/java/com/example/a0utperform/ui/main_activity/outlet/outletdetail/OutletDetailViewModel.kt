@@ -55,15 +55,19 @@ class OutletDetailViewModel @Inject constructor(
                         val allTeams = teamResult.getOrNull().orEmpty()
 
                         if (role.equals("manager", ignoreCase = true)) {
+                            // For managers, show all teams.
                             _teams.postValue(allTeams)
                         } else if (role.equals("staff", ignoreCase = true)) {
-                            val assignedTeamResult = databaseRepository.getAssignedTeamDetails(userId)
-                            if (assignedTeamResult.isSuccess) {
-                                val assignedTeam = assignedTeamResult.getOrNull()
-                                val filtered = allTeams.filter { it.team_id == assignedTeam?.team_id }
-                                _teams.postValue(filtered)
+                            // For staff, filter based on the teams they are assigned to.
+                            val assignedTeamsResult = databaseRepository.getAssignedTeamDetails(userId)
+                            if (assignedTeamsResult.isSuccess) {
+                                val assignedTeams = assignedTeamsResult.getOrNull().orEmpty()
+                                val filteredTeams = allTeams.filter { team ->
+                                    assignedTeams.any { assignedTeam -> assignedTeam.team_id == team.team_id }
+                                }
+                                _teams.postValue(filteredTeams)
                             } else {
-                                _error.postValue(assignedTeamResult.exceptionOrNull()?.message)
+                                _error.postValue(assignedTeamsResult.exceptionOrNull()?.message)
                                 _teams.postValue(emptyList())
                             }
                         } else {

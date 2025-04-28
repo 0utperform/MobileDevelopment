@@ -98,8 +98,14 @@ class ProfileFragment : Fragment() {
                 .into(binding.profileImage)
         }
 
-        profileViewModel.teamDetail.observe(viewLifecycleOwner) { team ->
-            binding.personalTeam.text = getString(R.string.team_format,team?.name ?: "N/A")
+        profileViewModel.teamDetail.observe(viewLifecycleOwner) { teamList ->
+
+            if (teamList.isNullOrEmpty()) {
+                binding.personalTeam.text = getString(R.string.team_format, "N/A")
+            } else {
+                val teamNames = teamList.joinToString { it?.name ?: "null" }
+                binding.personalTeam.text = getString(R.string.team_format, teamNames)
+            }
         }
 
         profileViewModel.outletDetail.observe(viewLifecycleOwner) { outlet ->

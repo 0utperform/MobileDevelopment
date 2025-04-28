@@ -38,10 +38,11 @@ class DatabaseRepository @Inject constructor(
     private val supabaseClient: SupabaseClient
 ) {
 
-    suspend fun getAssignedTeamDetails(userId: String): Result<TeamDetail?> {
+    suspend fun getAssignedTeamDetails(userId: String): Result<List<TeamDetail>> {
         return try {
-            Log.d("DatabaseRepository", "Fetching team assignment for user: $userId")
+            Log.d("DatabaseRepository", "Fetching team assignments for user: $userId")
 
+            // Fetch all team assignments for the user
             val teamAssignments = supabaseDatabase
                 .from("user_team")
                 .select(Columns.list()) {
@@ -49,21 +50,27 @@ class DatabaseRepository @Inject constructor(
                 }
                 .decodeList<TeamData>()
 
-            val userTeam = teamAssignments.find { it.user_id == userId }
-            if (userTeam == null) {
-                return Result.failure(Exception("User has no team assignment"))
+            if (teamAssignments.isEmpty()) {
+                return Result.failure(Exception("User has no team assignments"))
             }
 
-            Log.d("DatabaseRepository", "Fetching team detail for team_id: ${userTeam.team_id}")
+            Log.d("DatabaseRepository", "Fetching team details for ${teamAssignments.size} teams")
 
-            val teamDetail = supabaseDatabase
-                .from("teams")
-                .select(Columns.list()) {
-                    filter { eq("team_id", userTeam.team_id) }
-                }
-                .decodeSingleOrNull<TeamDetail>()
+            // Fetch the details for all the teams the user is assigned to
+            val teamDetails = teamAssignments.mapNotNull { userTeam ->
+                supabaseDatabase
+                    .from("teams")
+                    .select(Columns.list()) {
+                        filter { eq("team_id", userTeam.team_id) }
+                    }
+                    .decodeSingleOrNull<TeamDetail>()
+            }
 
-            Result.success(teamDetail)
+            if (teamDetails.isEmpty()) {
+                return Result.failure(Exception("No team details found for the user"))
+            }
+
+            Result.success(teamDetails)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching assigned team details", e)
             Result.failure(e)

@@ -27,8 +27,8 @@ class ProfileViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    private val _teamDetail = MutableLiveData<TeamDetail?>()
-    val teamDetail: LiveData<TeamDetail?> = _teamDetail
+    private val _teamDetail = MutableLiveData<List<TeamDetail?>>()
+    val teamDetail: LiveData<List<TeamDetail?>> = _teamDetail
 
     private val _outletDetail = MutableLiveData<OutletDetail?>()
     val outletDetail: LiveData<OutletDetail?> = _outletDetail
@@ -70,9 +70,9 @@ class ProfileViewModel @Inject constructor(
             _isLoading.value = true
             val teamResult = databaseRepository.getAssignedTeamDetails(userId)
             if (teamResult.isSuccess) {
-                _teamDetail.value = teamResult.getOrNull()
+                _teamDetail.value = teamResult.getOrNull() ?: emptyList()
             } else {
-                _teamDetail.value = null
+                _teamDetail.value = emptyList()
             }
             _isLoading.value = false
         }
