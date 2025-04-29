@@ -99,4 +99,9 @@
     <string name="submit_task_btn">Submit Task</string>
     <string name="task_completion_format">Task Completion: %1$s/%2$s</string>
     <string name="add_outlet">Add Outlet</string>
+    <string name="image_label">Image</string>
+    <string name="location_label">Location</string>
+    <string name="outlet_hint">Outlet Name</string>
+    <string name="location_hint">Location Name</string>
+    <string name="btn_create_outlet">Create Outlet</string>
 </resources>
