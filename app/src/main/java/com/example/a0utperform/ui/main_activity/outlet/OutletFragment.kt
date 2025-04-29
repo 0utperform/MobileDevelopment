@@ -64,7 +64,13 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
                 if (role.equals("Manager", ignoreCase = true)) {
                     binding.searchView.visibility = View.VISIBLE
                     binding.searchView.isIconified = true // collapsed initially
+                    binding.fabAddOutlet.visibility = View.VISIBLE
 
+                    // Set the button click listener (optional action to add an outlet)
+                    binding.fabAddOutlet.setOnClickListener {
+                        // Handle the button click here, for example, open a new activity
+                        Toast.makeText(context, "Add Outlet clicked", Toast.LENGTH_SHORT).show()
+                    }
                     // Expand only when user taps it
                     binding.searchView.setOnClickListener {
                         binding.searchView.isIconified = false
@@ -85,6 +91,7 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
                         }
                     })
                 } else {
+                    binding.fabAddOutlet.visibility = View.GONE
                     binding.searchView.visibility = View.GONE
                 }
             }
