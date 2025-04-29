@@ -59,7 +59,7 @@ android {
 
 dependencies {
     implementation (libs.kotlinx.metadata.jvm)
-
+    implementation (libs.androidx.appcompat.v161)
     implementation (libs.glide)
     implementation (libs.material)
 
@@ -80,7 +80,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation (libs.google.material.v1110)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)

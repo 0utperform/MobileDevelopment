@@ -25,8 +25,8 @@ class MainViewModel @Inject constructor(
 
     fun signOut() {
         viewModelScope.launch {
-            repository.signOut()
             userPreference.logout()
+            repository.signOut()
         }
     }
 }

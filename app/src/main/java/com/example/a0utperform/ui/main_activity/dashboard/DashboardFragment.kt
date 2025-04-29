@@ -22,6 +22,7 @@ import com.example.a0utperform.ui.main_activity.outlet.outletdetail.TeamAdapter
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -33,32 +34,23 @@ class DashboardFragment : Fragment() {
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var binding: FragmentDashboardBinding
 
+    private var taskListCollectorJob: Job? = null
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        teamAdapter = TeamAdapter { team ->
-            navigateToTeamDetail(team)
-        }
+        teamAdapter = TeamAdapter { team -> navigateToTeamDetail(team) }
         setupRecyclerView()
-
-        lifecycleScope.launch {
-            dashboardViewModel.getUserRole().collect { role ->
-                if (!role.isNullOrEmpty()) {
-                    taskAdapter = TaskAdapter(requireContext(), role)
-                    binding.task.adapter = taskAdapter
-                    observeTaskList(role)
-                }
-            }
-        }
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         dashboardViewModel.userSession.observe(viewLifecycleOwner) { session ->
             session?.let {
@@ -70,19 +62,32 @@ class DashboardFragment : Fragment() {
             }
         }
 
+
         dashboardViewModel.avatarUrl.observe(viewLifecycleOwner) { url ->
             Glide.with(this)
                 .load(url ?: R.drawable.placeholder_user)
                 .into(binding.profileImage)
         }
 
+        // Observe team assignments
         dashboardViewModel.teamAssignment.observe(viewLifecycleOwner) { teamList ->
             Log.d("DashboardFragment", "Fetched teamList: $teamList")
 
             teamAdapter.submitList(teamList)
             teamList.firstOrNull()?.team_id?.let { teamId ->
                 Log.d("DashboardFragment", "Fetching tasks for teamId: $teamId")
-                dashboardViewModel.fetchTasksWithProgress(teamId)  // Fetch tasks with progress
+                dashboardViewModel.fetchTasksWithProgress(teamId)
+            }
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            dashboardViewModel.getUserRole().collect { role ->
+                if (!role.isNullOrEmpty()) {
+                    taskAdapter = TaskAdapter(requireContext(), role)
+                    binding.task.adapter = taskAdapter
+                    observeTaskList(role)
+                }
             }
         }
     }
@@ -94,20 +99,22 @@ class DashboardFragment : Fragment() {
     }
 
     private fun observeTaskList(role: String) {
-        dashboardViewModel.taskList.observe(viewLifecycleOwner) { tasks ->
-            if (tasks.isNullOrEmpty()) {
-                binding.taskLabel.visibility = View.GONE
-                binding.task.visibility = View.GONE
-            } else {
-                // Filter tasks based on role (Staff vs. Manager)
-                val filteredTasks = if (role == "Staff") {
-                    tasks.filter { it.completedSubmissions < (it.totalTargetSubmissions ?: 0) }
+
+        taskListCollectorJob?.cancel()
+
+
+        taskListCollectorJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            dashboardViewModel.taskList.observe(viewLifecycleOwner) { tasks ->
+                if (tasks.isNullOrEmpty()) {
+                    binding.taskLabel.visibility = View.GONE
+                    binding.task.visibility = View.GONE
                 } else {
-                    tasks
+                    // Filter tasks based on role (Staff vs. Manager)
+                    val filteredTasks = tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
+                    taskAdapter.submitList(filteredTasks)
+                    binding.taskLabel.visibility = View.VISIBLE
+                    binding.task.visibility = View.VISIBLE
                 }
-                taskAdapter.submitList(filteredTasks)
-                binding.taskLabel.visibility = View.VISIBLE
-                binding.task.visibility = View.VISIBLE
             }
         }
     }
@@ -117,5 +124,12 @@ class DashboardFragment : Fragment() {
         val teamJson = Json.encodeToString(team)
         intent.putExtra("TEAM_DETAIL_JSON", teamJson)
         startActivity(intent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+
+        taskListCollectorJob?.cancel()
     }
 }
