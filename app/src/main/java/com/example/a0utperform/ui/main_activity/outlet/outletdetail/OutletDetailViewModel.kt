@@ -22,7 +22,8 @@ class OutletDetailViewModel @Inject constructor(
     private val userPreference: UserPreference
 ) : ViewModel() {
 
-
+    private val _userRole = MutableLiveData<String?>()
+    val userRole: LiveData<String?> = _userRole
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -84,6 +85,14 @@ class OutletDetailViewModel @Inject constructor(
                 } finally {
                     _isLoading.postValue(false)
                 }
+            }
+        }
+    }
+
+    fun getUserRole() {
+        viewModelScope.launch {
+            userPreference.getSession().collect { session ->
+                _userRole.postValue(session.role)
             }
         }
     }

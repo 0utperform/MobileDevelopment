@@ -3,7 +3,9 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -18,9 +20,13 @@ import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
 import com.example.a0utperform.utils.formatToReadableDate
+import com.example.a0utperform.utils.parseDueDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @AndroidEntryPoint
 class DetailTeamActivity : AppCompatActivity() {
@@ -44,10 +50,25 @@ class DetailTeamActivity : AppCompatActivity() {
                     taskAdapter = TaskAdapter(this@DetailTeamActivity, role)
                     binding.rvTasks.adapter = taskAdapter
 
+
+                    if (role == "Manager") {
+                        binding.fabAddTasks.visibility = View.VISIBLE
+                        binding.fabAddStaff.visibility = View.VISIBLE
+                        binding.fabAddTasks.setOnClickListener {
+                            Toast.makeText(this@DetailTeamActivity, "Add Task Clicked.", Toast.LENGTH_SHORT).show()
+                        }
+
+                        binding.fabAddStaff.setOnClickListener {
+                            Toast.makeText(this@DetailTeamActivity, "Add team clicked!", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        binding.fabAddTasks.visibility = View.GONE
+                        binding.fabAddStaff.visibility = View.GONE
+                    }
+
                     // Observe task list AFTER adapter is initialized
                     teamViewModel.taskList.observe(this@DetailTeamActivity) { tasks ->
                         if (tasks.isNullOrEmpty()) {
-                            binding.tasksLabel.visibility = View.GONE
                             binding.rvTasks.visibility = View.GONE
                         } else {
                             val filteredTasks = if (role == "Staff") {
@@ -59,16 +80,6 @@ class DetailTeamActivity : AppCompatActivity() {
                             binding.tasksLabel.visibility = View.VISIBLE
                             binding.rvTasks.visibility = View.VISIBLE
                         }
-                    }
-
-
-                    teamViewModel.taskList.value?.let {
-                        val filteredTasks = if (role == "Staff") {
-                            it.filter { task -> task.completedSubmissions < task.totalTargetSubmissions }
-                        } else {
-                            it
-                        }
-                        taskAdapter.submitList(filteredTasks)
                     }
                 }
             }
@@ -109,23 +120,6 @@ class DetailTeamActivity : AppCompatActivity() {
             Glide.with(this)
                 .load(team.img_url ?: R.drawable.placeholder_user)
                 .into(binding.imgTeam)
-        }
-
-        teamViewModel.taskList.observe(this) { tasks ->
-            if (tasks.isNullOrEmpty()) {
-                binding.tasksLabel.visibility = View.GONE
-                binding.rvTasks.visibility = View.GONE
-            } else {
-                // Apply filtering based on role
-                val filteredTasks = if (teamViewModel.getUserRole().toString() == "Staff") {
-                    tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
-                } else {
-                    tasks // No filter for Manager role
-                }
-                taskAdapter.submitList(filteredTasks)
-                binding.tasksLabel.visibility = View.VISIBLE
-                binding.rvTasks.visibility = View.VISIBLE
-            }
         }
     }
 }

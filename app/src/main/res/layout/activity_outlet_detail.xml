@@ -114,6 +114,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:padding="@dimen/padding_small"
         >
+
         <!-- Team Title -->
         <TextView
             android:id="@+id/team_title"
@@ -126,7 +127,7 @@
             android:layout_weight="1"/>
 
         <ImageButton
-            android:id="@+id/fab_add_outlet"
+            android:id="@+id/fab_add_team"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@android:color/transparent"
@@ -134,6 +135,7 @@
             android:src="@drawable/ic_add_"
             android:elevation="4dp"
             android:visibility="gone" />
+
     </LinearLayout>
 
         <!-- Team RecyclerView -->
@@ -145,17 +147,36 @@
             android:nestedScrollingEnabled="false"
             android:clipToPadding="false" />
 
-        <!-- Staff Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_small"
+        android:padding="@dimen/padding_small"
+        >
         <TextView
             android:id="@+id/staff_label"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_gravity="start"
             android:text="@string/staff_title"
             android:textColor="@color/text_color"
             android:fontFamily="@font/roboto_semibold"
+            android:layout_weight="1"
             android:textSize="@dimen/text_size_large" />
 
+        <ImageButton
+            android:id="@+id/fab_add_staff"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/add_outlet"
+            android:src="@drawable/ic_add_"
+            android:visibility="gone"
+            android:elevation="4dp"
+            />
+    </LinearLayout>
         <!-- Staff RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_staff"

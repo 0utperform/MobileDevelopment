@@ -65,25 +65,41 @@ class ActivityOutletDetail : AppCompatActivity() {
             outletViewModel.fetchTeamsByOutlet(outlet.outlet_id)
             outletViewModel.fetchStaffByOutlet(outlet.outlet_id)
         }
+
+        outletViewModel.getUserRole() // Call this to start collecting
+
+        outletViewModel.userRole.observe(this) { role ->
+            if (role.equals("Manager", ignoreCase = true)) {
+                binding.fabAddTeam.visibility = View.VISIBLE
+                binding.fabAddStaff.visibility = View.VISIBLE
+                binding.fabAddTeam.setOnClickListener {
+                    // Navigate to add team activity or show dialog
+                    Toast.makeText(this, "Add team clicked!", Toast.LENGTH_SHORT).show()
+                }
+                binding.fabAddStaff.setOnClickListener {
+                    // Navigate to add staff activity
+                    Toast.makeText(this, "Add Staff clicked!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                binding.fabAddTeam.visibility = View.GONE
+                binding.fabAddStaff.visibility = View.GONE
+            }
+        }
         outletViewModel.staffList.observe(this) { staff ->
             if (staff.isNullOrEmpty()) {
                 binding.rvStaff.visibility = View.GONE
-                binding.staffLabel.visibility = View.GONE
             } else {
                 staffAdapter.submitList(staff)
                 binding.rvStaff.visibility = View.VISIBLE
-                binding.staffLabel.visibility = View.VISIBLE
             }
         }
 
         outletViewModel.teams.observe(this) { teams ->
             if (teams.isNullOrEmpty()) {
                 binding.rvTeams.visibility = View.GONE
-                binding.teamTitle.visibility = View.GONE
             } else {
                 adapter.submitList(teams)
                 binding.rvTeams.visibility = View.VISIBLE
-                binding.teamTitle.visibility = View.VISIBLE
             }
         }
 

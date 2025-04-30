@@ -385,7 +385,6 @@ class DatabaseRepository @Inject constructor(
 
             val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/outlet/$filename"
 
-            // Insert into 'outlet' table
             val now = Clock.System.now().toString()
 
             val outlet = OutletDetail(

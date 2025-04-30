@@ -96,18 +96,37 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-        <!-- Staff Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_small"
+        android:padding="@dimen/padding_small"
+        >
         <TextView
             android:id="@+id/staff_label"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:text="@string/staff_title"
+            android:layout_gravity="start"
+            android:layout_weight="1"
             android:textColor="@color/text_color"
             android:fontFamily="@font/roboto_semibold"
             android:textSize="@dimen/text_size_large" />
 
+        <ImageButton
+            android:id="@+id/fab_add_staff"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/add_outlet"
+            android:src="@drawable/ic_add_"
+            android:visibility="gone"
+            android:elevation="4dp"
+            />
+    </LinearLayout>
         <!-- Staff RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_staff"
@@ -117,17 +136,37 @@
             android:nestedScrollingEnabled="false"
             android:clipToPadding="false" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/margin_small"
+        android:padding="@dimen/padding_small"
+        >
         <!-- Tasks Title -->
         <TextView
             android:id="@+id/tasks_label"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
+            android:layout_gravity="start"
             android:text="@string/team_task_label"
+            android:layout_weight="1"
             android:textColor="@color/text_color"
             android:fontFamily="@font/roboto_semibold"
             android:textSize="@dimen/text_size_large" />
-
+        <ImageButton
+            android:id="@+id/fab_add_tasks"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/add_outlet"
+            android:src="@drawable/ic_add_"
+            android:visibility="gone"
+            android:elevation="4dp"
+            />
+    </LinearLayout>
         <!-- Tasks RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_tasks"

@@ -34,6 +34,7 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
     }
 
     private val viewModel: OutletViewModel by viewModels()
+
     private lateinit var outletAdapter: OutletAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
