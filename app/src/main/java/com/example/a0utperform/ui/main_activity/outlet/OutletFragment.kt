@@ -68,8 +68,8 @@ class OutletFragment : Fragment(), OutletAdapter.OnOutletClickListener {
 
                     // Set the button click listener (optional action to add an outlet)
                     binding.fabAddOutlet.setOnClickListener {
-                        // Handle the button click here, for example, open a new activity
-                        Toast.makeText(context, "Add Outlet clicked", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(context, CreateOutletActivity::class.java)
+                        startActivity(intent)
                     }
                     // Expand only when user taps it
                     binding.searchView.setOnClickListener {

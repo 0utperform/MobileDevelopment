@@ -354,4 +354,58 @@ class DatabaseRepository @Inject constructor(
 
         supabaseClient.from("task_evidence").insert(evidenceInserts)
     }
+
+    suspend fun createNewOutlet(
+        name: String,
+        location: String,
+        imageUri: Uri
+    ): Result<Unit> {
+        return try {
+            val session = supabaseAuth.currentSessionOrNull()
+                ?: return Result.failure(Exception("User not logged in"))
+
+            val user = session.user
+            val managerId = user?.id
+            val managerName = user?.userMetadata?.get("name")?.jsonPrimitive?.contentOrNull
+                ?: "Unknown Manager"
+
+            // Upload image to Supabase Storage
+            val outletId = UUID.randomUUID().toString()
+            val filename = "outlets/$outletId.jpg"
+            val inputStream = context.contentResolver.openInputStream(imageUri)!!
+            val byteArray = inputStream.readBytes()
+
+
+            supabaseClient.storage
+                .from("outlet")
+                .upload(filename, byteArray) {
+                upsert = true
+                contentType = ContentType.Image.JPEG
+            }
+
+            val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/outlet/$filename"
+
+            // Insert into 'outlet' table
+            val now = Clock.System.now().toString()
+
+            val outlet = OutletDetail(
+                outlet_id = outletId,
+                name = name,
+                location = location,
+                created_at = now,
+                image_url = imageUrl,
+                manager_id = managerId ?: "",
+                manager_name = managerName,
+                staff_size = 1
+            )
+
+
+            supabaseClient.from("outlet").insert(listOf(outlet))
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error creating outlet", e)
+            Result.failure(e)
+        }
+    }
 }
