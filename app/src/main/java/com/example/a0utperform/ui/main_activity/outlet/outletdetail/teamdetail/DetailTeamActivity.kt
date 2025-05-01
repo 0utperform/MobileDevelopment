@@ -19,6 +19,9 @@ import com.example.a0utperform.R
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addstaff.ActivityAddStaff
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addteam.ActivityAddTeam
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.createtaskactivity.CreateTaskActivity
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -40,6 +43,9 @@ class DetailTeamActivity : AppCompatActivity() {
         binding = ActivityDetailTeamBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
+        val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
+
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
         binding.rvTasks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -54,11 +60,15 @@ class DetailTeamActivity : AppCompatActivity() {
                         binding.fabAddTasks.visibility = View.VISIBLE
                         binding.fabAddStaff.visibility = View.VISIBLE
                         binding.fabAddTasks.setOnClickListener {
-                            Toast.makeText(this@DetailTeamActivity, "Add Task Clicked.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@DetailTeamActivity, CreateTaskActivity::class.java)
+                            intent.putExtra("TEAM_DETAIL_JSON", teamJson)
+                            startActivity(intent)
                         }
 
                         binding.fabAddStaff.setOnClickListener {
-                            Toast.makeText(this@DetailTeamActivity, "Add team clicked!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@DetailTeamActivity, ActivityAddStaff::class.java)
+                            intent.putExtra("TEAM_DETAIL_JSON", teamJson)
+                            startActivity(intent)
                         }
                     } else {
                         binding.fabAddTasks.visibility = View.GONE
@@ -85,8 +95,7 @@ class DetailTeamActivity : AppCompatActivity() {
         }
 
 
-        val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
-        val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
+
 
         teamDetail?.let {
             teamViewModel.setTeamDetail(it)

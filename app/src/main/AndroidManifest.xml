@@ -22,14 +22,19 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.main_activity.outlet.outletdetail.teamdetail.createtaskactivity.CreateTaskActivity"
+            android:label="@string/add_task_label"
+            android:exported="false"
+            android:theme="@style/Theme.Dashboard"/>
+        <activity
             android:name=".ui.main_activity.outlet.outletdetail.addstaff.ActivityAddStaff"
             android:exported="false"
-            android:label="@string/add_team_label"
+            android:label="@string/add_staff_label"
             android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.main_activity.outlet.outletdetail.addteam.ActivityAddTeam"
             android:exported="false"
-            android:label="@string/add_staff_label"
+            android:label="@string/add_team_label"
             android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.main_activity.outlet.CreateOutletActivity"
