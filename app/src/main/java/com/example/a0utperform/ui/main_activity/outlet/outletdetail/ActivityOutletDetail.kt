@@ -73,12 +73,14 @@ class ActivityOutletDetail : AppCompatActivity() {
                 binding.fabAddTeam.visibility = View.VISIBLE
                 binding.fabAddStaff.visibility = View.VISIBLE
                 binding.fabAddTeam.setOnClickListener {
-                    // Navigate to add team activity or show dialog
-                    Toast.makeText(this, "Add team clicked!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, ActivityAddTeam::class.java)
+                        intent.putExtra("OUTLET_DETAIL_JSON", outletJson)
+                        startActivity(intent)
                 }
                 binding.fabAddStaff.setOnClickListener {
-                    // Navigate to add staff activity
-                    Toast.makeText(this, "Add Staff clicked!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, ActivityAddStaff::class.java)
+                    intent.putExtra("OUTLET_DETAIL_JSON", outletJson)
+                    startActivity(intent)
                 }
             } else {
                 binding.fabAddTeam.visibility = View.GONE

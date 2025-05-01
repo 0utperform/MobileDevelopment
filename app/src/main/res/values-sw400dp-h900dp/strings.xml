@@ -103,4 +103,11 @@
     <string name="location_hint">Location Name</string>
     <string name="btn_create_outlet">Create Outlet</string>
     <string name="outlet_create_label">Create Outlet</string>
+    <string name="add_staff_label">Add Staff</string>
+    <string name="add_team_label">Add Team</string>
+    <string name="add_team_image_description">"Add team image "</string>
+    <string name="create_team_btn">Create Team</string>
+    <string name="team_image_label">Team Image</string>
+    <string name="team_name_hint">Enter team name</string>
+    <string name="team_name_label">Team Name</string>
 </resources>

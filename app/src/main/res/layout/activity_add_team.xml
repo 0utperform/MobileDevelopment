@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="12dp"
+        card_view:cardElevation="4dp"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:orientation="vertical">
+
+            <!-- Team Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/team_name_label"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etTeamName"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/task_input_background"
+                android:padding="12dp"
+                android:hint="@string/team_name_hint" />
+
+            <!-- Description -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description_label"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"
+                android:gravity="top"
+                android:background="@drawable/task_input_background"
+                android:padding="12dp"
+                android:hint="@string/description_label" />
+
+            <!-- Image Picker -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/team_image_label"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp" />
+
+            <ImageView
+                android:id="@+id/ivImagePicker"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/add_button_bg"
+                android:src="@drawable/ic_add_"
+                android:contentDescription="@string/add_team_image_description" />
+
+            <!-- Create Team Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreateTeam"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/create_team_btn"
+                android:backgroundTint="@color/brandBlue" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

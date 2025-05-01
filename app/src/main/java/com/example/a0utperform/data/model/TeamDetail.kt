@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TeamDetail(
-    val team_id: String,
+    val team_id: String? = null,
     val name: String,
     @SerialName("created_at")
     val createdAt: String? = null,

@@ -43,8 +43,8 @@ class DetailTeamViewModel @Inject constructor(
 
     fun setTeamDetail(team: TeamDetail) {
         _team.value = team
-        fetchStaffByTeam(team.team_id)
-        fetchTasksForTeam(team.team_id)
+        team.team_id?.let { fetchStaffByTeam(it) }
+        team.team_id?.let { fetchTasksForTeam(it) }
     }
 
     private fun fetchStaffByTeam(teamId: String) {

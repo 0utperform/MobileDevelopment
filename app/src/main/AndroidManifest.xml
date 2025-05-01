@@ -22,10 +22,20 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.main_activity.outlet.outletdetail.ActivityAddStaff"
+            android:exported="false"
+            android:label="@string/add_team_label"
+            android:theme="@style/Theme.Dashboard" />
+        <activity
+            android:name=".ui.main_activity.outlet.outletdetail.ActivityAddTeam"
+            android:exported="false"
+            android:label="@string/add_staff_label"
+            android:theme="@style/Theme.Dashboard" />
+        <activity
             android:name=".ui.main_activity.outlet.CreateOutletActivity"
             android:exported="false"
             android:label="@string/outlet_create_label"
-            android:theme="@style/Theme.Dashboard"/>
+            android:theme="@style/Theme.Dashboard" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

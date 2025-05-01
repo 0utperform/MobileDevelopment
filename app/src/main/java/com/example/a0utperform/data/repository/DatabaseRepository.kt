@@ -21,8 +21,9 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.storage.storage
 import io.ktor.http.ContentType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
 import java.util.UUID
@@ -374,17 +375,18 @@ class DatabaseRepository @Inject constructor(
             val filename = "outlets/$outletId.jpg"
             val inputStream = context.contentResolver.openInputStream(imageUri)!!
             val byteArray = inputStream.readBytes()
-
+            withContext(Dispatchers.IO) {
+                inputStream.close()
+            }
 
             supabaseClient.storage
                 .from("outlet")
                 .upload(filename, byteArray) {
-                upsert = true
-                contentType = ContentType.Image.JPEG
-            }
+                    upsert = true
+                    contentType = ContentType.Image.JPEG
+                }
 
             val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/outlet/$filename"
-
             val now = Clock.System.now().toString()
 
             val outlet = OutletDetail(
@@ -399,11 +401,64 @@ class DatabaseRepository @Inject constructor(
             )
 
 
-            supabaseClient.from("outlet").insert(listOf(outlet))
+            supabaseClient.from("outlets").insert(outlet)
 
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error creating outlet", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun createNewTeam(
+        teamName: String,
+        description: String,
+        imageUri: Uri
+    ): Result<Unit> {
+        return try {
+            val session = supabaseAuth.currentSessionOrNull()
+                ?: return Result.failure(Exception("User not logged in"))
+
+            val user = session.user
+            val managerId = user?.id
+            val managerName = user?.userMetadata?.get("name")?.jsonPrimitive?.contentOrNull
+                ?: "Unknown Manager"
+
+            // Generate a unique ID for the team
+            val teamId = UUID.randomUUID().toString()
+            val filename = "teams/$teamId.jpg"
+
+            // Upload image to Supabase Storage
+            val inputStream = context.contentResolver.openInputStream(imageUri)!!
+            val byteArray = inputStream.readBytes()
+            withContext(Dispatchers.IO) {
+                inputStream.close()
+            }
+
+            supabaseClient.storage
+                .from("team_images")
+                .upload(filename, byteArray) {
+                    upsert = true
+                    contentType = ContentType.Image.JPEG
+                }
+
+            val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/team_images/$filename"
+            val now = Clock.System.now().toString()
+
+            // Create TeamDetail object
+            val teamDetail = TeamDetail(
+                name = teamName,
+                description = description,
+                img_url = imageUrl,
+                staffSize = "1"
+            )
+
+
+            supabaseClient.from("teams").insert(teamDetail)
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("TeamRepository", "Error creating team", e)
             Result.failure(e)
         }
     }

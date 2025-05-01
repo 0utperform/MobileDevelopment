@@ -65,7 +65,7 @@
 
         <ImageView
             android:id="@+id/ivImagePicker"
-            android:layout_width="80dp"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@drawable/add_button_bg"
             android:src="@drawable/ic_add_"

@@ -20,7 +20,6 @@ import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
 import com.example.a0utperform.utils.formatToReadableDate
-import com.example.a0utperform.utils.parseDueDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -91,7 +90,7 @@ class DetailTeamActivity : AppCompatActivity() {
 
         teamDetail?.let {
             teamViewModel.setTeamDetail(it)
-            teamViewModel.fetchTasksWithProgress(it.team_id)
+            it.team_id?.let { it1 -> teamViewModel.fetchTasksWithProgress(it1) }
         }
 
         teamViewModel.staffList.observe(this) { staff ->
