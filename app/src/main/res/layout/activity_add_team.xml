@@ -69,6 +69,7 @@
                 android:layout_height="100dp"
                 android:background="@drawable/add_button_bg"
                 android:src="@drawable/ic_add_"
+                android:scaleType="center"
                 android:contentDescription="@string/add_team_image_description" />
 
             <!-- Create Team Button -->

@@ -22,12 +22,12 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main_activity.outlet.outletdetail.ActivityAddStaff"
+            android:name=".ui.main_activity.outlet.outletdetail.addstaff.ActivityAddStaff"
             android:exported="false"
             android:label="@string/add_team_label"
             android:theme="@style/Theme.Dashboard" />
         <activity
-            android:name=".ui.main_activity.outlet.outletdetail.ActivityAddTeam"
+            android:name=".ui.main_activity.outlet.outletdetail.addteam.ActivityAddTeam"
             android:exported="false"
             android:label="@string/add_staff_label"
             android:theme="@style/Theme.Dashboard" />

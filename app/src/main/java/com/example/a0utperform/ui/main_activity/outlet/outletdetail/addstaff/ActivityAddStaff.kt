@@ -1,4 +1,4 @@
-package com.example.a0utperform.ui.main_activity.outlet.outletdetail
+package com.example.a0utperform.ui.main_activity.outlet.outletdetail.addstaff
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

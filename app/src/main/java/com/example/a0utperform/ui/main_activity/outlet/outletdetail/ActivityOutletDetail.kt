@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.databinding.ActivityOutletDetailBinding
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addstaff.ActivityAddStaff
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addteam.ActivityAddTeam
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.DetailTeamActivity
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint

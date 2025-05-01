@@ -413,44 +413,37 @@ class DatabaseRepository @Inject constructor(
     suspend fun createNewTeam(
         teamName: String,
         description: String,
-        imageUri: Uri
+        outletId: String,
+        imageUri: Uri?,
     ): Result<Unit> {
         return try {
-            val session = supabaseAuth.currentSessionOrNull()
-                ?: return Result.failure(Exception("User not logged in"))
-
-            val user = session.user
-            val managerId = user?.id
-            val managerName = user?.userMetadata?.get("name")?.jsonPrimitive?.contentOrNull
-                ?: "Unknown Manager"
-
             // Generate a unique ID for the team
             val teamId = UUID.randomUUID().toString()
             val filename = "teams/$teamId.jpg"
 
             // Upload image to Supabase Storage
-            val inputStream = context.contentResolver.openInputStream(imageUri)!!
+            val inputStream = imageUri?.let { context.contentResolver.openInputStream(it) }!!
             val byteArray = inputStream.readBytes()
             withContext(Dispatchers.IO) {
                 inputStream.close()
             }
 
             supabaseClient.storage
-                .from("team_images")
+                .from("team")
                 .upload(filename, byteArray) {
                     upsert = true
                     contentType = ContentType.Image.JPEG
                 }
 
             val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/team_images/$filename"
-            val now = Clock.System.now().toString()
 
             // Create TeamDetail object
             val teamDetail = TeamDetail(
                 name = teamName,
                 description = description,
+                outlet_id = outletId,
                 img_url = imageUrl,
-                staffSize = "1"
+                staffSize = "0"
             )
 
 
