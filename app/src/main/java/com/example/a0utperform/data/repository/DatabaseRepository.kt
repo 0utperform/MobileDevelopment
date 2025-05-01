@@ -435,7 +435,7 @@ class DatabaseRepository @Inject constructor(
                     contentType = ContentType.Image.JPEG
                 }
 
-            val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/team_images/$filename"
+            val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/team/$filename"
 
             // Create TeamDetail object
             val teamDetail = TeamDetail(

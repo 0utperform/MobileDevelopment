@@ -96,11 +96,9 @@ class DetailTeamActivity : AppCompatActivity() {
         teamViewModel.staffList.observe(this) { staff ->
             if (staff.isNullOrEmpty()) {
                 binding.rvStaff.visibility = View.GONE
-                binding.staffLabel.visibility = View.GONE
             } else {
                 staffAdapter.submitList(staff)
                 binding.rvStaff.visibility = View.VISIBLE
-                binding.staffLabel.visibility = View.VISIBLE
             }
         }
         teamViewModel.isLoading.observe(this) { isLoading ->
