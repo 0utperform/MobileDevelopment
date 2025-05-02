@@ -58,6 +58,7 @@ class ViewTaskActivity : AppCompatActivity() {
 
     private fun SetupUI() {
         binding.taskTitle.text = task.title
+        binding.tvTaskStatus.text = task.status
         binding.tvTaskDescription.text = task.description
 
         Glide.with(this)

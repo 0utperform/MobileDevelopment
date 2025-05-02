@@ -110,7 +110,9 @@ class DashboardFragment : Fragment() {
                     binding.task.visibility = View.GONE
                 } else {
                     // Filter tasks based on role (Staff vs. Manager)
-                    val filteredTasks = tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
+                    val filteredTasks = tasks.filter {
+                        it.status == "Progress" && it.completedSubmissions < it.totalTargetSubmissions
+                    }
                     taskAdapter.submitList(filteredTasks)
                     binding.taskLabel.visibility = View.VISIBLE
                     binding.task.visibility = View.VISIBLE

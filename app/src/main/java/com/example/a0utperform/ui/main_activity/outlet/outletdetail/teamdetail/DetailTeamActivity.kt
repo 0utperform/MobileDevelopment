@@ -81,7 +81,9 @@ class DetailTeamActivity : AppCompatActivity() {
                             binding.rvTasks.visibility = View.GONE
                         } else {
                             val filteredTasks = if (role == "Staff") {
-                                tasks.filter { it.completedSubmissions < it.totalTargetSubmissions }
+                                tasks.filter {
+                                    it.status == "Progress" && it.completedSubmissions < it.totalTargetSubmissions
+                                }
                             } else {
                                 tasks
                             }

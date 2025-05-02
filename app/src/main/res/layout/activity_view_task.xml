@@ -38,6 +38,17 @@
                         android:layout_marginBottom="@dimen/margin_small"
                         android:text="@string/taskEdit_label"/>
 
+                    <TextView
+                        android:id="@+id/tv_task_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_semibold"
+                        android:text="@string/task_status"
+                        android:textSize="14sp"
+                        android:maxLines="20"
+                        android:layout_marginBottom="12dp" />
+
                     <ImageView
                         android:id="@+id/img_task"
                         android:layout_width="match_parent"
@@ -45,6 +56,8 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/placeholder_user"
                         android:layout_marginBottom="@dimen/margin_small" />
+
+
 
                     <TextView
                         android:id="@+id/tv_task_description"
