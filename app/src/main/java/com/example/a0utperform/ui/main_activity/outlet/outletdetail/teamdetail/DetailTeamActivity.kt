@@ -26,9 +26,6 @@ import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 @AndroidEntryPoint
 class DetailTeamActivity : AppCompatActivity() {

@@ -2,9 +2,11 @@ package com.example.a0utperform.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoField
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -18,3 +20,16 @@ fun String.formatToReadableDate(): String {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+
+fun formatToSupabaseTimestamp(dueDate: ZonedDateTime): String {
+    // Convert the ZonedDateTime to UTC with the correct timezone
+    val utcDateTime = dueDate.withZoneSameInstant(ZoneOffset.UTC)
+
+    // Extract microsecond precision
+    val microseconds = utcDateTime.get(ChronoField.MICRO_OF_SECOND)
+
+    // Format date and manually add microseconds and +00 offset
+    val dateTimePart = utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    return "%s.%06d+00".format(dateTimePart, microseconds)
+}

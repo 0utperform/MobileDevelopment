@@ -14,6 +14,7 @@ import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.databinding.ActivityViewTaskBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.json.Json
+
 @AndroidEntryPoint
 class ViewTaskActivity : AppCompatActivity() {
 
@@ -35,7 +36,7 @@ class ViewTaskActivity : AppCompatActivity() {
         totalTargetSubmissions = intent.getIntExtra("TOTAL_TARGET_SUBMISSIONS", 0)
         task = Json.decodeFromString<TaskData>(taskJson!!)
 
-        viewModel.fetchSubmissionsWithEvidence(task.task_id)
+        task.task_id?.let { viewModel.fetchSubmissionsWithEvidence(it) }
 
         submissionAdapter = SubmissionAdapter()
         binding.rvTaskCompletion.layoutManager = LinearLayoutManager(this)

@@ -114,4 +114,15 @@
     <string name="team_name_label">Team Name</string>
     <string name="add_task_label">Add Task</string>
     <string name="task_status">Status</string>
+    <string name="title_task">Task Title</string>
+    <string name="category">Category</string>
+    <string name="daily">Daily</string>
+    <string name="once">Once</string>
+    <string name="due_date">Due Date</string>
+    <string name="write_due_date">Write Due Date</string>
+    <string name="submission">Submission</string>
+    <string name="due_date_hint">Due Date (YYYY-MM-DD)</string>
+    <string name="task_image">Task Image</string>
+    <string name="hint_submission">0</string>
+    <string name="btn_create_task">Create Task</string>
 </resources>

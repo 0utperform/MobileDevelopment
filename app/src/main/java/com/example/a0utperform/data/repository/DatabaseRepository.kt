@@ -455,4 +455,53 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    suspend fun createTask(
+        task: TaskData,
+        imageUri: Uri?
+    ): Result<Unit> {
+        return try {
+            // Generate a unique ID for the task
+            val taskId = UUID.randomUUID().toString()
+            val filename = "tasks/$taskId.jpg"
+
+            // Upload image if exists
+            val imageUrl = if (imageUri != null) {
+                val inputStream = context.contentResolver.openInputStream(imageUri)
+                    ?: throw Exception("Cannot open image URI")
+                val byteArray = inputStream.readBytes()
+                withContext(Dispatchers.IO) {
+                    inputStream.close()
+                }
+
+                supabaseClient.storage
+                    .from("image")
+                    .upload(filename, byteArray) {
+                        upsert = true
+                        contentType = ContentType.Image.JPEG
+                    }
+
+                "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/image/$filename"
+            } else {
+                null
+            }
+
+            // Create final task object with generated ID and image URL
+            val finalTask = task.copy(
+                task_id = taskId,
+                img_url = imageUrl
+            )
+
+            // Insert task into "task" table
+            supabaseClient
+                .from("task")
+                .insert(finalTask)
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("TaskRepository", "Error creating task", e)
+            Result.failure(e)
+        }
+    }
+
 }
