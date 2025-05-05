@@ -10,9 +10,9 @@ data class TaskData(
     val title: String,
     val team_id: String,
     val description: String,
-    val status: String, // "pending", "done", etc.
+    val status: String,
     @SerialName("due_date")
-    val dueDate: String? = "null", // Parseable format
+    val dueDate: String? = "null",
     @SerialName("created_at")
     val createdAt:String? = "null",
     val is_repeating:Boolean? = null,
