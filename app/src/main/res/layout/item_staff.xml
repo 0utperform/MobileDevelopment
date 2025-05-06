@@ -28,14 +28,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/CircleShape"/>
 
+
         <!-- Text content on the right -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:padding="@dimen/padding_small"
             android:orientation="vertical"
             android:gravity="center_vertical">
+
 
             <TextView
                 android:id="@+id/tvStaffName"
@@ -62,5 +64,16 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btnToggle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+            android:contentDescription="@string/add_staff_label"
+            android:elevation="4dp"
+            android:layout_margin="@dimen/margin_small"
+            android:src="@drawable/ic_add_" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

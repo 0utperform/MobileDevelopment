@@ -21,6 +21,7 @@ import com.example.a0utperform.databinding.ActivityDetailTeamBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.StaffAdapter
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addstaff.ActivityAddStaff
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.addteam.ActivityAddTeam
+import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.addstaffteam.ActivityAddStaffTeam
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.createtaskactivity.CreateTaskActivity
 import com.example.a0utperform.utils.formatToReadableDate
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +64,7 @@ class DetailTeamActivity : AppCompatActivity() {
                         }
 
                         binding.fabAddStaff.setOnClickListener {
-                            val intent = Intent(this@DetailTeamActivity, ActivityAddStaff::class.java)
+                            val intent = Intent(this@DetailTeamActivity, ActivityAddStaffTeam::class.java)
                             intent.putExtra("TEAM_DETAIL_JSON", teamJson)
                             startActivity(intent)
                         }

@@ -13,6 +13,8 @@ import com.example.a0utperform.data.model.TaskEvidence
 import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.UserModel
+import com.example.a0utperform.data.model.UserWithAssignment
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -502,6 +504,83 @@ class DatabaseRepository @Inject constructor(
             Log.e("TaskRepository", "Error creating task", e)
             Result.failure(e)
         }
+    }
+
+    suspend fun fetchUsersWithAssignmentStatus(outletId: String): Result<List<UserWithAssignment>> {
+        return try {
+            val users = supabaseClient.from("users")
+                .select()
+                .decodeList<UserModel>()
+
+            val userOutlets = supabaseClient.from("user_outlet")
+                .select()
+                .decodeList<OutletData>()
+
+            val assignedUserIds = userOutlets.filter { it.outlet_id == outletId }.map { it.user_id }.toSet()
+
+            val userWithStatus = users.map { user ->
+                UserWithAssignment(user, assignedUserIds.contains(user.userId))
+            }
+
+            Result.success(userWithStatus)
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching users", e)
+            Result.failure(e)
+        }
+    }
+    suspend fun addUserToOutlet(userId: String, outletId: String) {
+        supabaseClient.from("user_outlet").insert(
+            mapOf("user_id" to userId, "outlet_id" to outletId)
+        )
+    }
+
+    suspend fun removeUserFromOutlet(userId: String, outletId: String) {
+        supabaseClient.from("user_outlet")
+            .delete {
+                filter {
+                    eq("user_id", userId)
+                    eq("outlet_id", outletId)
+                }
+            }
+    }
+
+    suspend fun fetchUsersWithTeamStatus(teamId: String): Result<List<UserWithAssignment>> {
+        return try {
+            val users = supabaseClient.from("users")
+                .select()
+                .decodeList<UserModel>()
+
+            val userTeams = supabaseClient.from("user_team")
+                .select()
+                .decodeList<TeamData>() // Assume TeamData has fields: user_id, team_id
+
+            val assignedUserIds = userTeams.filter { it.team_id == teamId }.map { it.user_id }.toSet()
+
+            val userWithStatus = users.map { user ->
+                UserWithAssignment(user, assignedUserIds.contains(user.userId))
+            }
+
+            Result.success(userWithStatus)
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching users for team", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun addUserToTeam(userId: String, teamId: String) {
+        supabaseClient.from("user_team").insert(
+            mapOf("user_id" to userId, "team_id" to teamId)
+        )
+    }
+
+    suspend fun removeUserFromTeam(userId: String, teamId: String) {
+        supabaseClient.from("user_team")
+            .delete {
+                filter {
+                    eq("user_id", userId)
+                    eq("team_id", teamId)
+                }
+            }
     }
 
 }
