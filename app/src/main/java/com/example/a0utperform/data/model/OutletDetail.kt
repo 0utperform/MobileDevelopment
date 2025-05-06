@@ -11,5 +11,6 @@ data class OutletDetail(
     val image_url:String,
     val manager_id:String,
     val manager_name:String,
-    val staff_size:Int
+    val staff_size:Int,
+    val revenue:Double? = null
 )

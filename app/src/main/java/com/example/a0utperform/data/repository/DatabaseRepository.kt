@@ -529,19 +529,62 @@ class DatabaseRepository @Inject constructor(
         }
     }
     suspend fun addUserToOutlet(userId: String, outletId: String) {
-        supabaseClient.from("user_outlet").insert(
-            mapOf("user_id" to userId, "outlet_id" to outletId)
-        )
+        try {
+            // Add user to user_outlet
+            supabaseClient.from("user_outlet").insert(
+                mapOf("user_id" to userId, "outlet_id" to outletId)
+            )
+
+            // Fetch current outlet detail
+            val outlet = supabaseClient.from("outlet")
+                .select { filter { eq("outlet_id", outletId) } }
+                .decodeSingle<OutletDetail>()  // Assuming you have this data class
+
+            val currentStaffSize = outlet.staff_size
+            val newStaffSize = currentStaffSize + 1
+
+            // Update staff_size in outlets
+            supabaseClient.from("outlet").update(
+                mapOf("staff_size" to newStaffSize.toString())
+            ) {
+                filter { eq("outlet_id", outletId) }
+            }
+
+        } catch (e: Exception) {
+            Log.e("Repository", "Error adding user to outlet", e)
+        }
     }
 
+
     suspend fun removeUserFromOutlet(userId: String, outletId: String) {
-        supabaseClient.from("user_outlet")
-            .delete {
-                filter {
-                    eq("user_id", userId)
-                    eq("outlet_id", outletId)
+        try {
+            // Remove user from user_outlet
+            supabaseClient.from("user_outlet")
+                .delete {
+                    filter {
+                        eq("user_id", userId)
+                        eq("outlet_id", outletId)
+                    }
                 }
+
+            // Fetch current outlet detail
+            val outlet = supabaseClient.from("outlet")
+                .select { filter { eq("outlet_id", outletId) } }
+                .decodeSingle<OutletDetail>()  // Reuse your outlet model
+
+            val currentStaffSize = outlet.staff_size
+            val newStaffSize = maxOf(0, currentStaffSize - 1)
+
+            // Update staff_size in outlets
+            supabaseClient.from("outlet").update(
+                mapOf("staff_size" to newStaffSize.toString())
+            ) {
+                filter { eq("outlet_id", outletId) }
             }
+
+        } catch (e: Exception) {
+            Log.e("Repository", "Error removing user from outlet", e)
+        }
     }
 
     suspend fun fetchUsersWithTeamStatus(teamId: String): Result<List<UserWithAssignment>> {
@@ -604,7 +647,7 @@ class DatabaseRepository @Inject constructor(
                 }
 
             // Fetch current team detail
-            val team = supabaseClient.from("team")
+            val team = supabaseClient.from("teams")
                 .select {filter { eq("team_id", teamId) }}
 
                 .decodeSingle<TeamDetail>()
@@ -613,7 +656,7 @@ class DatabaseRepository @Inject constructor(
             val newStaffSize = maxOf(0, currentStaffSize - 1) // Prevent negative
 
             // Update staff_size
-            supabaseClient.from("team").update(
+            supabaseClient.from("teams").update(
                 mapOf("staff_size" to newStaffSize.toString())
             ) { filter {     eq("team_id", teamId) }
             }

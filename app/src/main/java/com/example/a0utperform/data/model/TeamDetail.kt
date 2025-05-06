@@ -13,5 +13,6 @@ data class TeamDetail(
     @SerialName("staff_size")
     val staffSize:String? = null,
     val img_url:String? = null,
-    val description:String?=null
+    val description:String?= null,
+    val completion_rate:Double? = null
 )
