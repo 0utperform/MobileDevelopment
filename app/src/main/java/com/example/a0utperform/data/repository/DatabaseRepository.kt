@@ -568,19 +568,59 @@ class DatabaseRepository @Inject constructor(
     }
 
     suspend fun addUserToTeam(userId: String, teamId: String) {
-        supabaseClient.from("user_team").insert(
-            mapOf("user_id" to userId, "team_id" to teamId)
-        )
-    }
+        try {
+            // Add user to user_team
+            supabaseClient.from("user_team").insert(
+                mapOf("user_id" to userId, "team_id" to teamId)
+            )
 
-    suspend fun removeUserFromTeam(userId: String, teamId: String) {
-        supabaseClient.from("user_team")
-            .delete {
-                filter {
-                    eq("user_id", userId)
-                    eq("team_id", teamId)
-                }
+            // Fetch current team detail
+            val team = supabaseClient.from("teams")
+                .select { filter { eq("team_id", teamId) } }
+                .decodeSingle<TeamDetail>()
+
+            val currentStaffSize = team.staffSize?.toIntOrNull() ?: 0
+            val newStaffSize = currentStaffSize + 1
+
+            // Update staff_size
+            supabaseClient.from("teams").update(
+                mapOf("staff_size" to newStaffSize.toString())
+            ) {
+                filter { eq("team_id", teamId) }
             }
+
+        } catch (e: Exception) {
+            Log.e("Repository", "Error adding user to team", e)
+        }
+    }
+    suspend fun removeUserFromTeam(userId: String, teamId: String) {
+        try {
+            // Remove user from user_team
+            supabaseClient.from("user_team")
+                .delete {
+                    filter {
+                        eq("user_id", userId)
+                        eq("team_id", teamId)}
+                }
+
+            // Fetch current team detail
+            val team = supabaseClient.from("team")
+                .select {filter { eq("team_id", teamId) }}
+
+                .decodeSingle<TeamDetail>()
+
+            val currentStaffSize = team.staffSize?.toIntOrNull() ?: 0
+            val newStaffSize = maxOf(0, currentStaffSize - 1) // Prevent negative
+
+            // Update staff_size
+            supabaseClient.from("team").update(
+                mapOf("staff_size" to newStaffSize.toString())
+            ) { filter {     eq("team_id", teamId) }
+            }
+
+        } catch (e: Exception) {
+            Log.e("Repository", "Error removing user from team", e)
+        }
     }
 
 }

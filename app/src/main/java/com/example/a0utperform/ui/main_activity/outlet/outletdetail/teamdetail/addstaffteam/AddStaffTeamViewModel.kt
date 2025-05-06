@@ -19,13 +19,28 @@ class AddStaffTeamViewModel @Inject constructor(
     private val _users = MutableLiveData<List<UserWithAssignment>>()
     val users: LiveData<List<UserWithAssignment>> get() = _users
 
-    fun loadUsers(teamId: String) {
+    fun loadUsersWithTeamStatusFilteredByOutlet(teamId: String, outletId: String) {
         viewModelScope.launch {
-            val result = repository.fetchUsersWithTeamStatus(teamId)
-            result.onSuccess {
-                _users.value = it
-            }.onFailure {
-                Log.e("ViewModel", "Error loading team users", it)
+            try {
+                val teamResult = repository.fetchUsersWithTeamStatus(teamId)
+                val outletResult = repository.fetchUsersWithAssignmentStatus(outletId)
+
+                if (teamResult.isSuccess && outletResult.isSuccess) {
+                    val outletAssignedUsers = outletResult.getOrNull()
+                        ?.filter { it.isAssigned }
+                        ?.map { it.user.userId }
+                        ?.toSet() ?: emptySet()
+
+                    val filteredTeamUsers = teamResult.getOrNull()
+                        ?.filter { outletAssignedUsers.contains(it.user.userId) }
+                        ?: emptyList()
+
+                    _users.value = filteredTeamUsers
+                } else {
+                    Log.e("ViewModel", "Failed to load users filtered by outlet and team")
+                }
+            } catch (e: Exception) {
+                Log.e("ViewModel", "Error filtering users by outlet and team", e)
             }
         }
     }

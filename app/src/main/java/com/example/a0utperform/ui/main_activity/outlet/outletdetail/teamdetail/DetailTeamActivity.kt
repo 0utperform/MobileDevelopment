@@ -42,7 +42,9 @@ class DetailTeamActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val teamJson = intent.getStringExtra("TEAM_DETAIL_JSON")
+        val outletJson = intent.getStringExtra("OUTLET_DETAIL_JSON")
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
+
 
         binding.rvStaff.adapter = staffAdapter
         binding.rvStaff.layoutManager = LinearLayoutManager(this)
@@ -66,6 +68,7 @@ class DetailTeamActivity : AppCompatActivity() {
                         binding.fabAddStaff.setOnClickListener {
                             val intent = Intent(this@DetailTeamActivity, ActivityAddStaffTeam::class.java)
                             intent.putExtra("TEAM_DETAIL_JSON", teamJson)
+                            intent.putExtra("OUTLET_DETAIL_JSON", outletJson)
                             startActivity(intent)
                         }
                     } else {

@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a0utperform.R
+import com.example.a0utperform.data.model.OutletData
+import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserWithAssignment
 import com.example.a0utperform.databinding.ActivityAddStaffTeamBinding
@@ -27,7 +29,9 @@ class ActivityAddStaffTeam : AppCompatActivity() {
     private val viewModel: AddStaffTeamViewModel by viewModels()
     private lateinit var adapter: StaffAddAdapter
     private var teamId: String? = null
+    private var outletId: String? = null
     private var fullUserList: List<UserWithAssignment> = emptyList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,15 @@ class ActivityAddStaffTeam : AppCompatActivity() {
         val teamDetail = teamJson?.let { Json.decodeFromString<TeamDetail>(it) }
         teamId = teamDetail?.team_id
 
+        val outletJson = intent.getStringExtra("OUTLET_DETAIL_JSON")
+        val outletDetail = outletJson?.let { Json.decodeFromString<OutletDetail>(it) }
+        outletId = outletDetail?.outlet_id
+
+        if (outletId == null) {
+            Toast.makeText(this, "Outlet data is missing.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
         if (teamId == null) {
             Toast.makeText(this, "Team data is missing.", Toast.LENGTH_SHORT).show()
             finish()
@@ -75,7 +88,7 @@ class ActivityAddStaffTeam : AppCompatActivity() {
             adapter.submitList(userList)
         }
 
-        viewModel.loadUsers(teamId!!)
+        viewModel.loadUsersWithTeamStatusFilteredByOutlet(teamId!!, outletId!!)
     }
 
     private fun toggleTeamAssignment(user: UserWithAssignment) {
@@ -84,12 +97,12 @@ class ActivityAddStaffTeam : AppCompatActivity() {
         if (user.isAssigned) {
             viewModel.removeUserFromTeam(user.user.userId, teamId!!) {
                 Toast.makeText(this, "${user.user.name} has been removed from team.", Toast.LENGTH_SHORT).show()
-                viewModel.loadUsers(teamId!!)
+                viewModel.loadUsersWithTeamStatusFilteredByOutlet(teamId!!, outletId!!)
             }
         } else {
             viewModel.addUserToTeam(user.user.userId, teamId!!) {
                 Toast.makeText(this, "${user.user.name} has been added to team.", Toast.LENGTH_SHORT).show()
-                viewModel.loadUsers(teamId!!)
+                viewModel.loadUsersWithTeamStatusFilteredByOutlet(teamId!!, outletId!!)
             }
         }
     }

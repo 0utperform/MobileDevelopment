@@ -22,13 +22,14 @@ import kotlinx.serialization.json.Json
 
 @AndroidEntryPoint
 class ActivityOutletDetail : AppCompatActivity() {
-
+    private lateinit var outletJson: String
     private lateinit var binding: ActivityOutletDetailBinding
     private val outletViewModel: OutletDetailViewModel by viewModels()
     private val adapter = TeamAdapter { team ->
         val intent = Intent(this, DetailTeamActivity::class.java)
         val teamJson = Json.encodeToString(team)
         intent.putExtra("TEAM_DETAIL_JSON", teamJson)
+        intent.putExtra("OUTLET_DETAIL_JSON", outletJson)
         startActivity(intent)
     }
     private val staffAdapter = StaffAdapter()
@@ -49,8 +50,10 @@ class ActivityOutletDetail : AppCompatActivity() {
 
 
 
-        val outletJson = intent.getStringExtra("OUTLET_DETAIL_JSON")
-        val outletDetail = outletJson?.let { Json.decodeFromString<OutletDetail>(it) }
+        outletJson = intent.getStringExtra("OUTLET_DETAIL_JSON") ?: ""
+        val outletDetail = outletJson.takeIf { it.isNotEmpty() }?.let {
+            Json.decodeFromString<OutletDetail>(it)
+        }
 
         outletDetail?.let { outlet ->
             binding.tvOutletName.text = outlet.name
