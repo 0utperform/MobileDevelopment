@@ -23,8 +23,14 @@ import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.D
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.TaskAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -48,10 +54,12 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
+        updateTimeAndDate()
         dashboardViewModel.userSession.observe(viewLifecycleOwner) { session ->
             session?.let {
                 dashboardViewModel.fetchAvatarUrl()
@@ -121,6 +129,21 @@ class DashboardFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateTimeAndDate() {
+        val jakartaZone = ZoneId.of("Asia/Jakarta")
+        val formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formatterDate = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy", Locale("id", "ID"))
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (isActive) {
+                val currentTime = ZonedDateTime.now(jakartaZone)
+                binding.time.text = currentTime.format(formatterTime)
+                binding.date.text = currentTime.format(formatterDate)
+                delay(1000L) // update every second
+            }
+        }
+    }
     private fun navigateToTeamDetail(team: TeamDetail) {
         val intent = Intent(requireContext(), DetailTeamActivity::class.java)
         val teamJson = Json.encodeToString(team)
