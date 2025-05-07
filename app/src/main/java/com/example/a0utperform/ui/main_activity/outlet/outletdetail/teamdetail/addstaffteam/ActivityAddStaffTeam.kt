@@ -2,6 +2,7 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
 import android.widget.Toast
@@ -56,7 +57,9 @@ class ActivityAddStaffTeam : AppCompatActivity() {
             finish()
             return
         }
-
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         adapter = StaffAddAdapter { userWithAssignment ->
             toggleTeamAssignment(userWithAssignment)
         }

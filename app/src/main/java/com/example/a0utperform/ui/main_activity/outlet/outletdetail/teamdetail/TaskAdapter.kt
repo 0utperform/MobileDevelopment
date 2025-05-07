@@ -2,8 +2,10 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +16,8 @@ import com.example.a0utperform.databinding.ItemTaskBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory.EditTaskActivity
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.viewtaskactivity.ViewTaskActivity
 import kotlinx.serialization.json.Json
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 class TaskAdapter(
@@ -32,6 +36,7 @@ class TaskAdapter(
     }
 
     inner class TaskViewHolder(val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(task: TaskData) {
             binding.tvTaskName.text = task.title
             binding.tvTaskCompletionLabel.text =  itemView.context.getString(
@@ -39,6 +44,17 @@ class TaskAdapter(
                 task.completedSubmissions.toString(),
                 task.totalTargetSubmissions.toString()
             )
+
+            task.createdAt?.let { timestamp ->
+                try {
+                    val zonedDateTime = ZonedDateTime.parse(timestamp) // e.g., 2025-05-07T00:00:00.837011+00:00
+                    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm z")
+                    val formattedTime = zonedDateTime.format(formatter)
+                    binding.tvCreatedAt.text = itemView.context.getString(R.string.created_format,formattedTime)
+                } catch (e: Exception) {
+                    binding.tvCreatedAt.text = "-" // fallback on parsing error
+                }
+            }
             Glide.with(context)
                 .load(task.img_url)
                 .into(binding.taskImage)
@@ -63,6 +79,7 @@ class TaskAdapter(
         return TaskViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(getItem(position))
     }

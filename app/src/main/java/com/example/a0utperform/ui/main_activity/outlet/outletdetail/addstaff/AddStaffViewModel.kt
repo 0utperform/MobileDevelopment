@@ -19,9 +19,14 @@ class AddStaffViewModel @Inject constructor(
     private val _users = MutableLiveData<List<UserWithAssignment>>()
     val users: LiveData<List<UserWithAssignment>> = _users
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun loadUsers(outletId: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             val result = repository.fetchUsersWithAssignmentStatus(outletId)
+            _isLoading.value = false
             result.onSuccess {
                 _users.value = it
             }.onFailure {
@@ -29,16 +34,21 @@ class AddStaffViewModel @Inject constructor(
             }
         }
     }
+
     fun addUserToOutlet(userId: String, outletId: String, onComplete: () -> Unit) {
         viewModelScope.launch {
+            _isLoading.value = true
             repository.addUserToOutlet(userId, outletId)
+            _isLoading.value = false
             onComplete()
         }
     }
 
     fun removeUserFromOutlet(userId: String, outletId: String, onComplete: () -> Unit) {
         viewModelScope.launch {
+            _isLoading.value = true
             repository.removeUserFromOutlet(userId, outletId)
+            _isLoading.value = false
             onComplete()
         }
     }

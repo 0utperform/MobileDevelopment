@@ -19,8 +19,12 @@ class AddStaffTeamViewModel @Inject constructor(
     private val _users = MutableLiveData<List<UserWithAssignment>>()
     val users: LiveData<List<UserWithAssignment>> get() = _users
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun loadUsersWithTeamStatusFilteredByOutlet(teamId: String, outletId: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val teamResult = repository.fetchUsersWithTeamStatus(teamId)
                 val outletResult = repository.fetchUsersWithAssignmentStatus(outletId)
@@ -41,28 +45,36 @@ class AddStaffTeamViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("ViewModel", "Error filtering users by outlet and team", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun addUserToTeam(userId: String, teamId: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 repository.addUserToTeam(userId, teamId)
                 onSuccess()
             } catch (e: Exception) {
                 Log.e("ViewModel", "Failed to add user to team", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun removeUserFromTeam(userId: String, teamId: String, onSuccess: () -> Unit) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 repository.removeUserFromTeam(userId, teamId)
                 onSuccess()
             } catch (e: Exception) {
                 Log.e("ViewModel", "Failed to remove user from team", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
