@@ -108,8 +108,9 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        profileViewModel.outletDetail.observe(viewLifecycleOwner) { outlet ->
-            binding.personalOutlet.text = getString(R.string.outlet_format,outlet?.name ?: "N/A")
+        profileViewModel.outletDetail.observe(viewLifecycleOwner) { outletList ->
+            val outletNames = outletList.joinToString { it.name ?: "N/A" }
+            binding.personalOutlet.text = getString(R.string.outlet_format, outletNames)
         }
 
     }

@@ -21,9 +21,13 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.storage.storage
 import io.ktor.http.ContentType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.contentOrNull
@@ -64,7 +68,8 @@ class DatabaseRepository @Inject constructor(
                 supabaseDatabase
                     .from("teams")
                     .select(Columns.list()) {
-                        filter { eq("team_id", userTeam.team_id) }
+                        filter {eq("team_id", userTeam.team_id) }
+
                     }
                     .decodeSingleOrNull<TeamDetail>()
             }
@@ -79,9 +84,9 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
-    suspend fun getAssignedOutletDetails(userId: String): Result<OutletDetail?> {
+    suspend fun getAssignedOutletDetails(userId: String): Result<List<OutletDetail>> {
         return try {
-            Log.d("DatabaseRepository", "Fetching outlet assignment for user: $userId")
+            Log.d("DatabaseRepository", "Fetching outlet assignments for user: $userId")
 
             val outletAssignments = supabaseDatabase
                 .from("user_outlet")
@@ -90,26 +95,42 @@ class DatabaseRepository @Inject constructor(
                 }
                 .decodeList<OutletData>()
 
-            val userOutlet = outletAssignments.find { it.user_id == userId }
-            if (userOutlet == null) {
+            if (outletAssignments.isEmpty()) {
                 return Result.failure(Exception("User has no Outlet assignment"))
             }
 
-            Log.d("DatabaseRepository", "Fetching Outlet detail for outlet_id: ${userOutlet.outlet_id}")
+            Log.d("DatabaseRepository", "Fetching Outlet details for ${outletAssignments.size} outlets")
 
-            val outletDetail = supabaseDatabase
-                .from("outlet")
-                .select(Columns.list()) {
-                    filter { eq("outlet_id", userOutlet.outlet_id) }
-                }
-                .decodeSingleOrNull<OutletDetail>()
+            // Parallel fetch
+            val outletDetails = coroutineScope {
+                outletAssignments.map { assignment ->
+                    async {
+                        try {
+                            supabaseDatabase
+                                .from("outlet")
+                                .select(Columns.list()) {
+                                    filter { eq("outlet_id", assignment.outlet_id) }
+                                }
+                                .decodeSingleOrNull<OutletDetail>()
+                        } catch (e: Exception) {
+                            Log.e("DatabaseRepository", "Error fetching outlet_id=${assignment.outlet_id}", e)
+                            null
+                        }
+                    }
+                }.awaitAll().filterNotNull()
+            }
 
-            Result.success(outletDetail)
+            if (outletDetails.isEmpty()) {
+                return Result.failure(Exception("No outlet details found for the user"))
+            }
+
+            Result.success(outletDetails)
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error fetching assigned outlet details", e)
             Result.failure(e)
         }
     }
+
     fun getUserImgUrl(): Result<String?> {
         return try {
             val session = supabaseAuth.currentSessionOrNull()
@@ -666,4 +687,36 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
+    suspend fun getTop3OutletsByRevenue(): Result<List<OutletDetail>> {
+        return try {
+            val outlets = supabaseDatabase
+                .from("outlet")
+                .select(Columns.list()) {
+                    order("revenue", Order.DESCENDING)
+                    limit(3)
+                }
+                .decodeList<OutletDetail>()
+            Result.success(outlets)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching top outlets", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTop3TeamsByCompletion(): Result<List<TeamDetail>> {
+        return try {
+            val teams = supabaseDatabase
+                .from("teams")
+                .select(Columns.list()) {
+                    order("completion_rate", Order.DESCENDING)
+                    limit(3)
+                }
+                .decodeList<TeamDetail>()
+
+            Result.success(teams)
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error fetching top teams", e)
+            Result.failure(e)
+        }
+    }
 }

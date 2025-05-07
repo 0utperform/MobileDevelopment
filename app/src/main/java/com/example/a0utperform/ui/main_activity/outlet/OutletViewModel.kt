@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.outlet
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,47 +36,46 @@ class OutletViewModel @Inject constructor(
             _isLoading.postValue(true)
 
             userPreference.getSession().collect { user ->
-                val userId = user.userId
-                val role = user.role
-
-                if (userId.isBlank() || role.isNullOrBlank()) {
+                if (user == null || user.userId.isBlank() || user.role.isNullOrBlank()) {
                     _error.postValue("Invalid user session or role.")
                     _isLoading.postValue(false)
                     return@collect
                 }
 
+                val userId = user.userId
+                val role = user.role
+
+                Log.d("OutletViewModel", "Fetching outlets for userId=$userId, role=$role")
+
                 try {
-                    when {
+                    val result = when {
                         role.equals("Staff", ignoreCase = true) -> {
-                            val result = databaseRepository.getAssignedOutletDetails(userId)
-                            if (result.isSuccess) {
-                                result.getOrNull()?.let { assignedOutlet ->
-                                    _outlets.postValue(listOf(assignedOutlet))
-                                } ?: run {
-                                    _outlets.postValue(emptyList())
-                                }
-                            } else {
-                                _error.postValue(result.exceptionOrNull()?.message)
-                                _outlets.postValue(emptyList())
-                            }
+                            databaseRepository.getAssignedOutletDetails(userId)
                         }
 
                         role.equals("Manager", ignoreCase = true) -> {
-                            val result = databaseRepository.getAllOutlets()
-                            if (result.isSuccess) {
-                                _outlets.postValue(result.getOrNull().orEmpty())
-                            } else {
-                                _error.postValue(result.exceptionOrNull()?.message)
-                                _outlets.postValue(emptyList())
-                            }
+                            databaseRepository.getAllOutlets()
                         }
 
                         else -> {
                             _error.postValue("Unknown role: $role")
                             _outlets.postValue(emptyList())
+                            return@collect
                         }
                     }
+
+                    if (result.isSuccess) {
+                        val list = result.getOrNull().orEmpty()
+                        Log.d("OutletViewModel", "Fetched ${list.size} outlets")
+                        _outlets.postValue(list)
+                    } else {
+                        val message = result.exceptionOrNull()?.message
+                        Log.e("OutletViewModel", "Error fetching outlets: $message")
+                        _error.postValue(message)
+                        _outlets.postValue(emptyList())
+                    }
                 } catch (e: Exception) {
+                    Log.e("OutletViewModel", "Exception: ${e.message}", e)
                     _error.postValue(e.message)
                     _outlets.postValue(emptyList())
                 } finally {
