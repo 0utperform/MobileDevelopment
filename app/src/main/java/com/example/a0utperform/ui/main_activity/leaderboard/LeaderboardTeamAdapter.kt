@@ -1,6 +1,7 @@
 package com.example.a0utperform.ui.main_activity.leaderboard
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -43,6 +44,11 @@ class LeaderboardTeamAdapter : RecyclerView.Adapter<LeaderboardTeamAdapter.TeamV
         fun bind(team: TeamDetail) {
             binding.tvTeamName.text = team.name
             binding.tvTeamSize.text = binding.root.context.getString(R.string.size_format, team.staffSize)
+            binding.tvCompletionRate.visibility = View.VISIBLE
+            binding.tvCompletionRate.text = binding.root.context.getString(
+                R.string.formatted_completion_rate,
+                team.completion_rate
+            )
             binding.tvTeamDescription.text = binding.root.context.getString(R.string.description_format, team.description)
 
             Glide.with(binding.root.context)

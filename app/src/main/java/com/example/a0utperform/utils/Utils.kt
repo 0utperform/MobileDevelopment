@@ -2,6 +2,7 @@ package com.example.a0utperform.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.NumberFormat
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -32,4 +33,10 @@ fun formatToSupabaseTimestamp(dueDate: ZonedDateTime): String {
     // Format date and manually add microseconds and +00 offset
     val dateTimePart = utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     return "%s.%06d+00".format(dateTimePart, microseconds)
+}
+
+fun formatToRupiah(amount: Double): String {
+    val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))
+    formatter.maximumFractionDigits = 0
+    return formatter.format(amount)
 }

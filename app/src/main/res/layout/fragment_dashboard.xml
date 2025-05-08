@@ -78,7 +78,7 @@
                 android:id="@+id/available_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4 tasks today"
+                android:text="@string/formatted_task"
                 android:textColor="@color/brandBlue"
                 android:layout_marginTop="@dimen/padding_medium"
                 android:layout_marginStart="@dimen/margin_medium"

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.a0utperform.R
 import com.example.a0utperform.data.model.OutletDetail
+import com.example.a0utperform.utils.formatToRupiah
 
 class LeaderboardOutletAdapter : RecyclerView.Adapter<LeaderboardOutletAdapter.LeaderboardOutletViewHolder>() {
 
@@ -45,12 +46,15 @@ class LeaderboardOutletAdapter : RecyclerView.Adapter<LeaderboardOutletAdapter.L
     inner class LeaderboardOutletViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvOutletName = itemView.findViewById<TextView>(R.id.tvOutletName)
         private val tvOutletLocation = itemView.findViewById<TextView>(R.id.tvAddress)
+        private val tvOutletRevenue = itemView.findViewById<TextView>(R.id.tvRevenue)
         private val mediaCoverImageView: ImageView = itemView.findViewById(R.id.imgOutlet)
         private val tvManager = itemView.findViewById<TextView>(R.id.tvManager)
         private val tvSize = itemView.findViewById<TextView>(R.id.tvSize)
 
         fun bind(outlet: OutletDetail) {
             tvOutletName.text = outlet.name ?: "No name"
+            tvOutletRevenue.visibility = View.VISIBLE
+            tvOutletRevenue.text = itemView.context.getString(R.string.format_revenue, formatToRupiah(outlet.revenue ?: 0.0))
             tvOutletLocation.text = outlet.location ?: "No location"
             tvManager.text = outlet.manager_name
             tvSize.text = itemView.context.getString(R.string.size_format, outlet.staff_size.toString())

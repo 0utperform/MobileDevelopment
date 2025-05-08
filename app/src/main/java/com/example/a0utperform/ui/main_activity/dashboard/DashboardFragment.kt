@@ -116,6 +116,7 @@ class DashboardFragment : Fragment() {
                 if (tasks.isNullOrEmpty()) {
                     binding.taskLabel.visibility = View.GONE
                     binding.task.visibility = View.GONE
+                    binding.availableTask.text = getString(R.string.formatted_task, "0")
                 } else {
                     // Filter tasks based on role (Staff vs. Manager)
                     val filteredTasks = tasks.filter {
@@ -124,6 +125,8 @@ class DashboardFragment : Fragment() {
                     taskAdapter.submitList(filteredTasks)
                     binding.taskLabel.visibility = View.VISIBLE
                     binding.task.visibility = View.VISIBLE
+                    val taskCount = filteredTasks.size
+                    binding.availableTask.text = getString(R.string.formatted_task, taskCount.toString())
                 }
             }
         }

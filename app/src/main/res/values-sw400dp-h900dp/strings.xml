@@ -125,4 +125,7 @@
     <string name="btn_create_task">Create Task</string>
     <string name="best_outlet_label">Best Outlet</string>
     <string name="best_team_label">Best Team</string>
+    <string name="formatted_task">" %1$s tasks today"</string>
+    <string name="format_revenue">Monthly Revenue : %1$s</string>
+    <string name="formatted_completion_rate">Completion Rate :  %1$.1f%%</string>
 </resources>

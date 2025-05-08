@@ -68,6 +68,16 @@
                 android:layout_marginTop="4dp"
                 android:maxLines="2"
                 android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvRevenue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/format_revenue"
+                android:visibility="gone"
+                android:layout_marginTop="4dp"
+                android:maxLines="2"
+                android:ellipsize="end" />
         </LinearLayout>
 
     </LinearLayout>
