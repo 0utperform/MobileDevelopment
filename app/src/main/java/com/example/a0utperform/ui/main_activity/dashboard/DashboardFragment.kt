@@ -58,6 +58,17 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.availableTask.visibility = View.GONE
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            dashboardViewModel.getUserRole().collect { role ->
+                if (!role.isNullOrEmpty()) {
+                    taskAdapter = TaskAdapter(requireContext(), role)
+                    binding.task.adapter = taskAdapter
+                    observeTaskList(role)
+                }
+            }
+        }
 
         updateTimeAndDate()
         dashboardViewModel.userSession.observe(viewLifecycleOwner) { session ->
@@ -89,15 +100,7 @@ class DashboardFragment : Fragment() {
         }
 
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            dashboardViewModel.getUserRole().collect { role ->
-                if (!role.isNullOrEmpty()) {
-                    taskAdapter = TaskAdapter(requireContext(), role)
-                    binding.task.adapter = taskAdapter
-                    observeTaskList(role)
-                }
-            }
-        }
+
     }
 
     private fun setupRecyclerView() {
@@ -107,30 +110,29 @@ class DashboardFragment : Fragment() {
     }
 
     private fun observeTaskList(role: String) {
-
         taskListCollectorJob?.cancel()
-
 
         taskListCollectorJob = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             dashboardViewModel.taskList.observe(viewLifecycleOwner) { tasks ->
-                if (tasks.isNullOrEmpty()) {
+                val filteredTasks = tasks?.filter {
+                    it.status == "Progress" && it.completedSubmissions < it.totalTargetSubmissions
+                }.orEmpty()
+
+                taskAdapter.submitList(filteredTasks)
+
+                if (filteredTasks.isEmpty()) {
                     binding.taskLabel.visibility = View.GONE
                     binding.task.visibility = View.GONE
                     binding.availableTask.text = getString(R.string.formatted_task, "0")
                 } else {
-                    // Filter tasks based on role (Staff vs. Manager)
-                    val filteredTasks = tasks.filter {
-                        it.status == "Progress" && it.completedSubmissions < it.totalTargetSubmissions
-                    }
-                    taskAdapter.submitList(filteredTasks)
                     binding.taskLabel.visibility = View.VISIBLE
                     binding.task.visibility = View.VISIBLE
-                    val taskCount = filteredTasks.size
-                    binding.availableTask.text = getString(R.string.formatted_task, taskCount.toString())
+                    binding.availableTask.text = getString(R.string.formatted_task, filteredTasks.size.toString())
                 }
             }
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTimeAndDate() {
