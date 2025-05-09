@@ -2,9 +2,12 @@ package com.example.a0utperform.data.repository
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
+import com.example.a0utperform.data.model.Attendance
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
@@ -15,6 +18,7 @@ import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
 import com.example.a0utperform.data.model.UserWithAssignment
+import com.example.a0utperform.utils.formatToSupabaseTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -32,6 +36,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Objects.isNull
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -719,4 +729,193 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    private val TAG = "AttendanceRepository"
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun clockIn(userId: String): Result<Attendance> = withContext(Dispatchers.IO) {
+        try {
+
+            val jakartaZone = ZoneId.of("Asia/Jakarta")
+            val currentTime = ZonedDateTime.now(java.time.Clock.system(jakartaZone))
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val formattedTime = currentTime.format(formatter)
+
+            val attendance = Attendance(
+                user_id = userId,
+                clock_in = formattedTime,
+                status = "active" // or whatever status you want to use
+            )
+
+            val result = supabaseDatabase
+                .from("attendance")
+                .insert(attendance) {
+                    select(Columns.list("user_id","status","clock_in"))
+
+                }
+
+                .decodeSingle<Attendance>()
+
+
+            Log.d(TAG, "Clock-in success: $result")
+            return@withContext Result.success(result)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during clock-in operation", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun clockOut(userId: String): Result<Attendance> = withContext(Dispatchers.IO) {
+        try {
+            val jakartaZone = ZoneId.of("Asia/Jakarta")
+            val currentTime = ZonedDateTime.now(java.time.Clock.system(jakartaZone))
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val formattedTime = currentTime.format(formatter)
+
+            val latestAttendance = supabaseDatabase
+                .from("attendance")
+                .select(Columns.list()) {
+                    select(Columns.list("user_id","status","clock_in", "clock_out"))
+                    filter {
+                        eq("user_id", userId)
+                        eq("status", "active")
+                        isNull("clock_out")
+                    }
+                    order("created_at", order = Order.DESCENDING)
+                    limit(1)
+                }
+                .decodeSingleOrNull<Attendance>() ?: return@withContext Result.failure(Exception("No active attendance record found"))
+
+            // Update the attendance record with clock_out time
+            val updatedAttendance = supabaseDatabase
+                .from("attendance")
+                .update({
+                    set("clock_out", formattedTime)
+                    set("status", "completed")
+                }) {
+                    select(Columns.list("user_id","status","clock_in","clock_out"))
+                    filter { eq("attendance_id", latestAttendance.attendance_id!!) }
+                }
+                .decodeSingle<Attendance>()
+
+            Log.d(TAG, "Clock-out success: $updatedAttendance")
+            return@withContext Result.success(updatedAttendance)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during clock-out operation", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
+    suspend fun getLatestAttendance(userId: String): Result<Attendance?> = withContext(Dispatchers.IO) {
+        try {
+            val attendance = supabaseDatabase
+                .from("attendance")
+                .select(Columns.list()) {
+                    filter { eq("user_id", userId) }
+                    order("created_at", order = Order.DESCENDING )
+                    limit(1)
+                }
+                .decodeSingleOrNull<Attendance>()
+
+            return@withContext Result.success(attendance)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching latest attendance", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getTodayAttendance(userId: String): Result<Attendance?> = withContext(Dispatchers.IO) {
+        try {
+            val jakartaZone = ZoneId.of("Asia/Jakarta")
+            val today = LocalDate.now(jakartaZone)
+            val startOfDay = today.atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            val endOfDay = today.plusDays(1).atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+            val attendance = supabaseDatabase
+                .from("attendance")
+                .select(Columns.list()) {
+                    filter {
+                        eq("user_id", userId)
+                        gte("created_at", startOfDay)
+                        lt("created_at", endOfDay)
+                    }
+                    order("created_at", order = Order.DESCENDING)
+                    limit(1)
+                }
+                .decodeSingleOrNull<Attendance>()
+
+            return@withContext Result.success(attendance)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching today's attendance", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun shouldShowClockIn(userId: String): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            val latestAttendanceResult = getLatestAttendance(userId)
+            if (latestAttendanceResult.isFailure) {
+                return@withContext Result.success(true) // If error fetching, default to showing clock in
+            }
+
+            val latestAttendance = latestAttendanceResult.getOrNull()
+            if (latestAttendance == null) {
+                return@withContext Result.success(true) // No attendance records, show clock in
+            }
+
+            // If there's a record but no clock out, we should show clock out instead
+            if (latestAttendance.clock_out == null && latestAttendance.status == "active") {
+                return@withContext Result.success(false) // Show clock out button
+            }
+
+            // Check if the last attendance record is from a previous day
+            val jakartaZone = ZoneId.of("Asia/Jakarta")
+            val today = LocalDate.now(jakartaZone)
+
+            try {
+                // Parse the created_at timestamp
+                val createdAtTime = if (latestAttendance.created_at != null) {
+                    ZonedDateTime.parse(latestAttendance.created_at, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                } else {
+                    // Fallback to clock_in if created_at is null
+                    ZonedDateTime.parse(latestAttendance.clock_in, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                }
+
+                val createdAtDate = createdAtTime.toLocalDate()
+
+                // If created_at date is before today, show clock in
+                return@withContext Result.success(createdAtDate.isBefore(today))
+            } catch (e: DateTimeParseException) {
+                Log.e(TAG, "Error parsing date", e)
+                return@withContext Result.success(true) // Default to showing clock in on parsing error
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error determining clock in status", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun calculateWorkHours(attendance: Attendance): Result<Double> = withContext(Dispatchers.IO) {
+        try {
+            if (attendance.clock_in == null || attendance.clock_out == null) {
+                return@withContext Result.success(0.0)
+            }
+
+            val clockInTime = ZonedDateTime.parse(attendance.clock_in, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            val clockOutTime = ZonedDateTime.parse(attendance.clock_out, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+            val durationInSeconds = java.time.Duration.between(clockInTime, clockOutTime).seconds
+            val hours = durationInSeconds / 3600.0
+
+            return@withContext Result.success(hours)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error calculating work hours", e)
+            return@withContext Result.failure(e)
+        }
+    }
+
 }

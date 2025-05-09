@@ -58,6 +58,8 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupAttendanceObservers()
+        setupAttendanceButtons()
         binding.availableTask.visibility = View.GONE
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -134,6 +136,7 @@ class DashboardFragment : Fragment() {
     }
 
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateTimeAndDate() {
         val jakartaZone = ZoneId.of("Asia/Jakarta")
@@ -162,4 +165,51 @@ class DashboardFragment : Fragment() {
 
         taskListCollectorJob?.cancel()
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupAttendanceObservers() {
+        // Observe the clock in state to update button visibility
+        dashboardViewModel.clockInState.observe(viewLifecycleOwner) { showClockIn ->
+            binding.btnClockIn.visibility = if (showClockIn) View.VISIBLE else View.GONE
+            binding.btnClockOut.visibility = if (showClockIn) View.GONE else View.VISIBLE
+        }
+
+
+        // Observe attendance times
+        dashboardViewModel.clockInTime.observe(viewLifecycleOwner) { time ->
+            binding.tvClockIn.text = if (time.isNullOrEmpty()) null else time
+        }
+        dashboardViewModel.clockOutTime.observe(viewLifecycleOwner) { time ->
+            binding.tvClockOut.text = if (time.isNullOrEmpty()) null else time
+        }
+
+        dashboardViewModel.totalHours.observe(viewLifecycleOwner) { hours ->
+            binding.tvTotalHrs.text = hours
+        }
+
+        // Observe loading state and errors
+        dashboardViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            // You can show a progress indicator here if needed
+        }
+
+        dashboardViewModel.error.observe(viewLifecycleOwner) { error ->
+            if (!error.isNullOrEmpty()) {
+                // Show error message, e.g., using a Snackbar or Toast
+                Log.e("DashboardFragment", "Attendance error: $error")
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setupAttendanceButtons() {
+        binding.btnClockIn.setOnClickListener {
+            dashboardViewModel.clockIn()
+        }
+
+        binding.btnClockOut.setOnClickListener {
+            dashboardViewModel.clockOut()
+        }
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.example.a0utperform.utils
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.text.NumberFormat
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -21,6 +22,7 @@ fun String.formatToReadableDate(): String {
     }
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 
 fun formatToSupabaseTimestamp(dueDate: ZonedDateTime): String {
@@ -34,6 +36,7 @@ fun formatToSupabaseTimestamp(dueDate: ZonedDateTime): String {
     val dateTimePart = utcDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     return "%s.%06d+00".format(dateTimePart, microseconds)
 }
+
 
 fun formatToRupiah(amount: Double): String {
     val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))

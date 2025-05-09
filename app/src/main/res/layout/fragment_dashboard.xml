@@ -233,6 +233,7 @@
                                android:textSize="@dimen/text_size_small"/>
 
                            <TextView
+                               android:id="@+id/tvClockIn"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="@string/time"
@@ -279,6 +280,7 @@
                                android:textSize="@dimen/text_size_small"/>
 
                            <TextView
+                               android:id="@+id/tvClockOut"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="@string/time"
@@ -322,6 +324,7 @@
                                android:textSize="@dimen/text_size_small"/>
 
                            <TextView
+                               android:id="@+id/tvTotalHrs"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="@string/time"
@@ -351,6 +354,23 @@
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintEnd_toEndOf="parent"
                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/btnClockOut"
+               android:layout_width="0dp"
+               android:layout_height="@dimen/button_height"
+               android:visibility="gone"
+               android:text="@string/clock_out_button"
+               android:fontFamily="@font/roboto_regular"
+               android:textColor="@color/primaryColor"
+               app:iconTint="@null"
+               android:backgroundTint="@color/brandBlue"
+               android:scaleType="fitCenter"
+               app:cornerRadius="@dimen/corner_radius"
+               android:layout_marginTop="@dimen/margin_medium"
+               app:layout_constraintTop_toBottomOf="@id/time_card"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent" />
 
 
 
