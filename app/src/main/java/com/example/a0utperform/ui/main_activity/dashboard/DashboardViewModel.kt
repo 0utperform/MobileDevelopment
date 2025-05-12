@@ -225,7 +225,7 @@ class DashboardViewModel @Inject constructor(
 
     fun fetchTasksWithProgress(teamId: String) {
         viewModelScope.launch {
-            //_isLoading.postValue(true)
+            _isLoading.postValue(true)
             try {
                 val tasksResult = databaseRepository.getTasksByTeamId(teamId)
                 val submissionsResult = databaseRepository.getSubmissionsByTeamId(teamId)
@@ -235,7 +235,6 @@ class DashboardViewModel @Inject constructor(
                     val submissions = submissionsResult.getOrNull() ?: emptyList()
                     val taskMap = submissions.groupBy { it.task_id }
 
-                    // Update tasks with completed and target submissions
                     val updatedTasks = tasks.map { task ->
                         val completed = taskMap[task.task_id]?.size ?: 0
                         val target = task.submission_per_day
@@ -245,28 +244,47 @@ class DashboardViewModel @Inject constructor(
                         }
                     }
                     _taskList.postValue(updatedTasks)
+                } else {
+                    _error.postValue("Failed to fetch tasks or submissions.")
                 }
             } catch (e: Exception) {
-               // _error.postValue(e.message)
+                _error.postValue(e.message)
             } finally {
-                //_isLoading.postValue(false)
+                _isLoading.postValue(false)
             }
         }
     }
+
 
     fun fetchAvatarUrl() {
         viewModelScope.launch {
-            val result = databaseRepository.getUserImgUrl()
-            _avatarUrl.value = result.getOrNull()
-        }
-    }
-
-    fun fetchTeamAssignment() {
-        viewModelScope.launch {
-            userSession.value?.let { session ->
-                val result = databaseRepository.getAssignedTeamDetails(session.userId)
-                _teamAssignment.value = result.getOrNull() ?: emptyList()
+            _isLoading.postValue(true)
+            try {
+                val result = databaseRepository.getUserImgUrl()
+                _avatarUrl.value = result.getOrNull()
+            } catch (e: Exception) {
+                _error.postValue("Failed to fetch avatar: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
             }
         }
     }
+
+
+    fun fetchTeamAssignment() {
+        viewModelScope.launch {
+            _isLoading.postValue(true)
+            try {
+                userSession.value?.let { session ->
+                    val result = databaseRepository.getAssignedTeamDetails(session.userId)
+                    _teamAssignment.value = result.getOrNull() ?: emptyList()
+                }
+            } catch (e: Exception) {
+                _error.postValue("Failed to fetch team assignment: ${e.message}")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
 }
