@@ -15,6 +15,7 @@ import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
 import com.example.a0utperform.data.repository.AuthRepository
 import com.example.a0utperform.data.repository.DatabaseRepository
+import com.example.a0utperform.utils.formatHoursToDigitalTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -48,8 +49,8 @@ class DashboardViewModel @Inject constructor(
 
     private val TAG = "AttendanceViewModel"
 
-    private val _clockInState = MutableLiveData<Boolean>()
-    val clockInState: LiveData<Boolean> = _clockInState
+    private val _clockInState = MutableLiveData<Boolean?>()
+    val clockInState: LiveData<Boolean?> = _clockInState
 
     private val _clockInTime = MutableLiveData<String>()
     val clockInTime: LiveData<String> = _clockInTime
@@ -72,46 +73,47 @@ class DashboardViewModel @Inject constructor(
         checkInitialClockInState()
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun checkInitialClockInState() {
+    fun checkInitialClockInState() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 val userId = userPreference.getSession().first().userId
-                val showClockInResult = databaseRepository.shouldShowClockIn(userId)
+                val todayAttendanceResult = databaseRepository.getTodayAttendance(userId)
 
-                if (showClockInResult.isSuccess) {
-                    _clockInState.value = showClockInResult.getOrNull() ?: true
+                if (todayAttendanceResult.isSuccess) {
+                    val attendance = todayAttendanceResult.getOrNull()
+                    _currentAttendance.value = attendance
 
-                    // If we should show clock out (not clock in), get the current attendance record
-                    if (_clockInState.value == false) {
-                        val todayAttendanceResult = databaseRepository.getTodayAttendance(userId)
-                        if (todayAttendanceResult.isSuccess) {
-                            val attendance = todayAttendanceResult.getOrNull()
-                            if (attendance != null) {
-                                _currentAttendance.value = attendance
-                                updateAttendanceDisplay(attendance)
-                            }
-                        }
+                    if (attendance == null) {
+                        // No attendance yet today → show Clock In
+                        _clockInState.value = true
+                    } else if (attendance.clock_out == null) {
+                        // Clocked in but not out yet → show Clock Out
+                        _clockInState.value = false
+                        updateAttendanceDisplay(attendance)
                     } else {
-                        // Clear the displays if we're showing clock in
-                        _clockInTime.value = ""
-                        _clockOutTime.value = ""
-                        _totalHours.value = "0.00"
+                        // Both clock_in and clock_out are set → hide both
+                        _clockInState.value = null
+                        updateAttendanceDisplay(attendance)
                     }
+
                 } else {
-                    _error.value = "Failed to check clock-in state: ${showClockInResult.exceptionOrNull()?.message}"
+                    _error.value = "Failed to check attendance: ${todayAttendanceResult.exceptionOrNull()?.message}"
                     _clockInState.value = true // Default to showing clock in on error
                 }
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error in checkInitialClockInState", e)
-                _error.value = "Failed to check clock-in state: ${e.message}"
+                _error.value = "Failed to check attendance: ${e.message}"
                 _clockInState.value = true // Default to showing clock in on error
             } finally {
                 _isLoading.value = false
             }
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun clockIn() {
@@ -179,7 +181,7 @@ class DashboardViewModel @Inject constructor(
     private fun updateAttendanceDisplay(attendance: Attendance) {
         viewModelScope.launch {
             try {
-                val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+                val formatter = DateTimeFormatter.ofPattern("HH:mm")
                 val jakartaZone = ZoneId.of("Asia/Jakarta")
 
                 // Format clock in time
@@ -199,7 +201,8 @@ class DashboardViewModel @Inject constructor(
                     val hoursResult = databaseRepository.calculateWorkHours(attendance)
                     if (hoursResult.isSuccess) {
                         val hours = hoursResult.getOrNull() ?: 0.0
-                        _totalHours.value = String.format("%.2f", hours)
+                        val formattedTime = formatHoursToDigitalTime(hours)
+                        _totalHours.value = formattedTime
                     } else {
                         _totalHours.value = "0.00"
                     }

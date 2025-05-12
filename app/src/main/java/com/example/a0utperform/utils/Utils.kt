@@ -37,6 +37,12 @@ fun formatToSupabaseTimestamp(dueDate: ZonedDateTime): String {
     return "%s.%06d+00".format(dateTimePart, microseconds)
 }
 
+fun formatHoursToDigitalTime(hours: Double): String {
+    val totalMinutes = (hours * 60).toInt()
+    val hr = totalMinutes / 60
+    val min = totalMinutes % 60
+    return String.format("%d:%02d", hr, min)
+}
 
 fun formatToRupiah(amount: Double): String {
     val formatter = NumberFormat.getCurrencyInstance(Locale("in", "ID"))

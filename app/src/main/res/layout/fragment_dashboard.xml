@@ -24,8 +24,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_top_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,15 +78,15 @@
                 android:id="@+id/available_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/formatted_task"
-                android:textColor="@color/brandBlue"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="@dimen/padding_medium"
-                android:layout_marginStart="@dimen/margin_medium"
+                android:fontFamily="@font/roboto_medium"
+
+                android:textColor="@color/brandBlue"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/profile_image"
                 app:layout_constraintTop_toBottomOf="@+id/profile_role"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:fontFamily="@font/roboto_medium"
-                />
+                app:layout_constraintVertical_bias="0.333" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -101,8 +101,8 @@
        app:layout_constraintEnd_toEndOf="parent"
        app:cardCornerRadius="@dimen/corner_radius"
        android:layout_marginTop="@dimen/margin_top_medium"
-       android:layout_marginEnd="@dimen/margin_medium"
-       android:layout_marginStart="@dimen/margin_medium"
+       android:layout_marginEnd="@dimen/margin_small"
+       android:layout_marginStart="@dimen/margin_small"
      >
 
        <androidx.constraintlayout.widget.ConstraintLayout
@@ -198,6 +198,8 @@
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:orientation="horizontal"
+                   android:paddingTop="@dimen/padding_small"
+                   android:paddingBottom="@dimen/padding_small"
                    android:gravity="start"
                    android:weightSum="3">
 
@@ -222,6 +224,7 @@
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:gravity="center"
+
                            android:orientation="vertical">
 
                            <TextView
@@ -234,10 +237,10 @@
 
                            <TextView
                                android:id="@+id/tvClockIn"
+                               android:gravity="center"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="@string/time"
-
                                android:textSize="@dimen/text_size_medium"
                                android:textColor="@color/gray"/>
                        </LinearLayout>
@@ -283,6 +286,7 @@
                                android:id="@+id/tvClockOut"
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
+                               android:gravity="center"
                                android:text="@string/time"
                                android:textSize="@dimen/text_size_medium"
                                android:textColor="@color/gray"/>
@@ -328,7 +332,7 @@
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
                                android:text="@string/time"
-                               android:layout_gravity="center"
+                               android:gravity="center"
                                android:textSize="@dimen/text_size_medium"
                                android:textColor="@color/gray"/>
                        </LinearLayout>
@@ -387,8 +391,8 @@
         android:textSize="@dimen/text_size_large"
         android:textColor="@color/text_color"
         android:fontFamily="@font/inter_semibold"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintTop_toBottomOf="@id/attendance_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -398,8 +402,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         android:orientation="horizontal"
         android:scrollbars="horizontal"
         app:layout_constraintTop_toBottomOf="@id/task_label"
@@ -416,8 +420,8 @@
         android:textSize="@dimen/text_size_large"
         android:textColor="@color/text_color"
         android:fontFamily="@font/inter_semibold"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintTop_toBottomOf="@id/task"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -427,8 +431,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_medium"
         android:orientation="horizontal"
         android:scrollbars="horizontal"

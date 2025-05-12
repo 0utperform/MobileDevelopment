@@ -750,7 +750,7 @@ class DatabaseRepository @Inject constructor(
             val result = supabaseDatabase
                 .from("attendance")
                 .insert(attendance) {
-                    select(Columns.list("user_id","status","clock_in"))
+                    select(Columns.list("attendance_id","user_id","status","clock_in","created_at"))
 
                 }
 
@@ -776,7 +776,7 @@ class DatabaseRepository @Inject constructor(
             val latestAttendance = supabaseDatabase
                 .from("attendance")
                 .select(Columns.list()) {
-                    select(Columns.list("user_id","status","clock_in", "clock_out"))
+                    select(Columns.list("attendance_id","user_id","status","clock_in", "clock_out","created_at"))
                     filter {
                         eq("user_id", userId)
                         eq("status", "active")
@@ -794,7 +794,7 @@ class DatabaseRepository @Inject constructor(
                     set("clock_out", formattedTime)
                     set("status", "completed")
                 }) {
-                    select(Columns.list("user_id","status","clock_in","clock_out"))
+                    select(Columns.list("attendance_id","user_id","status","clock_in","clock_out","created_at"))
                     filter { eq("attendance_id", latestAttendance.attendance_id!!) }
                 }
                 .decodeSingle<Attendance>()

@@ -6,7 +6,7 @@
     <!-- Text Sizes -->
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
-    <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_small">10sp</dimen>
 
     <!-- Margins -->
     <dimen name="margin_large">80dp</dimen>

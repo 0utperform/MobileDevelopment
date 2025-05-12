@@ -60,6 +60,25 @@ class DashboardFragment : Fragment() {
 
         setupAttendanceObservers()
         setupAttendanceButtons()
+
+        dashboardViewModel.clockInState.observe(viewLifecycleOwner) { showClockIn ->
+            dashboardViewModel.checkInitialClockInState()
+            when (showClockIn) {
+                true -> {
+                    binding.btnClockIn.visibility = View.VISIBLE
+                    binding.btnClockOut.visibility = View.GONE
+                }
+                false -> {
+                    binding.btnClockIn.visibility = View.GONE
+                    binding.btnClockOut.visibility = View.VISIBLE
+                }
+                null -> {
+                    // Both buttons hidden (attendance done for today)
+                    binding.btnClockIn.visibility = View.GONE
+                    binding.btnClockOut.visibility = View.GONE
+                }
+            }
+        }
         binding.availableTask.visibility = View.GONE
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -71,6 +90,10 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
+
+
+        // Call the ViewModel function to get the attendance completion
+
 
         updateTimeAndDate()
         dashboardViewModel.userSession.observe(viewLifecycleOwner) { session ->
@@ -86,7 +109,9 @@ class DashboardFragment : Fragment() {
 
         dashboardViewModel.avatarUrl.observe(viewLifecycleOwner) { url ->
             Glide.with(this)
-                .load(url ?: R.drawable.placeholder_user)
+                .load(url)
+                .placeholder(R.drawable.placeholder_user)
+                .error(R.drawable.placeholder_user)
                 .into(binding.profileImage)
         }
 
@@ -111,6 +136,7 @@ class DashboardFragment : Fragment() {
         binding.task.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeTaskList(role: String) {
         taskListCollectorJob?.cancel()
 
@@ -125,10 +151,12 @@ class DashboardFragment : Fragment() {
                 if (filteredTasks.isEmpty()) {
                     binding.taskLabel.visibility = View.GONE
                     binding.task.visibility = View.GONE
+                    binding.availableTask.visibility = View.VISIBLE
                     binding.availableTask.text = getString(R.string.formatted_task, "0")
                 } else {
                     binding.taskLabel.visibility = View.VISIBLE
                     binding.task.visibility = View.VISIBLE
+                    binding.availableTask.visibility = View.VISIBLE
                     binding.availableTask.text = getString(R.string.formatted_task, filteredTasks.size.toString())
                 }
             }
@@ -168,11 +196,6 @@ class DashboardFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupAttendanceObservers() {
-        // Observe the clock in state to update button visibility
-        dashboardViewModel.clockInState.observe(viewLifecycleOwner) { showClockIn ->
-            binding.btnClockIn.visibility = if (showClockIn) View.VISIBLE else View.GONE
-            binding.btnClockOut.visibility = if (showClockIn) View.GONE else View.VISIBLE
-        }
 
 
         // Observe attendance times
