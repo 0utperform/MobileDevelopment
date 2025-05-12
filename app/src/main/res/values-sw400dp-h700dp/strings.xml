@@ -32,7 +32,7 @@
     <string name="time_placeholder">09:10 AM</string>
     <string name="date_placeholder">March 12, 2024 - Saturday</string>
     <string name="placeholder_percent">94%</string>
-    <string name="percent_desc">Monthly Attendance</string>
+    <string name="percent_desc">Overall Attendance</string>
     <string name="clock_in">Clock In</string>
     <string name="time">--:--</string>
     <string name="clock_out">Clock Out</string>
