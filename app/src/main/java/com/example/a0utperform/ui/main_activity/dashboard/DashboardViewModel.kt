@@ -10,6 +10,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.Attendance
+import com.example.a0utperform.data.model.AttendanceStats
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
@@ -67,12 +68,30 @@ class DashboardViewModel @Inject constructor(
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
+    private val _attendanceStats = MutableLiveData<AttendanceStats>()
+    val attendanceStats: LiveData<AttendanceStats> = _attendanceStats
+
     private val _currentAttendance = MutableLiveData<Attendance?>()
 
     init {
         checkInitialClockInState()
     }
 
+    fun fetchAttendanceStats(userId: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+
+            try {
+                val stats = databaseRepository.getUserAttendanceStats(userId)
+                _attendanceStats.value = stats
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun checkInitialClockInState() {

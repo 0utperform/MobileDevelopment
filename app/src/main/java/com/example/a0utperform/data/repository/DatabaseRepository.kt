@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.Attendance
+import com.example.a0utperform.data.model.AttendanceStats
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
@@ -45,6 +46,8 @@ import java.util.Objects.isNull
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.serialization.json.*
+import java.util.Locale
 
 @Singleton
 class DatabaseRepository @Inject constructor(
@@ -916,6 +919,48 @@ class DatabaseRepository @Inject constructor(
             Log.e(TAG, "Error calculating work hours", e)
             return@withContext Result.failure(e)
         }
+    }
+
+
+
+
+
+
+    suspend fun getUserAttendanceStats(userId: String): AttendanceStats {
+        val response = supabaseDatabase.from("attendance")
+            .select() {
+                filter { eq("user_id", userId) }
+            }
+
+        val root = response.data ?: return AttendanceStats(0, 0, 0, 0.0)
+
+        val json = Json.parseToJsonElement(root.toString())
+
+        if (json !is JsonArray) return AttendanceStats(0, 0, 0, 0.0)
+
+        var total = 0
+        var completed = 0
+        var absent = 0
+
+        for (item in json) {
+            val status = item.jsonObject["status"]?.jsonPrimitive?.contentOrNull?.lowercase()
+
+            if (status != null) {
+                total++
+                when (status) {
+                    "completed" -> completed++
+                    "absent" -> absent++
+                }
+            }
+        }
+
+        val percentage = if (total > 0) {
+            String.format(Locale.US, "%.1f", (completed.toDouble() / total) * 100).toDouble()
+        } else {
+            0.0
+        }
+
+        return AttendanceStats(completed, absent, total,  percentage)
     }
 
 }

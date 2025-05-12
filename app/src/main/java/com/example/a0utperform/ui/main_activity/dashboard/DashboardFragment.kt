@@ -91,7 +91,9 @@ class DashboardFragment : Fragment() {
             }
         }
 
-
+        dashboardViewModel.attendanceStats.observe(viewLifecycleOwner) { stats ->
+            binding.percent.text = String.format(Locale.US, "%.0f%%", stats.percentage)
+        }
         // Call the ViewModel function to get the attendance completion
 
 
@@ -100,6 +102,7 @@ class DashboardFragment : Fragment() {
             session?.let {
                 dashboardViewModel.fetchAvatarUrl()
                 dashboardViewModel.fetchTeamAssignment()
+                dashboardViewModel.fetchAttendanceStats(session.userId)
 
                 binding.profileName.text = it.name.split(" ").firstOrNull() ?: "User"
                 binding.profileRole.text = it.role ?: "Role"
