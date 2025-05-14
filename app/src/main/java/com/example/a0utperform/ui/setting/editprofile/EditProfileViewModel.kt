@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.local.user.UserPreference
+import com.example.a0utperform.data.model.Event
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamDetail
 import com.example.a0utperform.data.model.UserModel
@@ -38,6 +39,10 @@ class EditProfileViewModel @Inject constructor(
 
     private val _payroll = MutableLiveData<Double?>()
     val payroll: LiveData<Double?> = _payroll
+
+
+    private val _profileUpdateSuccess = MutableLiveData<Event<Boolean>>()
+    val profileUpdateSuccess: LiveData<Event<Boolean>> get() = _profileUpdateSuccess
 
     fun fetchPayroll(userId: String) {
         viewModelScope.launch {
@@ -79,4 +84,16 @@ class EditProfileViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
+    fun updateUserProfile(name: String, age: String, phone: String, avatarUrl: String? = null) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = repository.editUserProfile(name, age, phone, avatarUrl)
+            if (result.isSuccess) {
+                userPreference.saveSession(result.getOrNull()!!)
+                _profileUpdateSuccess.value = Event(true)
+            }
+            _isLoading.value = false
+        }
+    }
+
 }

@@ -253,4 +253,66 @@ class AuthRepository @Inject constructor(
         supabaseDatabase.from("users").insert(newUser)
         return newUser
     }
+    suspend fun editUserProfile(
+        name: String,
+        age: String,
+        phone: String,
+        avatarUrl: String? = null
+    ): Result<UserModel> {
+        return try {
+            val session = supabaseAuth.currentSessionOrNull()
+                ?: return Result.failure(Exception("Session not found"))
+
+            val user = session.user
+                ?: return Result.failure(Exception("User not found"))
+
+            val userId = user.id
+            val firstName = name.split(" ").firstOrNull() ?: name
+
+            // Build new metadata JSON
+            val newMetadata = buildJsonObject {
+                put("full_name", JsonPrimitive(name))
+                put("display_name", JsonPrimitive(firstName))
+                put("age", JsonPrimitive(age))
+                put("phone", JsonPrimitive(phone))
+                avatarUrl?.let { put("avatar_url", JsonPrimitive(it)) } // only update if not null
+            }
+
+            // Update Supabase Auth metadata only
+            supabaseAuth.updateUser {
+                this.data = newMetadata
+            }
+
+            // Update user info in database (excluding avatarUrl)
+            supabaseDatabase.from("users").update(
+                mapOf(
+                    "name" to name,
+                    "age" to age,
+                    "phone" to phone
+                )
+            ) {
+                filter {
+                    eq("user_id", userId)
+                }
+            }
+
+            // Updated session model
+            val updatedUser = UserModel(
+                userId = userId,
+                name = name,
+                age = age,
+                email = user.email.orEmpty(),
+                phone = phone,
+                createdAt = user.createdAt?.toString() ?: "",
+                avatarUrl = avatarUrl ?: user.userMetadata?.get("avatar_url")?.jsonPrimitive?.contentOrNull
+            )
+
+            userPreference.saveSession(updatedUser)
+
+            Result.success(updatedUser)
+        } catch (e: Exception) {
+            Result.failure(Exception("Failed to update profile: ${e.message}"))
+        }
+    }
+
 }

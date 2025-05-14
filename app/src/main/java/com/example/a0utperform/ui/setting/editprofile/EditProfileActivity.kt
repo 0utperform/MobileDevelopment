@@ -2,6 +2,7 @@ package com.example.a0utperform.ui.setting.editprofile
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,17 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         observeViewModels()
+        binding.btnEditProfile.setOnClickListener {
+            val name = binding.etName.text.toString().trim()
+            val age = binding.etAge.text.toString().trim()
+            val phone = binding.etPhone.text.toString().trim()
+
+            if (name.isNotEmpty() && age.isNotEmpty() && phone.isNotEmpty()) {
+                editProfileViewModel.updateUserProfile(name, age, phone)
+            } else {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     }
 
@@ -30,6 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
         editProfileViewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)
         }
+
         editProfileViewModel.userSession.observe(this) { session ->
             session?.let {
                 editProfileViewModel.fetchPayroll(it.userId)
@@ -38,6 +51,7 @@ class EditProfileActivity : AppCompatActivity() {
                 binding.etName.setText(it.name)
                 binding.etRole.setText(it.role)
                 binding.etAge.setText(it.age)
+                binding.etPhone.setText(it.phone)
 
 
             }
@@ -68,6 +82,17 @@ class EditProfileActivity : AppCompatActivity() {
             binding.etOutlet.setText(getString(R.string.outlet_format, outletNames))
         }
 
+        editProfileViewModel.profileUpdateSuccess.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { success ->
+                if (success) {
+                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                else {
+                    Toast.makeText(this, "Failed to create outlet", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

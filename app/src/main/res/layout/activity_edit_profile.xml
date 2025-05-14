@@ -54,6 +54,22 @@
                 android:background="@drawable/task_input_background"
                 android:padding="12dp" />
 
+            <!-- Phone (Disabled) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="Phone"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp" />
+            <EditText
+                android:id="@+id/etPhone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Enter Phone Number"
+                android:background="@drawable/task_input_background"
+                android:padding="12dp" />
+
             <!-- Role (Disabled) -->
             <TextView
                 android:layout_width="match_parent"
@@ -142,5 +158,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
+        android:visibility="gone"
         />
 </FrameLayout>
