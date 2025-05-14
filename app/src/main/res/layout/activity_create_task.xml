@@ -122,12 +122,14 @@
 
             <!-- Submit Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCreateTask"
+                android:id="@+id/btn_create_task"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="@string/btn_create_task"
-                android:backgroundTint="@color/brandBlue" />
+                android:layout_marginTop="16dp"
+                app:cornerRadius="16dp"
+                android:theme="@style/Theme.Dashboard"
+                android:textColor="@android:color/white" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </ScrollView>

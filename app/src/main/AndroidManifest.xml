@@ -24,7 +24,8 @@
         <activity
             android:name=".ui.setting.editprofile.EditProfileActivity"
             android:exported="false"
-            android:theme="@style/Theme._0utPerform" />
+            android:label="@string/edit_profile"
+            android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.main_activity.outlet.outletdetail.teamdetail.addstaffteam.ActivityAddStaffTeam"
             android:exported="false"
