@@ -38,6 +38,8 @@
     <item name="cornerSize">50%</item>
 </style>
 
+    <style name="Theme._0utPerform" parent="Base.Theme._0utPerform" />
+
 
 
 </resources>

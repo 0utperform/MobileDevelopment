@@ -350,6 +350,7 @@
                android:fontFamily="@font/roboto_regular"
                android:textColor="@color/brandBlue"
                app:iconTint="@null"
+               android:visibility="gone"
                android:scaleType="fitCenter"
                app:cornerRadius="@dimen/corner_radius"
                app:strokeColor="@color/brandBlue"

@@ -106,14 +106,14 @@ class DashboardViewModel @Inject constructor(
                     _currentAttendance.value = attendance
 
                     if (attendance == null) {
-                        // No attendance yet today → show Clock In
                         _clockInState.value = true
+                    } else if (attendance.clock_in == null && attendance.clock_out == null) {
+                        // Absent → hide both buttons
+                        _clockInState.value = null
                     } else if (attendance.clock_out == null) {
-                        // Clocked in but not out yet → show Clock Out
                         _clockInState.value = false
                         updateAttendanceDisplay(attendance)
                     } else {
-                        // Both clock_in and clock_out are set → hide both
                         _clockInState.value = null
                         updateAttendanceDisplay(attendance)
                     }
