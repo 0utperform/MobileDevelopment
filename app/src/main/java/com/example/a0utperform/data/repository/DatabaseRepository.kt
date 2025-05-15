@@ -23,6 +23,7 @@ import com.example.a0utperform.utils.formatToSupabaseTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -47,6 +48,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.json.*
+import java.time.YearMonth
 import java.util.Locale
 
 @Singleton
@@ -961,6 +963,42 @@ class DatabaseRepository @Inject constructor(
         }
 
         return AttendanceStats(completed, absent, total,  percentage)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getAttendanceByMonth(userId: String, month: YearMonth): Map<LocalDate, String> {
+        val start = month.atDay(1).atStartOfDay(ZoneId.of("Asia/Jakarta"))
+        val end = month.plusMonths(1).atDay(1).atStartOfDay(ZoneId.of("Asia/Jakarta"))
+
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+        val response = supabaseDatabase
+            .from("attendance")
+            .select() {
+                filter {
+                    eq("user_id", userId)
+                    gte("created_at", start.format(formatter))
+                    lt("created_at", end.format(formatter))
+                }
+            }
+
+        val attendanceMap = mutableMapOf<LocalDate, String>()
+        val jsonArray = Json.parseToJsonElement(response.data.toString()) as? JsonArray ?: return attendanceMap
+
+        for (item in jsonArray) {
+            val createdAt = item.jsonObject["created_at"]?.jsonPrimitive?.content
+            val status = item.jsonObject["status"]?.jsonPrimitive?.contentOrNull
+            if (createdAt != null && status != null) {
+                val date = ZonedDateTime.parse(createdAt).toLocalDate()
+                attendanceMap[date] = status
+            }
+        }
+
+        return attendanceMap
+    }
+
+    suspend fun getCurrentUserId(): String? {
+        return supabaseClient.auth.currentSessionOrNull()?.user?.id
     }
 
 }
