@@ -5,6 +5,7 @@
         android:id="@+id/action_notifications"
         android:icon="@drawable/baseline_notifications_24"
         android:title="@string/notifications"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item

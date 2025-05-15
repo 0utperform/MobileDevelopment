@@ -315,4 +315,15 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun changePassword(newPassword: String): Result<Unit> {
+        return try {
+            supabaseAuth.updateUser {
+                password = newPassword
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

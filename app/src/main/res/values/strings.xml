@@ -130,5 +130,7 @@
     <string name="format_revenue">Monthly Revenue : %1$s</string>
     <string name="formatted_completion_rate">Completion Rate :  %1$.1f%%</string>
     <string name="clock_out_button">Clock Out</string>
+    <string name="btn_change_password">Change Password</string>
+    <string name="change_password_label">New Password</string>
 
 </resources>
