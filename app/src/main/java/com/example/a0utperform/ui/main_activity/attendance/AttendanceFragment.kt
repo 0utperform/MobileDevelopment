@@ -60,7 +60,9 @@ class AttendanceFragment : Fragment() {
             binding.tvMonthYear.text = month.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
             viewModel.fetchAttendance()
         }
-
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         viewModel.attendanceMap.observe(viewLifecycleOwner) { attendance ->
             val days = generateCalendarDays(viewModel.selectedMonth.value!!, attendance)
             adapter.submitList(days)

@@ -21,6 +21,9 @@ class AttendanceViewModel @Inject constructor(
     private val _attendanceMap = MutableLiveData<Map<LocalDate, String>>()
     val attendanceMap: LiveData<Map<LocalDate, String>> = _attendanceMap
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     @RequiresApi(Build.VERSION_CODES.O)
     private val _selectedMonth = MutableLiveData<YearMonth>(YearMonth.now())
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,11 +37,17 @@ class AttendanceViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun fetchAttendance() {
         viewModelScope.launch {
-            val userId = repository.getCurrentUserId() ?: return@launch
+            _isLoading.postValue(true)
+            val userId = repository.getCurrentUserId()
+            if (userId == null) {
+                _isLoading.postValue(false)
+                return@launch
+            }
+
             val month = _selectedMonth.value ?: YearMonth.now()
             val data = repository.getAttendanceByMonth(userId, month)
             _attendanceMap.postValue(data)
+            _isLoading.postValue(false)
         }
     }
-
 }

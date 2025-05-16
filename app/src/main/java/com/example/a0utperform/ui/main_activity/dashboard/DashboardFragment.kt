@@ -213,9 +213,8 @@ class DashboardFragment : Fragment() {
             binding.tvTotalHrs.text = hours
         }
 
-        // Observe loading state and errors
         dashboardViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // You can show a progress indicator here if needed
+            binding.dashboardLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         dashboardViewModel.error.observe(viewLifecycleOwner) { error ->
