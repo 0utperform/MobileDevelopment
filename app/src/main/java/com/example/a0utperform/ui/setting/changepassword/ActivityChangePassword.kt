@@ -1,6 +1,7 @@
 package com.example.a0utperform.ui.setting.changepassword
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -29,7 +30,9 @@ class ActivityChangePassword : AppCompatActivity() {
                 changePasswordViewModel.changePassword(newPassword)
             }
         }
-
+        changePasswordViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         changePasswordViewModel.changePasswordResult.observe(this) { result ->
             result.onSuccess {
                 Toast.makeText(this, "Password changed successfully!", Toast.LENGTH_SHORT).show()

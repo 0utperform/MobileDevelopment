@@ -2,17 +2,12 @@ package com.example.a0utperform.ui.main_activity.outlet
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityCreateOutletBinding
-import com.example.a0utperform.databinding.ActivityMainBinding
-import com.example.a0utperform.ui.main_activity.outlet.outletdetail.CreateOutletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,7 +45,9 @@ class CreateOutletActivity : AppCompatActivity() {
 
             viewModel.createOutlet(name, location, uri)
         }
-
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBarLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         viewModel.outletCreationStatus.observe(this) { result ->
             result.onSuccess {
                 Toast.makeText(this, "Outlet created successfully!", Toast.LENGTH_SHORT).show()

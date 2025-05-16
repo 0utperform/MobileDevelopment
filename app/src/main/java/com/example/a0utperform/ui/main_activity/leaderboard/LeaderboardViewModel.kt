@@ -22,15 +22,22 @@ class LeaderboardViewModel @Inject constructor(
     private val _topTeams = MutableLiveData<Result<List<TeamDetail>>>()
     val topTeams: LiveData<Result<List<TeamDetail>>> = _topTeams
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun fetchTopOutlets() {
         viewModelScope.launch {
+            _isLoading.value = true
             _topOutlets.value = repository.getTop3OutletsByRevenue()
+            _isLoading.value = false
         }
     }
 
     fun fetchTopTeams() {
         viewModelScope.launch {
+            _isLoading.value = true
             _topTeams.value = repository.getTop3TeamsByCompletion()
+            _isLoading.value = false
         }
     }
 }

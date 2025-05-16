@@ -55,6 +55,9 @@ class LeaderboardFragment : Fragment(), OutletAdapter.OnOutletClickListener {
                 .onFailure { showToast("Failed to load outlets") }
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         viewModel.topTeams.observe(viewLifecycleOwner) { result ->
             result.onSuccess { teamAdapter.submitList(it) }
                 .onFailure { showToast("Failed to load teams") }

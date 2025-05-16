@@ -17,10 +17,15 @@ class ChangePasswordViewModel @Inject constructor(
     private val _changePasswordResult = MutableLiveData<Result<Unit>>()
     val changePasswordResult: LiveData<Result<Unit>> = _changePasswordResult
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun changePassword(newPassword: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             val result = authRepository.changePassword(newPassword)
             _changePasswordResult.value = result
+            _isLoading.value = false
         }
     }
 }
