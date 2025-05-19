@@ -1,5 +1,6 @@
 package com.example.a0utperform.ui.main_activity.attendance
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +11,12 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.a0utperform.data.model.CalendarDay
+import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.databinding.FragmentAttendanceBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -26,6 +31,7 @@ class AttendanceFragment : Fragment() {
 
     private val viewModel: AttendanceViewModel by viewModels()
     private lateinit var adapter: CalendarAdapter
+    private lateinit var leaveRequestAdapter: LeaveRequestAdapter
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -35,7 +41,8 @@ class AttendanceFragment : Fragment() {
         _binding = FragmentAttendanceBinding.inflate(inflater, container, false)
 
         setupCalendar()
-
+        setupRecyclerView(binding.leaveRequestRecyclerView)
+        observeData()
         binding.btnPrevMonth.setOnClickListener {
             viewModel.changeMonth(-1)
         }
@@ -46,6 +53,37 @@ class AttendanceFragment : Fragment() {
         observeViewModel()
 
         return binding.root
+    }
+
+    private fun setupRecyclerView(rv: RecyclerView) {
+        leaveRequestAdapter = LeaveRequestAdapter { request ->
+            handleLeaveRequestClick(request)
+        }
+        binding.leaveRequestRecyclerView.layoutManager = LinearLayoutManager(context)
+        rv.adapter = leaveRequestAdapter
+    }
+
+    private fun observeData() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.leaveRequests.collect { requests ->
+                leaveRequestAdapter.submitList(requests)
+            }
+        }
+    }
+
+    private fun handleLeaveRequestClick(request: LeaveRequest) {
+        val role = viewModel.userRole.value
+        val context = requireContext()
+
+        /*if (role == "manager" && request.status == "Progress") {
+            val intent = Intent(context, EditLeaveRequestActivity::class.java)
+            intent.putExtra("leave_request", request)
+            startActivity(intent)
+        } else {
+            val intent = Intent(context, DetailLeaveRequestActivity::class.java)
+            intent.putExtra("leave_request", request)
+            startActivity(intent)
+        }*/
     }
 
     private fun setupCalendar() {

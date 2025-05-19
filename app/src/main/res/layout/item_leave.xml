@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/margin_small"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
@@ -57,28 +56,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/padding_small">
-
-                <!-- Clock Icon -->
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/clock_in"
-                    android:contentDescription="Clock In Icon"
-                    android:layout_marginEnd="8dp" />
-
-                <!-- Vertical container for label and time -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="@dimen/padding_small"
+                >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Clock In"
+                        android:padding="@dimen/padding_small"
+                        android:layout_gravity="center"
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold" />
 
@@ -89,7 +77,6 @@
                         android:text="--:--"
                         android:layout_gravity="center"
                         android:textSize="12sp" />
-                </LinearLayout>
             </LinearLayout>
 
 
@@ -97,27 +84,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center_vertical"
-                android:padding="@dimen/padding_small">
-
-                <!-- Clock Icon -->
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/clock_out"
-                    android:contentDescription="Clock Out Icon"
-                    android:layout_marginEnd="8dp" />
-
-                <!-- Vertical container for label and time -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                android:padding="@dimen/padding_small"
+                >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/padding_small"
                         android:text="Clock Out"
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold" />
@@ -129,7 +105,7 @@
                         android:layout_gravity="center"
                         android:text="--:--"
                         android:textSize="12sp" />
-                </LinearLayout>
+
             </LinearLayout>
 
 
@@ -137,28 +113,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center_vertical"
-                android:padding="@dimen/padding_small">
+                android:padding="@dimen/padding_small"
+               >
 
-                <!-- Clock Icon -->
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/total_hrs"
-                    android:contentDescription="Total Hrs Icon"
-                    android:layout_marginEnd="8dp" />
-
-                <!-- Vertical container for label and time -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Hrs"
+                        android:padding="@dimen/padding_small"
+                        android:layout_gravity="center"
                         android:textSize="@dimen/text_size_small"
                         android:textStyle="bold" />
 
@@ -169,12 +135,12 @@
                         android:layout_gravity="center"
                         android:text="--:--"
                         android:textSize="12sp" />
-                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/ctgStatus"
+            android:id="@+id/ctgType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="12dp"

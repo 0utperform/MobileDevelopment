@@ -9,6 +9,7 @@ import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.Attendance
 import com.example.a0utperform.data.model.AttendanceStats
+import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
@@ -34,6 +35,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.contentOrNull
@@ -995,6 +999,29 @@ class DatabaseRepository @Inject constructor(
         }
 
         return attendanceMap
+    }
+
+    fun getLeaveRequests(): Flow<List<LeaveRequest>> = flow {
+        val role = userPreference.getSession().first().role
+        val userId = userPreference.getSession().first().userId
+
+        val query = if (role == "Staff") {
+            supabaseDatabase.from("leave_requests")
+                .select {
+                    filter {   eq("user_id", userId) }
+                }
+
+        } else {
+            supabaseDatabase.from("leave_requests")
+                .select()
+        }
+
+        val result = query.decodeList<LeaveRequest>()
+        emit(result)
+    }
+
+    suspend fun getUserRole(): String? {
+        return userPreference.getSession().first().role
     }
 
     suspend fun getCurrentUserId(): String? {
