@@ -133,5 +133,13 @@
     <string name="btn_change_password">Change Password</string>
     <string name="change_password_label">New Password</string>
     <string name="leave_request_label">Leave Request</string>
+    <string name="leave_username_label">Name</string>
+    <string name="leave_username_hint">Applicant Name</string>
+    <string name="reason_label">Reason</string>
+    <string name="from">from</string>
+    <string name="date_time_hint">Date and Time</string>
+    <string name="until">Until</string>
+    <string name="btn_approve_leave">Approve</string>
+    <string name="btn_reject_leave">Reject</string>
 
 </resources>

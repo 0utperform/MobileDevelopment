@@ -75,15 +75,15 @@ class AttendanceFragment : Fragment() {
         val role = viewModel.userRole.value
         val context = requireContext()
 
-        /*if (role == "manager" && request.status == "Progress") {
+        if (role == "Manager" && request.status == "Progress") {
             val intent = Intent(context, EditLeaveRequestActivity::class.java)
-            intent.putExtra("leave_request", request)
+            intent.putExtra("leave_requests", request)
             startActivity(intent)
         } else {
-            val intent = Intent(context, DetailLeaveRequestActivity::class.java)
-            intent.putExtra("leave_request", request)
+            val intent = Intent(context, DetailLeaveRequestActivitiy::class.java)
+            intent.putExtra("leave_requests", request)
             startActivity(intent)
-        }*/
+        }
     }
 
     private fun setupCalendar() {
