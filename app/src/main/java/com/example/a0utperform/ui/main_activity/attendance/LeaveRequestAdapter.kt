@@ -4,9 +4,12 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a0utperform.R
 import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.databinding.ItemLeaveBinding
 import java.time.Duration
@@ -48,6 +51,22 @@ class LeaveRequestAdapter(
             binding.tvDate.text = day
             binding.tvMonth.text = month
 
+            binding.ctgStatus.text = item.status
+
+            when (item.status.lowercase()) {
+                "process" -> {
+                    ViewCompat.setBackgroundTintList(binding.ctgStatus, ContextCompat.getColorStateList(binding.root.context, R.color.brandBlue))
+                }
+                "rejected" -> {
+                    ViewCompat.setBackgroundTintList(binding.ctgStatus, ContextCompat.getColorStateList(binding.root.context, R.color.dark_red))
+                }
+                "approved" -> {
+                    ViewCompat.setBackgroundTintList(binding.ctgStatus, ContextCompat.getColorStateList(binding.root.context, R.color.green))
+                }
+                else -> {
+                    ViewCompat.setBackgroundTintList(binding.ctgStatus, ContextCompat.getColorStateList(binding.root.context, R.color.gray))
+                }
+            }
             binding.root.setOnClickListener {
                 onItemClick(item)
             }

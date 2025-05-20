@@ -2,4 +2,5 @@
 <resources>
     <color name="text_color">#FFFFFF</color>
     <color name="dark_red">#AC0000</color>
+    <color name="green">#34A853</color>
 </resources>

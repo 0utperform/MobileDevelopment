@@ -139,9 +139,13 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/ctgType"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
@@ -150,7 +154,23 @@
             android:backgroundTint="@color/brandBlue"
             android:background="@drawable/bug_rounded_blue"
             android:textSize="12sp"
+            android:layout_marginBottom="@dimen/margin_small"
             android:gravity="center"
             android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/ctgStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="Process"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/brandBlue"
+            android:background="@drawable/bug_rounded_blue"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_gravity="center_vertical" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
