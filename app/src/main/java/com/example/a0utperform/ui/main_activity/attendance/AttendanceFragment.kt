@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a0utperform.data.model.CalendarDay
 import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.databinding.FragmentAttendanceBinding
+import com.example.a0utperform.ui.main_activity.attendance.detailleaverequest.DetailLeaveRequestActivitiy
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth

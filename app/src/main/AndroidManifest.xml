@@ -27,7 +27,7 @@
             android:label="@string/leave_request_label"
             android:theme="@style/Theme.Dashboard"/>
         <activity
-            android:name=".ui.main_activity.attendance.DetailLeaveRequestActivitiy"
+            android:name=".ui.main_activity.attendance.detailleaverequest.DetailLeaveRequestActivitiy"
             android:exported="false"
             android:label="@string/leave_request_label"
             android:theme="@style/Theme.Dashboard" />

@@ -1020,6 +1020,22 @@ class DatabaseRepository @Inject constructor(
         emit(result)
     }
 
+    suspend fun getUsernameById(userId: String): String {
+        return try {
+            val result = supabaseDatabase.from("users")
+                .select {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                    limit(1)
+                }
+                .decodeSingle<UserModel>()  // Decode to your data class
+            result.name
+        } catch (e: Exception) {
+            "Unknown User"
+        }
+    }
+
     suspend fun getUserRole(): String? {
         return userPreference.getSession().first().role
     }
