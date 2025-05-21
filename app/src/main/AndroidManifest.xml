@@ -22,10 +22,15 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main_activity.attendance.editleaverequest.EditLeaveRequestActivity"
+            android:name=".ui.main_activity.attendance.create_leave_request.CreateLeaveRequestActivity"
             android:exported="false"
             android:label="@string/leave_request_label"
             android:theme="@style/Theme.Dashboard"/>
+        <activity
+            android:name=".ui.main_activity.attendance.editleaverequest.EditLeaveRequestActivity"
+            android:exported="false"
+            android:label="@string/leave_request_label"
+            android:theme="@style/Theme.Dashboard" />
         <activity
             android:name=".ui.main_activity.attendance.detailleaverequest.DetailLeaveRequestActivitiy"
             android:exported="false"

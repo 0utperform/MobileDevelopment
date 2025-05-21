@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a0utperform.data.model.CalendarDay
 import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.databinding.FragmentAttendanceBinding
+import com.example.a0utperform.ui.main_activity.attendance.create_leave_request.CreateLeaveRequestActivity
 import com.example.a0utperform.ui.main_activity.attendance.detailleaverequest.DetailLeaveRequestActivitiy
 import com.example.a0utperform.ui.main_activity.attendance.editleaverequest.EditLeaveRequestActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +40,6 @@ class AttendanceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?) : View? {
         _binding = FragmentAttendanceBinding.inflate(inflater, container, false)
-
         setupCalendar()
         setupRecyclerView(binding.leaveRequestRecyclerView)
         observeData()
@@ -48,6 +48,10 @@ class AttendanceFragment : Fragment() {
         }
         binding.btnNextMonth.setOnClickListener {
             viewModel.changeMonth(1)
+        }
+        binding.btnCreateLeave.setOnClickListener{
+            val intent = Intent(requireContext(), CreateLeaveRequestActivity::class.java)
+            startActivity(intent)
         }
 
         observeViewModel()

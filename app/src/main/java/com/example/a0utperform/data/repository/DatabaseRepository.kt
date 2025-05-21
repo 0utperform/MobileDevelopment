@@ -38,6 +38,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.contentOrNull
@@ -52,8 +53,11 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.json.*
+import java.text.SimpleDateFormat
 import java.time.YearMonth
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @Singleton
 class DatabaseRepository @Inject constructor(
@@ -1053,6 +1057,33 @@ class DatabaseRepository @Inject constructor(
             true
         } catch (e: Exception) {
             e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun submitLeaveRequest(
+        userId: String?,
+        startDate: String,
+        endDate: String,
+        reason: String,
+        type: String
+    ): Boolean {
+        return try {
+            val payload = mapOf(
+                "user_id" to userId,
+                "start_date" to startDate,
+                "end_date" to endDate,
+                "reason" to reason,
+                "type" to type,
+                "status" to "Progress"
+            )
+
+            supabaseDatabase.from("leave_requests")
+                .insert(payload)
+
+            true
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error: ${e.localizedMessage}")
             false
         }
     }
