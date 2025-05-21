@@ -1036,6 +1036,27 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
+    suspend fun updateLeaveRequestStatus(requestId: String, newStatus: String): Boolean {
+        return try {
+            val result = supabaseDatabase
+                .from("leave_requests")
+                .update(
+                    {
+                        set("status", newStatus)
+                    }
+                ) {
+                    select(Columns.list("request_id","user_id","start_date","end_date","reason","status","type","created_at"))
+                    filter { eq("request_id", requestId) }
+                }
+                .decodeSingle<LeaveRequest>()
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     suspend fun getUserRole(): String? {
         return userPreference.getSession().first().role
     }

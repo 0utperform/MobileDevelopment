@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main_activity.attendance.EditLeaveRequestActivity"
+            android:name=".ui.main_activity.attendance.editleaverequest.EditLeaveRequestActivity"
             android:exported="false"
             android:label="@string/leave_request_label"
             android:theme="@style/Theme.Dashboard"/>
