@@ -55,6 +55,7 @@ import javax.inject.Singleton
 import kotlinx.serialization.json.*
 import java.text.SimpleDateFormat
 import java.time.YearMonth
+import java.time.ZoneOffset
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
@@ -837,14 +838,20 @@ class DatabaseRepository @Inject constructor(
             return@withContext Result.failure(e)
         }
     }
-
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getTodayAttendance(userId: String): Result<Attendance?> = withContext(Dispatchers.IO) {
         try {
-            val jakartaZone = ZoneId.of("Asia/Jakarta")
-            val today = LocalDate.now(jakartaZone)
-            val startOfDay = today.atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-            val endOfDay = today.plusDays(1).atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            val utcZone = ZoneOffset.UTC
+            val today = LocalDate.now(utcZone)
+
+            val startOfDay = today
+                .atStartOfDay(utcZone)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+            val endOfDay = today
+                .plusDays(1)
+                .atStartOfDay(utcZone)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
             val attendance = supabaseDatabase
                 .from("attendance")
@@ -866,50 +873,7 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun shouldShowClockIn(userId: String): Result<Boolean> = withContext(Dispatchers.IO) {
-        try {
-            val latestAttendanceResult = getLatestAttendance(userId)
-            if (latestAttendanceResult.isFailure) {
-                return@withContext Result.success(true) // If error fetching, default to showing clock in
-            }
 
-            val latestAttendance = latestAttendanceResult.getOrNull()
-            if (latestAttendance == null) {
-                return@withContext Result.success(true) // No attendance records, show clock in
-            }
-
-            // If there's a record but no clock out, we should show clock out instead
-            if (latestAttendance.clock_out == null && latestAttendance.status == "active") {
-                return@withContext Result.success(false) // Show clock out button
-            }
-
-            // Check if the last attendance record is from a previous day
-            val jakartaZone = ZoneId.of("Asia/Jakarta")
-            val today = LocalDate.now(jakartaZone)
-
-            try {
-                // Parse the created_at timestamp
-                val createdAtTime = if (latestAttendance.created_at != null) {
-                    ZonedDateTime.parse(latestAttendance.created_at, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                } else {
-                    // Fallback to clock_in if created_at is null
-                    ZonedDateTime.parse(latestAttendance.clock_in, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                }
-
-                val createdAtDate = createdAtTime.toLocalDate()
-
-                // If created_at date is before today, show clock in
-                return@withContext Result.success(createdAtDate.isBefore(today))
-            } catch (e: DateTimeParseException) {
-                Log.e(TAG, "Error parsing date", e)
-                return@withContext Result.success(true) // Default to showing clock in on parsing error
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error determining clock in status", e)
-            return@withContext Result.failure(e)
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun calculateWorkHours(attendance: Attendance): Result<Double> = withContext(Dispatchers.IO) {
