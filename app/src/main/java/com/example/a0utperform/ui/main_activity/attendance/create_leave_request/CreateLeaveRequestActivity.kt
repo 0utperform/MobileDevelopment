@@ -3,17 +3,19 @@ package com.example.a0utperform.ui.main_activity.attendance.create_leave_request
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.a0utperform.R
 import com.example.a0utperform.databinding.ActivityCreateLeaveRequestBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -25,6 +27,7 @@ class CreateLeaveRequestActivity : AppCompatActivity() {
     private var endDateTime: String? = null
     private var selectedType: String = "Full Day"
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateLeaveRequestBinding.inflate(layoutInflater)
@@ -54,7 +57,17 @@ class CreateLeaveRequestActivity : AppCompatActivity() {
             if (startDateTime.isNullOrBlank() || endDateTime.isNullOrBlank() || reason.isBlank()) {
                 Toast.makeText(this, "Please complete all fields", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.submitLeave(startDateTime!!, endDateTime!!, reason, selectedType)
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                val start = LocalDateTime.parse(startDateTime, formatter)
+                val end = LocalDateTime.parse(endDateTime, formatter)
+
+                if (start.toLocalDate() != end.toLocalDate()) {
+                    Toast.makeText(this, "Start and end must be on the same date", Toast.LENGTH_SHORT).show()
+                } else if (end.isBefore(start)) {
+                    Toast.makeText(this, "End time cannot be earlier than start time", Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.submitLeave(startDateTime!!, endDateTime!!, reason, selectedType)
+                }
             }
         }
 
