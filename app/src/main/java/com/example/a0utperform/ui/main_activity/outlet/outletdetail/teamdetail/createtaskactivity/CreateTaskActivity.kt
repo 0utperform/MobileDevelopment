@@ -29,6 +29,7 @@ class CreateTaskActivity : AppCompatActivity() {
     private val viewModel: CreateTaskViewModel by viewModels()
     private lateinit var teamDetail: TeamDetail
     private var selectedImageUri: Uri? = null
+    private val selectedUserIds = mutableSetOf<String>()
 
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -43,6 +44,16 @@ class CreateTaskActivity : AppCompatActivity() {
         binding = ActivityCreateTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        binding.btnSelectUsers.setOnClickListener {
+            SelectUserDialogFragment.newInstance(teamDetail.team_id ?: "", viewModel.selectedUserIds.toList()) { selected ->
+                viewModel.selectedUserIds.clear()
+                viewModel.selectedUserIds.addAll(selected)
+                binding.tvSelectedUsers.text = if (selected.isNotEmpty()) {
+                    "Selected: ${selected.size} user(s)"
+                } else "No users selected"
+            }.show(supportFragmentManager, "SelectUserDialog")
+        }
         // Get team detail from intent
         teamDetail = Json.decodeFromString(intent.getStringExtra("TEAM_DETAIL_JSON") ?: "")
 

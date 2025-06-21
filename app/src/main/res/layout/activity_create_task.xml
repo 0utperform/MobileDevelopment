@@ -50,6 +50,31 @@
                 android:background="@drawable/task_input_background"
                 android:padding="12dp" />
 
+            <TextView
+                android:id="@+id/tvAssignUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Assign User to Task"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:id="@+id/tvSelectedUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No users selected"
+                android:layout_marginTop="12dp"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Assign User to Task"
+                android:layout_marginTop="16dp"
+                app:cornerRadius="16dp"
+                android:theme="@style/Theme.Dashboard"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:layout_height="wrap_content"
@@ -103,6 +128,8 @@
                 android:hint="@string/hint_submission"
                 android:background="@drawable/task_input_background"
                 android:padding="12dp" />
+
+
 
             <!-- Image Picker -->
             <TextView

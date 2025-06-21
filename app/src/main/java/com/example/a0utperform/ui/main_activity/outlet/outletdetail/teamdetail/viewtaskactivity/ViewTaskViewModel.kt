@@ -26,6 +26,16 @@ class ViewTaskViewModel @Inject constructor(
 
     private val _usernameMap = mutableMapOf<String, MutableLiveData<String>>()
 
+    private val _assignedUsernames = MutableStateFlow<List<String>>(emptyList())
+    val assignedUsernames: StateFlow<List<String>> = _assignedUsernames
+
+    fun fetchAssignedUsernames(taskId: String) {
+        viewModelScope.launch {
+            val result = repository.getAssignedUsernames(taskId)
+            _assignedUsernames.value = result
+        }
+    }
+
     fun getUsername(userId: String): LiveData<String> {
         if (!_usernameMap.containsKey(userId)) {
             val liveData = MutableLiveData<String>()

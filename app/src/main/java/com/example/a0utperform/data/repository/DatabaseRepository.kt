@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.test.espresso.util.filter
 import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.Attendance
@@ -13,6 +14,7 @@ import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
+import com.example.a0utperform.data.model.TaskAssignment
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TaskEvidence
 import com.example.a0utperform.data.model.TaskSubmission
@@ -442,7 +444,6 @@ class DatabaseRepository @Inject constructor(
                 outlet_id = outletId,
                 name = name,
                 location = location,
-                created_at = now,
                 image_url = imageUrl,
                 manager_id = managerId ?: "",
                 manager_name = managerName,
@@ -507,13 +508,11 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
     suspend fun createTask(
         task: TaskData,
         imageUri: Uri?
-    ): Result<Unit> {
+    ): Result<String> {
         return try {
-            // Generate a unique ID for the task
             val taskId = UUID.randomUUID().toString()
             val filename = "tasks/$taskId.jpg"
 
@@ -538,23 +537,23 @@ class DatabaseRepository @Inject constructor(
                 null
             }
 
-            // Create final task object with generated ID and image URL
+            // Insert task into "task" table
             val finalTask = task.copy(
                 task_id = taskId,
                 img_url = imageUrl
             )
 
-            // Insert task into "task" table
             supabaseClient
                 .from("task")
                 .insert(finalTask)
 
-            Result.success(Unit)
+            Result.success(taskId)
         } catch (e: Exception) {
             Log.e("TaskRepository", "Error creating task", e)
             Result.failure(e)
         }
     }
+
 
     suspend fun fetchUsersWithAssignmentStatus(outletId: String): Result<List<UserWithAssignment>> {
         return try {
@@ -1052,6 +1051,40 @@ class DatabaseRepository @Inject constructor(
         } catch (e: Exception) {
             Log.e("DatabaseRepository", "Error: ${e.localizedMessage}")
             false
+        }
+    }
+
+    suspend fun assignUsersToTask(taskId: String, userIds: List<String>): Result<Unit> {
+        return try {
+            val inserts = userIds.map { userId ->
+                mapOf("task_id" to taskId, "user_id" to userId)
+            }
+            supabaseClient.from("task_assignments").insert(inserts)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("Repository", "Error assigning users to task", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAssignedUsernames(taskId: String): List<String> {
+        return try {
+
+            val assignments = supabaseClient
+                .from("task_assignments")
+                .select(Columns.list()) {
+                    filter { eq("task_id", taskId) }
+                }
+
+                .decodeList<TaskAssignment>()
+
+
+            assignments.map { assignment ->
+                getUsernameById(assignment.user_id)
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching assigned users", e)
+            emptyList()
         }
     }
 
