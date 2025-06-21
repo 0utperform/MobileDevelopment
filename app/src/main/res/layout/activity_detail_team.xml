@@ -144,6 +144,9 @@
         android:layout_marginTop="@dimen/margin_small"
         android:padding="@dimen/padding_small"
         >
+
+
+
         <!-- Tasks Title -->
         <TextView
             android:id="@+id/tasks_label"
@@ -156,6 +159,7 @@
             android:textColor="@color/text_color"
             android:fontFamily="@font/roboto_semibold"
             android:textSize="@dimen/text_size_large" />
+
         <ImageButton
             android:id="@+id/fab_add_tasks"
             android:layout_width="30dp"
@@ -166,7 +170,77 @@
             android:visibility="gone"
             android:elevation="4dp"
             />
+
     </LinearLayout>
+
+        <SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:background="@drawable/search_background"
+            android:queryHint="Search Task by Title"
+            android:focusable="true"
+            android:visibility="gone"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
+            android:iconifiedByDefault="true"
+            android:elevation="4dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/task_filter_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/tvStartDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/outlined_background"
+                android:textColor="@color/text_color"
+                android:text="From"
+                android:padding="8dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tvEndDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/outlined_background"
+                android:textColor="@color/text_color"
+                android:text="Until"
+                android:padding="8dp"
+                android:gravity="center"
+                android:layout_marginStart="8dp"/>
+
+            <ImageButton
+                android:id="@+id/btnApplyFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_filter_list_24"
+                android:background="@android:color/transparent"
+                android:contentDescription="Filter Tasks"
+                android:layout_marginStart="8dp"/>
+
+            <ImageButton
+                android:id="@+id/btnClearFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/clear_filter"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                android:contentDescription="Filter Tasks"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
         <!-- Tasks RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_tasks"

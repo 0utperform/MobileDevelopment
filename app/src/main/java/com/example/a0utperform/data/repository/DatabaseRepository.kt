@@ -1056,7 +1056,7 @@ class DatabaseRepository @Inject constructor(
         return userPreference.getSession().first().role
     }
 
-    suspend fun getCurrentUserId(): String? {
+    fun getCurrentUserId(): String? {
         return supabaseClient.auth.currentSessionOrNull()?.user?.id
     }
 

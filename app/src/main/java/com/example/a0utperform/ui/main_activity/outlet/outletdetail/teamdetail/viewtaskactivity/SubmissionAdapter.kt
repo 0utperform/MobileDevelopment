@@ -3,15 +3,20 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a0utperform.R
 import com.example.a0utperform.data.model.SubmissionWithEvidence
 import com.example.a0utperform.databinding.ItemviewtaskBinding
 import com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.edittaskdirectory.EvidenceAdapter
 
-class SubmissionAdapter : ListAdapter<SubmissionWithEvidence, SubmissionAdapter.SubmissionViewHolder>(DIFF_CALLBACK) {
+class SubmissionAdapter (
+    private val viewModel: ViewTaskViewModel,
+    private val lifecycleOwner: LifecycleOwner
+): ListAdapter<SubmissionWithEvidence, SubmissionAdapter.SubmissionViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<SubmissionWithEvidence>() {
@@ -34,6 +39,13 @@ class SubmissionAdapter : ListAdapter<SubmissionWithEvidence, SubmissionAdapter.
 
         fun bind(data: SubmissionWithEvidence) {
             binding.etTaskDescription.text = data.submission.description
+            viewModel.getUsername(data.submission.user_id)
+                .observe(lifecycleOwner) { username ->
+                    binding.submittedBy.text = binding.root.context.getString(
+                        R.string.submitted_by,
+                        username
+                    )
+                }
 
 
             Log.d("ViewEvidenceAdapter", "Evidence list size: ${data.evidenceList.size}")

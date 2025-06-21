@@ -141,4 +141,6 @@
     <string name="btn_approve_leave">Approve</string>
     <string name="btn_reject_leave">Reject</string>
     <string name="btn_request_leave">Request Leave</string>
+    <string name="submitted_by">Submitted By : %1$s</string>
+    <string name="created_by">Created By : %1$s</string>
 </resources>

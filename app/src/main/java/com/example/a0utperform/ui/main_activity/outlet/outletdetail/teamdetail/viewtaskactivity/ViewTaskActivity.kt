@@ -38,7 +38,10 @@ class ViewTaskActivity : AppCompatActivity() {
 
         task.task_id?.let { viewModel.fetchSubmissionsWithEvidence(it) }
 
-        submissionAdapter = SubmissionAdapter()
+       submissionAdapter = SubmissionAdapter(
+            viewModel = viewModel,
+            lifecycleOwner = this
+        )
         binding.rvTaskCompletion.layoutManager = LinearLayoutManager(this)
         binding.rvTaskCompletion.adapter = submissionAdapter
 

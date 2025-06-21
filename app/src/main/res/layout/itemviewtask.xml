@@ -20,7 +20,7 @@
             android:padding="@dimen/padding_medium"
             android:orientation="vertical">
 
-            <!-- Task Completion Evidence Label -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,6 +61,16 @@
                 android:background="@drawable/task_input_background"
                 android:padding="12dp"
                 android:maxLines="20" />
+
+            <TextView
+                android:id="@+id/submitted_by"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submitted_by"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
 
 
         </LinearLayout>
