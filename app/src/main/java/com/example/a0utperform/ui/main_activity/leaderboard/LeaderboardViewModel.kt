@@ -28,7 +28,7 @@ class LeaderboardViewModel @Inject constructor(
     fun fetchTopOutlets() {
         viewModelScope.launch {
             _isLoading.value = true
-            _topOutlets.value = repository.getTop3OutletsByRevenue()
+            _topOutlets.value = repository.getTopOutletsByRevenue()
             _isLoading.value = false
         }
     }
@@ -36,7 +36,7 @@ class LeaderboardViewModel @Inject constructor(
     fun fetchTopTeams() {
         viewModelScope.launch {
             _isLoading.value = true
-            _topTeams.value = repository.getTop3TeamsByCompletion()
+            _topTeams.value = repository.getTopTeamsByCompletion()
             _isLoading.value = false
         }
     }

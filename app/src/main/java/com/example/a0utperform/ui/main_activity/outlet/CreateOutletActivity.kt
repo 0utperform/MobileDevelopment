@@ -33,6 +33,7 @@ class CreateOutletActivity : AppCompatActivity() {
             pickImageLauncher.launch("image/*")
         }
 
+
         binding.btnCreateOutlet.setOnClickListener {
             val name = binding.etOutletName.text.toString().trim()
             val location = binding.etLocation.text.toString().trim()

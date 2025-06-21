@@ -26,6 +26,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
@@ -419,7 +420,7 @@ class DatabaseRepository @Inject constructor(
 
             // Upload image to Supabase Storage
             val outletId = UUID.randomUUID().toString()
-            val filename = "outlets/$outletId.jpg"
+            val filename = "outlet/$outletId.jpg"
             val inputStream = context.contentResolver.openInputStream(imageUri)!!
             val byteArray = inputStream.readBytes()
             withContext(Dispatchers.IO) {
@@ -434,6 +435,7 @@ class DatabaseRepository @Inject constructor(
                 }
 
             val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/outlet/$filename"
+
             val now = Clock.System.now().toString()
 
             val outlet = OutletDetail(
@@ -447,14 +449,17 @@ class DatabaseRepository @Inject constructor(
                 staff_size = 1
             )
 
-
-            supabaseClient.from("outlets").insert(outlet)
+            Log.d("CreateOutletVM", "Inserting outlet: $outlet")
+            supabaseClient.from("outlet").insert(outlet)
 
             Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e("DatabaseRepository", "Error creating outlet", e)
+        }  catch (e: PostgrestRestException) {
+            Log.e("Supabase", "PostgrestRestException: ${e.message}", e)
+            Log.e("DatabaseRepository", "Supabase Status Code: ${e.statusCode}")
             Result.failure(e)
         }
+
+
     }
 
     suspend fun createNewTeam(
@@ -711,13 +716,12 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    suspend fun getTop3OutletsByRevenue(): Result<List<OutletDetail>> {
+    suspend fun getTopOutletsByRevenue(): Result<List<OutletDetail>> {
         return try {
             val outlets = supabaseDatabase
                 .from("outlet")
                 .select(Columns.list()) {
                     order("revenue", Order.DESCENDING)
-                    limit(3)
                 }
                 .decodeList<OutletDetail>()
             Result.success(outlets)
@@ -727,13 +731,12 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    suspend fun getTop3TeamsByCompletion(): Result<List<TeamDetail>> {
+    suspend fun getTopTeamsByCompletion(): Result<List<TeamDetail>> {
         return try {
             val teams = supabaseDatabase
                 .from("teams")
                 .select(Columns.list()) {
                     order("completion_rate", Order.DESCENDING)
-                    limit(3)
                 }
                 .decodeList<TeamDetail>()
 
