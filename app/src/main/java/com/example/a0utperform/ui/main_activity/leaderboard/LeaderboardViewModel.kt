@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.TopStaffItem
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,6 +25,15 @@ class LeaderboardViewModel @Inject constructor(
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _topStaff = MutableLiveData<Result<List<TopStaffItem>>>()
+    val topStaff: LiveData<Result<List<TopStaffItem>>> = _topStaff
+
+    fun fetchTopStaff() {
+        viewModelScope.launch {
+            _topStaff.value = repository.getTopStaff()
+        }
+    }
 
     fun fetchTopOutlets() {
         viewModelScope.launch {

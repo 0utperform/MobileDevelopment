@@ -31,6 +31,11 @@ class TeamMemberAdapter(
         holder.binding.tvStaffName.text = user.name
         holder.binding.tvStaffRole.text = user.role
 
+        Glide.with(holder.binding.root.context)
+            .load(user.avatarUrl ?: R.drawable.placeholder_user)
+            .into(holder.binding.profileImage)
+
+
         holder.binding.checkbox.setOnCheckedChangeListener(null)
         holder.binding.checkbox.isChecked = selectedIds.contains(user.userId)
         holder.binding.checkbox.setOnCheckedChangeListener { _, isChecked ->

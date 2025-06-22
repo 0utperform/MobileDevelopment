@@ -20,6 +20,7 @@ import com.example.a0utperform.data.model.TaskEvidence
 import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.TopStaffItem
 import com.example.a0utperform.data.model.UserModel
 import com.example.a0utperform.data.model.UserWithAssignment
 import com.example.a0utperform.utils.formatToSupabaseTimestamp
@@ -1087,6 +1088,55 @@ class DatabaseRepository @Inject constructor(
             emptyList()
         }
     }
+
+    suspend fun getTopStaff(): Result<List<TopStaffItem>> {
+        return try {
+            val assignments = supabaseDatabase.from("task_assignments")
+                .select(Columns.ALL)
+                .decodeList<TaskAssignment>()
+
+            val tasks = supabaseDatabase
+                .from("task").select(Columns.ALL)
+                .decodeList<TaskData>()
+
+            val groupedByUser = assignments.groupBy { it.user_id }
+
+            val topStaff = groupedByUser.mapNotNull { (userId, userAssignments) ->
+                val totalTasks = userAssignments.size
+                val completedTasks = userAssignments.count { assignment ->
+                    tasks.find { it.task_id == assignment.task_id }?.status == "Completed"
+                }
+
+                val expiredTasks = userAssignments.count { assignment ->
+                    tasks.find { it.task_id == assignment.task_id }?.status == "Expired"
+                }
+
+                val totalRelevant = completedTasks + expiredTasks
+                if (totalRelevant == 0) return@mapNotNull null
+
+                val completionRate = (completedTasks.toDouble() / totalRelevant) * 100
+
+
+                val user = supabaseDatabase.from("users")
+                    .select(Columns.ALL) {
+                        filter { eq("user_id", userId)}
+                    }.decodeSingle<UserModel>()
+
+                TopStaffItem(
+                    userId = userId,
+                    name = user.name,
+                    role = user.role,
+                    profileUrl = user.avatarUrl,
+                    completionRate = completionRate
+                )
+            }.sortedByDescending { it.completionRate }
+
+            Result.success(topStaff)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     suspend fun getUserRole(): String? {
         return userPreference.getSession().first().role
