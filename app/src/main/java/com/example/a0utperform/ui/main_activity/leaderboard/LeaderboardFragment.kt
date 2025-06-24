@@ -27,6 +27,7 @@ class LeaderboardFragment : Fragment(), OutletAdapter.OnOutletClickListener {
     private lateinit var teamAdapter: LeaderboardTeamAdapter
     private lateinit var outletAdapter: LeaderboardOutletAdapter
     private val viewModel: LeaderboardViewModel by viewModels()
+    private lateinit var staffAdapter: TopStaffAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +43,16 @@ class LeaderboardFragment : Fragment(), OutletAdapter.OnOutletClickListener {
 
         viewModel.fetchTopOutlets()
         viewModel.fetchTopTeams()
+        viewModel.fetchTopStaff()
+
+        staffAdapter = TopStaffAdapter()
+        binding.rvBestEmployees.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvBestEmployees.adapter = staffAdapter
+
+        viewModel.topStaff.observe(viewLifecycleOwner) { result ->
+            result.onSuccess { staffAdapter.submitList(it) }
+                .onFailure { showToast("Failed to load top staff") }
+        }
 
         outletAdapter = LeaderboardOutletAdapter()
         teamAdapter = LeaderboardTeamAdapter()
@@ -55,6 +66,9 @@ class LeaderboardFragment : Fragment(), OutletAdapter.OnOutletClickListener {
                 .onFailure { showToast("Failed to load outlets") }
         }
 
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
         viewModel.topTeams.observe(viewLifecycleOwner) { result ->
             result.onSuccess { teamAdapter.submitList(it) }
                 .onFailure { showToast("Failed to load teams") }

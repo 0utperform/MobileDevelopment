@@ -36,12 +36,26 @@ class ViewTaskActivity : AppCompatActivity() {
         totalTargetSubmissions = intent.getIntExtra("TOTAL_TARGET_SUBMISSIONS", 0)
         task = Json.decodeFromString<TaskData>(taskJson!!)
 
-        task.task_id?.let { viewModel.fetchSubmissionsWithEvidence(it) }
+        task.task_id?.let {
+            viewModel.fetchAssignedUsernames(it)
+            viewModel.fetchSubmissionsWithEvidence(it) }
 
-        submissionAdapter = SubmissionAdapter()
+       submissionAdapter = SubmissionAdapter(
+            viewModel = viewModel,
+            lifecycleOwner = this
+        )
         binding.rvTaskCompletion.layoutManager = LinearLayoutManager(this)
         binding.rvTaskCompletion.adapter = submissionAdapter
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.assignedUsernames.collect { usernames ->
+                binding.tvAssignedUsers.text = if (usernames.isEmpty()) {
+                    "Assigned to: Everyone"
+                } else {
+                    "Assigned to: ${usernames.joinToString(", ")}"
+                }
+            }
+        }
         lifecycleScope.launchWhenStarted {
             viewModel.submissionWithEvidenceList.collect { list ->
                 submissionAdapter.submitList(list)

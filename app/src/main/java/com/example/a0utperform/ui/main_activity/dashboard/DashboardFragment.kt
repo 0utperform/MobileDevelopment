@@ -60,7 +60,6 @@ class DashboardFragment : Fragment() {
 
         setupAttendanceObservers()
         setupAttendanceButtons()
-
         dashboardViewModel.clockInState.observe(viewLifecycleOwner) { showClockIn ->
             dashboardViewModel.checkInitialClockInState()
             when (showClockIn) {
@@ -73,7 +72,6 @@ class DashboardFragment : Fragment() {
                     binding.btnClockOut.visibility = View.VISIBLE
                 }
                 null -> {
-                    // Both buttons hidden (attendance done for today)
                     binding.btnClockIn.visibility = View.GONE
                     binding.btnClockOut.visibility = View.GONE
                 }
@@ -213,9 +211,8 @@ class DashboardFragment : Fragment() {
             binding.tvTotalHrs.text = hours
         }
 
-        // Observe loading state and errors
         dashboardViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // You can show a progress indicator here if needed
+            binding.dashboardLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         dashboardViewModel.error.observe(viewLifecycleOwner) { error ->

@@ -75,6 +75,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/task_completion_format"/>
+
+                    <TextView
+                        android:id="@+id/tvAssignedUsers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Assigned to: -"
+                        android:textSize="16sp"
+                        android:layout_marginTop="12dp"
+                        android:textStyle="italic"/>
+
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

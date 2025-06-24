@@ -34,6 +34,7 @@ class DashboardViewModel @Inject constructor(
     private val databaseRepository: DatabaseRepository,
     private val userPreference: UserPreference
 ): ViewModel() {
+    private val TAG = "AttendanceViewModel"
 
     private val _avatarUrl = MutableLiveData<String?>()
     val avatarUrl: LiveData<String?> = _avatarUrl
@@ -47,8 +48,6 @@ class DashboardViewModel @Inject constructor(
 
     private val _teamAssignment = MutableLiveData<List<TeamDetail>>()
     val teamAssignment: LiveData<List<TeamDetail>> = _teamAssignment
-
-    private val TAG = "AttendanceViewModel"
 
     private val _clockInState = MutableLiveData<Boolean?>()
     val clockInState: LiveData<Boolean?> = _clockInState

@@ -61,7 +61,7 @@ class ActivityOutletDetail : AppCompatActivity() {
             binding.tvOutletId.text = getString(R.string.outletId_format, outlet.outlet_id)
             binding.tvSize.text = getString(R.string.size_format, outlet.staff_size.toString())
             binding.tvAddress.text = getString(R.string.outlet_address_format, outlet.location)
-            binding.tvCreated.text = getString(R.string.created_format, outlet.created_at.formatToReadableDate())
+            binding.tvCreated.text = getString(R.string.created_format, outlet.created_at?.formatToReadableDate())
 
             Glide.with(this)
                 .load(outlet.image_url ?: R.drawable.placeholder_user)

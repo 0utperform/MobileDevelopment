@@ -32,9 +32,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBestOutlets"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="500dp"
                 android:layout_marginBottom="16dp"
-                android:nestedScrollingEnabled="false"
+                android:nestedScrollingEnabled="true"
                 android:overScrollMode="never" />
 
             <!-- Best Team Label -->
@@ -52,11 +52,33 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBestTeams"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
+                android:layout_height="500dp"
+                android:nestedScrollingEnabled="true"
                 android:overScrollMode="never" />
+
+            <TextView
+                android:id="@+id/tvBestEmployeeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Employees"
+                android:textColor="@color/text_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingVertical="8dp" />
+
+            <!-- RecyclerView for Best Employees -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBestEmployees"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                android:layout_marginBottom="16dp" />
+
         </LinearLayout>
+
     </ScrollView>
+
 
     <!-- ProgressBar in center -->
     <ProgressBar

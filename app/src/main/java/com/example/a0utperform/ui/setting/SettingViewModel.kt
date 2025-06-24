@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(private val pref: SettingPreferences) : ViewModel() {
+
     fun getThemeSettings(): LiveData<Boolean> {
         return pref.getThemeSetting().asLiveData()
     }
@@ -20,4 +21,7 @@ class SettingViewModel @Inject constructor(private val pref: SettingPreferences)
             pref.saveThemeSetting(isDarkModeActive)
         }
     }
+
+
+
 }

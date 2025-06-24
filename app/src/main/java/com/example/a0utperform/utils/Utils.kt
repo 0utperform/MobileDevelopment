@@ -49,3 +49,4 @@ fun formatToRupiah(amount: Double): String {
     formatter.maximumFractionDigits = 0
     return formatter.format(amount)
 }
+

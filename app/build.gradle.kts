@@ -7,7 +7,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id ("kotlin-kapt")
     id ("org.jetbrains.kotlin.plugin.serialization") version ("2.0.0")
-
+    id ("kotlin-parcelize")
 }
 
 
@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.core.i18n)
     kapt (libs.hilt.android.compiler)
 
     implementation (libs.facebook.login)

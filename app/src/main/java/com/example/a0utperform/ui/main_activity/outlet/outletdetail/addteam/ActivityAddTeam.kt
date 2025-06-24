@@ -3,6 +3,7 @@ package com.example.a0utperform.ui.main_activity.outlet.outletdetail.addteam
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -59,7 +60,10 @@ class ActivityAddTeam : AppCompatActivity() {
 
             viewModel.createTeam(name, desc, outletId!!, imageUri)
         }
+        viewModel.isLoading.observe(this) { loading ->
+            binding.progressBarLoading.visibility = if (loading) View.VISIBLE else View.GONE
 
+        }
         viewModel.teamCreationStatus.observe(this) { result ->
             result.onSuccess {
                 Toast.makeText(this, "Team created successfully!", Toast.LENGTH_SHORT).show()

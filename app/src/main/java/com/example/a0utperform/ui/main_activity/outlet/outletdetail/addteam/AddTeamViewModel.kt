@@ -18,10 +18,15 @@ class AddTeamViewModel @Inject constructor(
     private val _teamCreationStatus = MutableLiveData<Result<Unit>>()
     val teamCreationStatus: LiveData<Result<Unit>> = _teamCreationStatus
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun createTeam(name: String, desc: String, outletId: String, imageUri: Uri?) {
         viewModelScope.launch {
+            _isLoading.value = true
             val result = repository.createNewTeam(name, desc, outletId, imageUri)
             _teamCreationStatus.value = result
+            _isLoading.value = false
         }
     }
 }

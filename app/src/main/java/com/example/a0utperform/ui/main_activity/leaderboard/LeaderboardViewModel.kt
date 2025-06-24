@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.TopStaffItem
 import com.example.a0utperform.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,15 +23,31 @@ class LeaderboardViewModel @Inject constructor(
     private val _topTeams = MutableLiveData<Result<List<TeamDetail>>>()
     val topTeams: LiveData<Result<List<TeamDetail>>> = _topTeams
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _topStaff = MutableLiveData<Result<List<TopStaffItem>>>()
+    val topStaff: LiveData<Result<List<TopStaffItem>>> = _topStaff
+
+    fun fetchTopStaff() {
+        viewModelScope.launch {
+            _topStaff.value = repository.getTopStaff()
+        }
+    }
+
     fun fetchTopOutlets() {
         viewModelScope.launch {
-            _topOutlets.value = repository.getTop3OutletsByRevenue()
+            _isLoading.value = true
+            _topOutlets.value = repository.getTopOutletsByRevenue()
+            _isLoading.value = false
         }
     }
 
     fun fetchTopTeams() {
         viewModelScope.launch {
-            _topTeams.value = repository.getTop3TeamsByCompletion()
+            _isLoading.value = true
+            _topTeams.value = repository.getTopTeamsByCompletion()
+            _isLoading.value = false
         }
     }
 }

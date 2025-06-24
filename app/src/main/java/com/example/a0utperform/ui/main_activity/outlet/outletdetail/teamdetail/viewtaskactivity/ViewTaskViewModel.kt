@@ -1,5 +1,7 @@
 package com.example.a0utperform.ui.main_activity.outlet.outletdetail.teamdetail.viewtaskactivity
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a0utperform.data.model.SubmissionWithEvidence
@@ -20,6 +22,37 @@ class ViewTaskViewModel @Inject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
+
+
+    private val _usernameMap = mutableMapOf<String, MutableLiveData<String>>()
+
+    private val _assignedUsernames = MutableStateFlow<List<String>>(emptyList())
+    val assignedUsernames: StateFlow<List<String>> = _assignedUsernames
+
+    fun fetchAssignedUsernames(taskId: String) {
+        viewModelScope.launch {
+            val result = repository.getAssignedUsernames(taskId)
+            _assignedUsernames.value = result
+        }
+    }
+
+    fun getUsername(userId: String): LiveData<String> {
+        if (!_usernameMap.containsKey(userId)) {
+            val liveData = MutableLiveData<String>()
+            _usernameMap[userId] = liveData
+
+            viewModelScope.launch {
+                val username = try {
+                    repository.getUsernameById(userId)
+                } catch (e: Exception) {
+                    "Unknown User"
+                }
+                liveData.postValue(username)
+            }
+        }
+        return _usernameMap[userId]!!
+    }
+
 
     fun fetchSubmissionsWithEvidence(taskId: String) {
         viewModelScope.launch {

@@ -5,25 +5,31 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.test.espresso.util.filter
 import com.example.a0utperform.BuildConfig
 import com.example.a0utperform.data.local.user.UserPreference
 import com.example.a0utperform.data.model.Attendance
 import com.example.a0utperform.data.model.AttendanceStats
+import com.example.a0utperform.data.model.LeaveRequest
 import com.example.a0utperform.data.model.OutletData
 import com.example.a0utperform.data.model.OutletDetail
 import com.example.a0utperform.data.model.StaffData
+import com.example.a0utperform.data.model.TaskAssignment
 import com.example.a0utperform.data.model.TaskData
 import com.example.a0utperform.data.model.TaskEvidence
 import com.example.a0utperform.data.model.TaskSubmission
 import com.example.a0utperform.data.model.TeamData
 import com.example.a0utperform.data.model.TeamDetail
+import com.example.a0utperform.data.model.TopStaffItem
 import com.example.a0utperform.data.model.UserModel
 import com.example.a0utperform.data.model.UserWithAssignment
 import com.example.a0utperform.utils.formatToSupabaseTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
@@ -33,6 +39,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.contentOrNull
@@ -47,7 +57,12 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.serialization.json.*
+import java.text.SimpleDateFormat
+import java.time.YearMonth
+import java.time.ZoneOffset
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @Singleton
 class DatabaseRepository @Inject constructor(
@@ -408,7 +423,7 @@ class DatabaseRepository @Inject constructor(
 
             // Upload image to Supabase Storage
             val outletId = UUID.randomUUID().toString()
-            val filename = "outlets/$outletId.jpg"
+            val filename = "outlet/$outletId.jpg"
             val inputStream = context.contentResolver.openInputStream(imageUri)!!
             val byteArray = inputStream.readBytes()
             withContext(Dispatchers.IO) {
@@ -423,27 +438,30 @@ class DatabaseRepository @Inject constructor(
                 }
 
             val imageUrl = "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/outlet/$filename"
+
             val now = Clock.System.now().toString()
 
             val outlet = OutletDetail(
                 outlet_id = outletId,
                 name = name,
                 location = location,
-                created_at = now,
                 image_url = imageUrl,
                 manager_id = managerId ?: "",
                 manager_name = managerName,
                 staff_size = 1
             )
 
-
-            supabaseClient.from("outlets").insert(outlet)
+            Log.d("CreateOutletVM", "Inserting outlet: $outlet")
+            supabaseClient.from("outlet").insert(outlet)
 
             Result.success(Unit)
-        } catch (e: Exception) {
-            Log.e("DatabaseRepository", "Error creating outlet", e)
+        }  catch (e: PostgrestRestException) {
+            Log.e("Supabase", "PostgrestRestException: ${e.message}", e)
+            Log.e("DatabaseRepository", "Supabase Status Code: ${e.statusCode}")
             Result.failure(e)
         }
+
+
     }
 
     suspend fun createNewTeam(
@@ -491,13 +509,11 @@ class DatabaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
     suspend fun createTask(
         task: TaskData,
         imageUri: Uri?
-    ): Result<Unit> {
+    ): Result<String> {
         return try {
-            // Generate a unique ID for the task
             val taskId = UUID.randomUUID().toString()
             val filename = "tasks/$taskId.jpg"
 
@@ -522,23 +538,23 @@ class DatabaseRepository @Inject constructor(
                 null
             }
 
-            // Create final task object with generated ID and image URL
+            // Insert task into "task" table
             val finalTask = task.copy(
                 task_id = taskId,
                 img_url = imageUrl
             )
 
-            // Insert task into "task" table
             supabaseClient
                 .from("task")
                 .insert(finalTask)
 
-            Result.success(Unit)
+            Result.success(taskId)
         } catch (e: Exception) {
             Log.e("TaskRepository", "Error creating task", e)
             Result.failure(e)
         }
     }
+
 
     suspend fun fetchUsersWithAssignmentStatus(outletId: String): Result<List<UserWithAssignment>> {
         return try {
@@ -700,13 +716,12 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    suspend fun getTop3OutletsByRevenue(): Result<List<OutletDetail>> {
+    suspend fun getTopOutletsByRevenue(): Result<List<OutletDetail>> {
         return try {
             val outlets = supabaseDatabase
                 .from("outlet")
                 .select(Columns.list()) {
                     order("revenue", Order.DESCENDING)
-                    limit(3)
                 }
                 .decodeList<OutletDetail>()
             Result.success(outlets)
@@ -716,13 +731,12 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    suspend fun getTop3TeamsByCompletion(): Result<List<TeamDetail>> {
+    suspend fun getTopTeamsByCompletion(): Result<List<TeamDetail>> {
         return try {
             val teams = supabaseDatabase
                 .from("teams")
                 .select(Columns.list()) {
                     order("completion_rate", Order.DESCENDING)
-                    limit(3)
                 }
                 .decodeList<TeamDetail>()
 
@@ -827,14 +841,20 @@ class DatabaseRepository @Inject constructor(
             return@withContext Result.failure(e)
         }
     }
-
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getTodayAttendance(userId: String): Result<Attendance?> = withContext(Dispatchers.IO) {
         try {
-            val jakartaZone = ZoneId.of("Asia/Jakarta")
-            val today = LocalDate.now(jakartaZone)
-            val startOfDay = today.atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-            val endOfDay = today.plusDays(1).atStartOfDay(jakartaZone).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+            val utcZone = ZoneOffset.UTC
+            val today = LocalDate.now(utcZone)
+
+            val startOfDay = today
+                .atStartOfDay(utcZone)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+            val endOfDay = today
+                .plusDays(1)
+                .atStartOfDay(utcZone)
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
             val attendance = supabaseDatabase
                 .from("attendance")
@@ -856,50 +876,7 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun shouldShowClockIn(userId: String): Result<Boolean> = withContext(Dispatchers.IO) {
-        try {
-            val latestAttendanceResult = getLatestAttendance(userId)
-            if (latestAttendanceResult.isFailure) {
-                return@withContext Result.success(true) // If error fetching, default to showing clock in
-            }
 
-            val latestAttendance = latestAttendanceResult.getOrNull()
-            if (latestAttendance == null) {
-                return@withContext Result.success(true) // No attendance records, show clock in
-            }
-
-            // If there's a record but no clock out, we should show clock out instead
-            if (latestAttendance.clock_out == null && latestAttendance.status == "active") {
-                return@withContext Result.success(false) // Show clock out button
-            }
-
-            // Check if the last attendance record is from a previous day
-            val jakartaZone = ZoneId.of("Asia/Jakarta")
-            val today = LocalDate.now(jakartaZone)
-
-            try {
-                // Parse the created_at timestamp
-                val createdAtTime = if (latestAttendance.created_at != null) {
-                    ZonedDateTime.parse(latestAttendance.created_at, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                } else {
-                    // Fallback to clock_in if created_at is null
-                    ZonedDateTime.parse(latestAttendance.clock_in, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-                }
-
-                val createdAtDate = createdAtTime.toLocalDate()
-
-                // If created_at date is before today, show clock in
-                return@withContext Result.success(createdAtDate.isBefore(today))
-            } catch (e: DateTimeParseException) {
-                Log.e(TAG, "Error parsing date", e)
-                return@withContext Result.success(true) // Default to showing clock in on parsing error
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error determining clock in status", e)
-            return@withContext Result.failure(e)
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun calculateWorkHours(attendance: Attendance): Result<Double> = withContext(Dispatchers.IO) {
@@ -961,6 +938,212 @@ class DatabaseRepository @Inject constructor(
         }
 
         return AttendanceStats(completed, absent, total,  percentage)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getAttendanceByMonth(userId: String, month: YearMonth): Map<LocalDate, String> {
+        val start = month.atDay(1).atStartOfDay(ZoneId.of("Asia/Jakarta"))
+        val end = month.plusMonths(1).atDay(1).atStartOfDay(ZoneId.of("Asia/Jakarta"))
+
+        val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+        val response = supabaseDatabase
+            .from("attendance")
+            .select() {
+                filter {
+                    eq("user_id", userId)
+                    gte("created_at", start.format(formatter))
+                    lt("created_at", end.format(formatter))
+                }
+            }
+
+        val attendanceMap = mutableMapOf<LocalDate, String>()
+        val jsonArray = Json.parseToJsonElement(response.data.toString()) as? JsonArray ?: return attendanceMap
+
+        for (item in jsonArray) {
+            val createdAt = item.jsonObject["created_at"]?.jsonPrimitive?.content
+            val status = item.jsonObject["status"]?.jsonPrimitive?.contentOrNull
+            if (createdAt != null && status != null) {
+                val date = ZonedDateTime.parse(createdAt).toLocalDate()
+                attendanceMap[date] = status
+            }
+        }
+
+        return attendanceMap
+    }
+
+    fun getLeaveRequests(): Flow<List<LeaveRequest>> = flow {
+        val role = userPreference.getSession().first().role
+        val userId = userPreference.getSession().first().userId
+
+        val query = if (role == "Staff") {
+            supabaseDatabase.from("leave_requests")
+                .select {
+                    filter {   eq("user_id", userId) }
+                }
+
+        } else {
+            supabaseDatabase.from("leave_requests")
+                .select()
+        }
+
+        val result = query.decodeList<LeaveRequest>()
+        emit(result)
+    }
+
+    suspend fun getUsernameById(userId: String): String {
+        return try {
+            val result = supabaseDatabase.from("users")
+                .select {
+                    filter {
+                        eq("user_id", userId)
+                    }
+                    limit(1)
+                }
+                .decodeSingle<UserModel>()  // Decode to your data class
+            result.name
+        } catch (e: Exception) {
+            "Unknown User"
+        }
+    }
+
+    suspend fun updateLeaveRequestStatus(requestId: String, newStatus: String): Boolean {
+        return try {
+            val result = supabaseDatabase
+                .from("leave_requests")
+                .update(
+                    {
+                        set("status", newStatus)
+                    }
+                ) {
+                    select(Columns.list("request_id","user_id","start_date","end_date","reason","status","type","created_at"))
+                    filter { eq("request_id", requestId) }
+                }
+                .decodeSingle<LeaveRequest>()
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun submitLeaveRequest(
+        userId: String?,
+        startDate: String,
+        endDate: String,
+        reason: String,
+        type: String
+    ): Boolean {
+        return try {
+            val payload = mapOf(
+                "user_id" to userId,
+                "start_date" to startDate,
+                "end_date" to endDate,
+                "reason" to reason,
+                "type" to type,
+                "status" to "Progress"
+            )
+
+            supabaseDatabase.from("leave_requests")
+                .insert(payload)
+
+            true
+        } catch (e: Exception) {
+            Log.e("DatabaseRepository", "Error: ${e.localizedMessage}")
+            false
+        }
+    }
+
+    suspend fun assignUsersToTask(taskId: String, userIds: List<String>): Result<Unit> {
+        return try {
+            val inserts = userIds.map { userId ->
+                mapOf("task_id" to taskId, "user_id" to userId)
+            }
+            supabaseClient.from("task_assignments").insert(inserts)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("Repository", "Error assigning users to task", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAssignedUsernames(taskId: String): List<String> {
+        return try {
+
+            val assignments = supabaseClient
+                .from("task_assignments")
+                .select(Columns.list()) {
+                    filter { eq("task_id", taskId) }
+                }
+
+                .decodeList<TaskAssignment>()
+
+
+            assignments.map { assignment ->
+                getUsernameById(assignment.user_id)
+            }
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching assigned users", e)
+            emptyList()
+        }
+    }
+
+    suspend fun getTopStaff(): Result<List<TopStaffItem>> {
+        return try {
+            val assignments = supabaseDatabase.from("task_assignments")
+                .select(Columns.ALL)
+                .decodeList<TaskAssignment>()
+
+            val tasks = supabaseDatabase
+                .from("task").select(Columns.ALL)
+                .decodeList<TaskData>()
+
+            val groupedByUser = assignments.groupBy { it.user_id }
+
+            val topStaff = groupedByUser.mapNotNull { (userId, userAssignments) ->
+                val totalTasks = userAssignments.size
+                val completedTasks = userAssignments.count { assignment ->
+                    tasks.find { it.task_id == assignment.task_id }?.status == "Completed"
+                }
+
+                val expiredTasks = userAssignments.count { assignment ->
+                    tasks.find { it.task_id == assignment.task_id }?.status == "Expired"
+                }
+
+                val totalRelevant = completedTasks + expiredTasks
+                if (totalRelevant == 0) return@mapNotNull null
+
+                val completionRate = (completedTasks.toDouble() / totalRelevant) * 100
+
+
+                val user = supabaseDatabase.from("users")
+                    .select(Columns.ALL) {
+                        filter { eq("user_id", userId)}
+                    }.decodeSingle<UserModel>()
+
+                TopStaffItem(
+                    userId = userId,
+                    name = user.name,
+                    role = user.role,
+                    profileUrl = user.avatarUrl,
+                    completionRate = completionRate
+                )
+            }.sortedByDescending { it.completionRate }
+
+            Result.success(topStaff)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
+    suspend fun getUserRole(): String? {
+        return userPreference.getSession().first().role
+    }
+
+    fun getCurrentUserId(): String? {
+        return supabaseClient.auth.currentSessionOrNull()?.user?.id
     }
 
 }
